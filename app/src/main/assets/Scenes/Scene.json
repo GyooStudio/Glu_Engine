@@ -1,0 +1,137 @@
+{
+  "materials" : [
+    {
+      "name" : "default",
+      "type" : 1,
+      "isColorTextured" : false,
+      "texture" : "Wallpaper",
+      "color" : [1.0,1.0,1.0],
+      "emissionIntensity" : 0.0,
+      "isRoughnessMapped" : false,
+      "roughness" : 1.0,
+      "isNormalMapped" : false,
+      "normalMap" : "metal plate normal",
+      "alphaClip" : false
+    },{
+      "name" : "Rubiks_Cube",
+      "type" : 1,
+      "isColorTextured" : true,
+      "texture" : "Rubiks cube albedo",
+      "color" : [1.0,1.0,1.0],
+      "emissionIntensity" : 0.0,
+      "isRoughnessMapped" : false,
+      "roughness" : 0.5,
+      "isNormalMapped" : true,
+      "normalMap" : "Rubiks cube normal",
+      "alphaClip" : false
+    }, {
+      "name" : "metal",
+      "type" : 3,
+      "isColorTextured" : false,
+      "texture" : "fusé",
+      "color" : [1.0,1.0,1.0],
+      "emissionIntensity" : 1.0,
+      "isRoughnessMapped" : false,
+      "roughness" : 0.1,
+      "isNormalMapped" : false,
+      "normalMap" : "metal plate normal",
+      "alphaClip" : false
+    }, {
+      "name" : "glow",
+      "type" : 2,
+      "isColorTextured" : true,
+      "texture" : "fusé",
+      "color" : [1.0,1.0,1.0],
+      "emissionIntensity" : 5.0,
+      "isRoughnessMapped" : false,
+      "roughness" : 0.0,
+      "isNormalMapped" : false,
+      "normalMap" : "metal plate normal",
+      "alphaClip" : true
+    }
+  ],
+
+  "skybox" : {
+    "HDRI" : "HDRI_interior",
+    "Mesh" : "skybox",
+    "intensity" : 2.0
+  },
+
+  "Entities" : [
+    {
+      "name" : "room",
+      "mesh" : "Room",
+      "separateMesh": false,
+      "material" : "default",
+      "position" : [0.0,0.0,0.0],
+      "rotation" : [0.0,0.0,0.0],
+      "scale" : [10.0,10.0,10.0]
+    }, {
+      "name" : "ball",
+      "mesh" : "icosphere",
+      "SeparateMesh" : false,
+      "material" : "metal",
+      "position" : [0.0,1.0,6.0],
+      "rotation" : [0.0,0.0,0.0],
+      "scale" : [5.0,5.0,5.0]
+    },{
+      "name" : "ballb",
+      "mesh" : "icosphere",
+      "SeparateMesh" : false,
+      "material" : "glow",
+      "position" : [0.0,0.0,0.0],
+      "rotation" : [0.0,0.0,0.0],
+      "scale" : [0.5,0.5,0.5]
+    },{
+      "name" : "Rubiks cube",
+      "mesh" : "Rubiks_Cube",
+      "SeparateMesh" : true,
+      "material" : "Rubiks_Cube",
+      "position" : [0.0,0.0,0.0],
+      "rotation" : [0.0,0.0,0.0],
+      "scale" : [10.0,10.0,10.0]
+    }
+  ],
+
+  "TMP_NULL" : [],
+
+  "lights" : [
+    {
+      "position" : [2.2,5.75,-4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 3.0
+    },{
+      "position" : [-2.2,5.75,-4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 3.0
+    },{
+      "position" : [2.2,5.75, 4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 3.0
+    },{
+      "position" : [-2.2,5.75, 4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 3.0
+  }],
+
+  "UI" : {
+    "TexQuads": [
+      {
+        "name" : "pointer",
+        "texture" : "pointer",
+        "position" : [0.0,0.0],
+        "rotation" : 0.0,
+        "scale" : [80.0,80.0]
+      }
+    ],
+    "ColorSquare" : [
+      {
+        "name" : "square",
+        "color" : [1.0,1.0,1.0,0.0],
+        "position" : [100.0,0.0],
+        "rotation" : 0.0,
+        "scale" : [80.0,80.0]
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "Meshes" : [
+    {
+      "name" : "Room",
+      "directory" : "Objects/Cube_Room.obj"
+    }, {
+      "name" : "icosphere",
+      "directory" : "Objects/ico.obj"
+    },{
+      "name" : "Rubiks_Cube",
+      "directory" : "Objects/Rubiks_cube.obj"
+    },{
+      "name" : "skybox",
+      "directory" : "Objects/skybox.obj"
+    },{
+      "name" : "Village_Demo",
+      "directory" : "Objects/Village_Demo.obj"
+    }
+  ],
+
+  "Textures" : [
+    {
+      "name" : "pointer",
+      "directory" : "Textures/pointer_cross.png"
+    },{
+      "name" : "Rubiks cube albedo",
+      "directory" : "Textures/Rubiks_cube_albedo.png"
+    },{
+      "name" : "Rubiks cube normal",
+      "directory" : "Textures/Rubiks_cube_normal.png"
+    },{
+      "name" : "Rubiks cube roughness",
+      "directory" : "Textures/Rubiks_cube_roughness.png"
+    },{
+      "name" : "Wallpaper",
+      "directory" : "Textures/Wall_Paper.png"
+    },{
+      "name" : "HDRI_outdoors",
+      "directory" : "Textures/HDRI/HDRI1.png"
+    },{
+      "name" : "HDRI_interior",
+      "directory" : "Textures/HDRI/InteriorHDRI.png"
+    },{
+      "name" : "pointer",
+      "directory" : "Textures/pointer_cross.png"
+    },{
+      "name" : "Village demo albedo",
+      "directory" : "Textures/Village_Demo_textures/Albedo.png"
+    },{
+      "name" : "Village demo emission",
+      "directory" : "Textures/Village_Demo_textures/Emission.png"
+    },{
+      "name" : "Village demo MaterialMap",
+      "directory" : "Textures/Village_Demo_textures/MaterialMap.png"
+    },{
+      "name" : "metal plate normal",
+      "directory" : "Textures/metal_plate.jpg"
+    },{
+      "name" : "fusé",
+      "directory" : "Textures/fusé.png"
+    }
+  ],
+
+  "Fonts" : [
+    {
+      "name" : "normal Bold",
+      "directory" : "Fonts/BRLNSR.TTF",
+      "size" : 30,
+      "padding" : 5,
+      "ranges" : [0,500]
+    }
+  ]
+}

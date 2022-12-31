@@ -1,0 +1,15 @@
+int error = GLES30.glGetError();
+switch(error){
+    case GLES30.GL_INVALID_ENUM: Log.e("GLError", "INVALID ENUM");
+        break;
+    case GLES30.GL_INVALID_VALUE: Log.e("GLError", "INVALID VALUE");
+        break;
+    case GLES30.GL_INVALID_OPERATION: Log.e("GLError", "INVALID OPERATION");
+        break;
+    case GLES30.GL_INVALID_FRAMEBUFFER_OPERATION: Log.e("GLError", "INVALID FRAMEBUFFER OPERATION");
+        break;
+    case GLES30.GL_OUT_OF_MEMORY: Log.e("GLError", "OUT OF MEMORY");
+        break;
+    case GLES30.GL_NO_ERROR: Log.e("GLError", "NO ERROR");
+        break;
+}

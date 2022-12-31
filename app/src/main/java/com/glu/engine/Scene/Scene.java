@@ -124,7 +124,7 @@ public final class Scene {
 
     public Entity getEntity(String name){
         for (Entity entity: Entities) {
-            if(name == entity.name){
+            if(entity != null && name.equals(entity.name)){
                 return entity;
             }
         }
@@ -141,7 +141,7 @@ public final class Scene {
 
     public CustomObject getCustomObject(String name){
         for (CustomObject object: objects) {
-            if(name == object.name){
+            if(name.equals(object.name)){
                 return object;
             }
         }
@@ -154,7 +154,7 @@ public final class Scene {
 
     public GTexture getTexture(String name){
         for (GTexture texture: textures) {
-            if(name == texture.name){
+            if(name.equals(texture.name)){
                 return texture;
             }
         }
@@ -167,7 +167,7 @@ public final class Scene {
 
     public TexQuad getTexQuad(String name){
         for (TexQuad quad: TexQuads) {
-            if(name == quad.name){
+            if(name.equals(quad.name)){
                 return quad;
             }
         }
@@ -180,7 +180,7 @@ public final class Scene {
 
     public ColorSquare getColorSquare(String name){
         for (ColorSquare quad: ColorSquare) {
-            if(name == quad.name){
+            if(name.equals(quad.name)){
                 return quad;
             }
         }
@@ -194,7 +194,7 @@ public final class Scene {
     public Button getButton(String name){
         for (Button button: Buttons) {
             for (String n : button.name) {
-                if(name == n){
+                if(name.equals(n)){
                     return button;
                 }
             }
@@ -208,7 +208,7 @@ public final class Scene {
 
     public Slider getSlider(String name){
         for (Slider s: Sliders) {
-            if(s.name == name){
+            if(s.name.equals(name)){
                 return s;
             }
         }
@@ -222,7 +222,7 @@ public final class Scene {
 
     public Light getLight(String name){
         for (Light l : Lights) {
-            if (l.name == name){
+            if (l.name.equals(name)){
                 return l;
             }
         }
@@ -235,7 +235,7 @@ public final class Scene {
 
     public TextBox getTextBox(String name){
         for (TextBox t : TextBoxes) {
-            if (t.name == name) {
+            if (t.name.equals(name)) {
                 return t;
             }
         }

@@ -39,10 +39,10 @@ public class RawModel {
         RawModel model = Loader.loadToVAO(positions,uv,norm,indices);
         vaoID = model.vaoID;
         isDirty = false;
-        this.positions = null;
-        this.uv = null;
-        this.norm = null;
-        this.indices = null;
+        //this.positions = null;
+        //this.uv = null;
+        //this.norm = null;
+        //this.indices = null;
     }
 
 }

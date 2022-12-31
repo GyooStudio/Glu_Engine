@@ -445,7 +445,7 @@ public class PostProcessing {
                 deffShader.loadTileSize(tileSize);
                 deffShader.loadScreenDiff(new Vector2f(offX,offY));
 
-                GLES30.glDrawArraysInstanced(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount, (int)(Math.ceil(scene.width/tileSize)*Math.ceil(scene.height/tileSize)));
+                GLES30.glDrawArraysInstanced(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount, (int)( Math.ceil(scene.width/tileSize) * Math.ceil(scene.height/tileSize) ) );
 
                 deffShader.stop();
 

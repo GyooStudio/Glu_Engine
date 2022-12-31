@@ -21,15 +21,18 @@ flat out int lNum1;
 
 out vec2 I_UV;
 
+out float ID;
+
 float ZFar = 200.0;
 
 void main(){
-    vec2 size = vec2(textureSize(A,0));
+    ID = float(gl_InstanceID);
+    vec2 size = vec2( textureSize(A,0) );
     vec2 pos = position.xy * 0.5 + 0.5;
     pos = pos * (tileSize/size);
     float numPerLine = ceil(size.x/tileSize);
-    pos.x += (mod(float(gl_InstanceID),numPerLine) * (tileSize/size.x));
-    pos.y += (floor((float(gl_InstanceID) / numPerLine)) * (tileSize/size.y));
+    pos.x += ( ( mod(float(gl_InstanceID) + 0.1 ,numPerLine) - 0.1) * (tileSize/size.y) ); // amazingly, mod(3.0,3.0) almost always results in something close to 1.0, so we
+    pos.y += ( ( floor( ( float(gl_InstanceID) + 0.1 )/numPerLine ) ) * (tileSize/size.y) ); //have to add a 0.1, to make to it goes over the edge and goes close to 0.0
 
     I_UV = pos;
 

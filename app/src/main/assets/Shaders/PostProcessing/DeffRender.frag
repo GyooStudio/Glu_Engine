@@ -35,6 +35,8 @@ uniform float SunIntensity;
 uniform mat4 SunViewMat;
 uniform mat4 SunProjMat;
 
+in float ID;
+
 const mediump vec2 poissonDisk[] = vec2[](
     vec2(-0.9420164, -0.39906216),
     vec2(0.94558609, -0.76890725),

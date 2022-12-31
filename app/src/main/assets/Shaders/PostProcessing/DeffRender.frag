@@ -67,7 +67,7 @@ void main(){
         highp vec3 pos = (c.xyz * 2.0 - 1.0) * c.w;
         vec3 albedo = a.rgb;
         vec3 normal = b.xyz * 2.0 - 1.0;
-        float roughness = b.a;
+        float roughness = 0.1;
 
         vec3 CamDir = normalize(CamPos - pos);
 
@@ -76,7 +76,7 @@ void main(){
         F_I *= F_I;
         float F_A = pow(max(1.0-dot(normal, CamDir), 0.0), 3.0);
         float fresnel = (1.0-F_I)*F_A + F_I;
-        fresnel *= 1.0-roughness;
+        fresnel *= 0.9;
 
         vec3 diffColorMultiplier;
         vec3 specColor;
@@ -104,6 +104,10 @@ void main(){
             //diffuse
             float diffLightAmount = max(dot(LightDir, normal), 0.0) * LightDist * lI * isHit;
             diffColorMultiplier += diffLightAmount  * lCol;
+
+            //specular
+            float specularAmount = max( 10.0 * ( dot(reflect(-LightDir, normal), CamDir) ) - 9.0, 0.0) * lI * isHit * float(b.a < 0.5);
+            specColor += lCol * specularAmount;
         }
         //shadow mapping
         vec4 p = vec4(pos,1.0);
@@ -116,6 +120,10 @@ void main(){
         float lDiff = max(dot(-SunDir, normal), 0.0) * shadow;
         diffColorMultiplier += (lDiff * SunColor * SunIntensity);
 
+        // SunLight specular
+        float lSpec = max( 100.0 * (dot(reflect(SunDir, normal), CamDir) ) - 90.0, 0.0 ) * shadow * SunIntensity * float(b.a < 0.5);
+        specColor += lSpec * SunColor;
+
         //skybox diffuse
         vec3 n = normal;
         n.xy =  vec2( atan(n.x, n.z) * (1.0/3.14152) * 0.5 + 0.5, 1.0 - (n.y*0.5 + 0.5) );
@@ -126,12 +134,12 @@ void main(){
         //skybox reflections
         n = reflect(-CamDir, normal);
         n.xy =  vec2( atan(n.x, n.z) * (1.0/3.14152) * 0.5 + 0.5, 1.0 - (n.y*0.5 + 0.5) );
-        vec3 skySpecColor = textureLod(D,n.xy,mix(0.0,8.0,sqrt(roughness)) ).rgb;
-        skySpecColor = skySpecColor * skyboxStrength;
+        vec3 skySpecColor = texture(D,n.xy).rgb;
+        skySpecColor = skySpecColor * skyboxStrength * float(b.a < 0.5);
         specColor += skySpecColor;
 
-        Fragment = vec4( (diffColorMultiplier * albedo), 1.0);
-        SkyColor = vec4(skyDefColor, 1.0);
+        Fragment = vec4( (diffColorMultiplier * albedo) + (specColor * fresnel), 1.0);
+        SkyColor = vec4(skyDefColor + (skySpecColor * fresnel), 1.0);
     }
     /*if(a.a > 1.9 && a.a < 2.1){
         Fragment = vec4(a.rgb,1.0);

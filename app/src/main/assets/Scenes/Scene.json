@@ -20,7 +20,7 @@
       "color" : [1.0,1.0,1.0],
       "emissionIntensity" : 0.0,
       "isRoughnessMapped" : false,
-      "roughness" : 0.5,
+      "roughness" : 1.0,
       "isNormalMapped" : true,
       "normalMap" : "Rubiks cube normal",
       "alphaClip" : false

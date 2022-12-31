@@ -70,7 +70,7 @@ void main(){
         }
 
         A = vec4(albedo.rgb,materialType);
-        B = vec4(normal,0.0);
+        B = vec4(normal,r);
         if(length(Position) > 0.01){
             C = vec4(normalize(Position) * 0.5 + 0.5, length(Position));
         }else{

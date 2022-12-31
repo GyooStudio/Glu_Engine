@@ -5,13 +5,10 @@ import android.util.Log;
 
 import com.glu.engine.GUI.Button;
 import com.glu.engine.GUI.Slider;
-import com.glu.engine.Objects.Collider;
 import com.glu.engine.Objects.CustomObjects.RubikCube;
 import com.glu.engine.Objects.Entity;
-import com.glu.engine.Objects.Raycast;
 import com.glu.engine.Scene.Scene;
 import com.glu.engine.utils.Loader;
-import com.glu.engine.utils.Maths;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
 import com.glu.engine.vectors.Vector3f;
@@ -31,7 +28,7 @@ public class InputManager {
 
     Entity ball;
     Entity RCCube;
-    Entity collider;
+    Entity movingEntity;
     int movingEntityIndex;
     float lastAngle;
     int rotationAxis = 0;
@@ -59,6 +56,12 @@ public class InputManager {
         Slider s = scene.getSlider("slider");
         if (ball == null){
             ball = scene.getEntity("ball");
+        }
+        if (RCCube == null){
+            RCCube = scene.getEntity("RCCube");
+        }
+        if(cube == null){
+            cube = (RubikCube) scene.getCustomObject("rubikCube");
         }
 
         for (int index = 0; index < ActionManager.MAX_POINTERS; index++) {
@@ -96,6 +99,10 @@ public class InputManager {
             }
 
             if(!updatedAction) {
+                //updatedAction = cube.update(scene);
+            }
+
+            if(!updatedAction) {
                 if(actionManager.isTouching[index] && actionManager.pointerNumber == 1 && (movementType == 0 || movementType == 1)) {
                     scene.camera.setRotation(Vector3f.add(new Vector3f(actionManager.velocity[index].y * 5f * deltaTime,-actionManager.velocity[index].x * 5f * deltaTime,0f),scene.camera.getRotation()));
                     movementType = 1;
@@ -122,18 +129,6 @@ public class InputManager {
             movementType = 2;
             timeOfLastMovement = System.currentTimeMillis();
 
-        }
-
-        Vector3f pointer = new Vector3f(0,0, -1);
-        Matrix4f mat = new Matrix4f();
-        mat.setIdentity();
-        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().y, 0, 1, 0);
-        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().x, 1, 0, 0);
-        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().z, 0, 0, 1);
-        pointer = Matrix4f.MultiplyMV( mat, pointer);
-        Raycast raycast = scene.raycast(scene.camera.getPosition(),pointer);
-        if (raycast.hit){
-            ball.setPosition(raycast.hitpos.get(0),0);
         }
 
         //if(actionManager.pointerNumber == 0){

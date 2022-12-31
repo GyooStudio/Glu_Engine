@@ -11,8 +11,6 @@ import android.view.MotionEvent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MotionEventCompat;
 
-import com.glu.engine.Objects.Collider;
-import com.glu.engine.Objects.Entity;
 import com.glu.engine.Postprocessing.PostProcessing;
 import com.glu.engine.Scene.Light;
 import com.glu.engine.Scene.Scene;
@@ -124,16 +122,16 @@ public final class GluSurfaceView extends GLSurfaceView implements Runnable {
                             scene = loader.loadScene("Scenes/Scene.json", new Vector2f(1));
                             renderer.setScene(scene);
 
-                            //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
-                            scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING,0,0);
-                            //scene.pp.addEffect(PostProcessing.effect.SSR,1.0f,0.1f);
-                            //scene.pp.addEffect(PostProcessing.effect.AO,1.0f,5f);
-                            scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT,-1.0f, 2.2f);
+                            //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);//17 ms (default)
+                            scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING,0,0); // 19ms
+                            //scene.pp.addEffect(PostProcessing.effect.SSR,1.0f,0.1f); // 9 ms
+                            //scene.pp.addEffect(PostProcessing.effect.AO,1.0f,5f); // 7 ms
+                            scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT,-1.0f, 2.2f); // 7 ms
                             //scene.pp.addEffect(PostProcessing.effect.GAUSSIAN_BLUR,4.0f,1.0f);
-                            //scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,5.0f);
-                            scene.pp.addEffect(PostProcessing.effect.BLOOM,4f, 10f);
+                            //scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,5.0f); // 20 ms
+                            scene.pp.addEffect(PostProcessing.effect.BLOOM,4f, 10f); // 5 ms
                             //scene.pp.addEffect(PostProcessing.effect.DITHERING,0f,0f);
-                            //scene.pp.addEffect(PostProcessing.effect.TAA,4.0f, 2.2f);
+                            //scene.pp.addEffect(PostProcessing.effect.TAA,4.0f, 2.2f); // 3 ms
                             //scene.pp.addEffect(PostProcessing.effect.PIXELISE,0f,0f);
                             scene.pp.setBackgroundColor(renderer.color);
 

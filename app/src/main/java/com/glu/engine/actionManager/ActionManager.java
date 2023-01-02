@@ -155,14 +155,15 @@ public final class ActionManager {
     }
 
     public void manualUpdate(){
-        long tmp = System.currentTimeMillis()-timeOfLastRecording;
-        if(tmp > 41){ // if it has been more than a 24th of a second (2.5 60fps frames and 1.25 30fps frames) since the last update.
+        long time = System.currentTimeMillis()-timeOfLastRecording;
+        if(time > 41 && !hasManuallyUpdated){ // if it has been more than a 24th of a second (2.5 60fps frames and 1.25 30fps frames) since the last update.
             for(int i = 0; i < pointerNumber; i ++){
                 if(lastPoint[i] != null) {
                     addPoint(i, lastPoint[i].x, ressources.viewport.y - lastPoint[i].y);
                 }
             }
-            //Log.w("ManualUpdate","Updated");
+            hasManuallyUpdated = true;
+            Log.w("actionManager","Updated after " + time + " milliseconds");
             timeOfLastRecording = System.currentTimeMillis();
         }
     }

@@ -83,7 +83,7 @@ public class InputManager {
             for (Button button : scene.Buttons) {
                 for (int i = 0; i < button.name.size(); i++) {
                     if (actionManager.pointerIndices[index]) {
-                        if (actionManager.isTouching[index] && !updatedAction) {
+                        if (actionManager.isTouching[index] && !updatedAction){
                             if (button.hasReleased.get(i)) {
                                 button.checkPassAt(actionManager.lastPoint[index], i, index);
                                 button.checkClickAt(actionManager.startPosition[index], i, index);

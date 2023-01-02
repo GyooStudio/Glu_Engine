@@ -3,10 +3,6 @@ package com.glu.engine.vectors;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 /* index:
 * 0 ; 1 ; 2 ; 3
 * 4 ; 5 ; 6 ; 7

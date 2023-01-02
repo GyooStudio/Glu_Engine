@@ -3,7 +3,6 @@ package com.glu.engine.Objects;
 import android.util.Log;
 
 import com.glu.engine.shader.Material;
-import com.glu.engine.shader.StaticShader;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector3f;
 
@@ -345,12 +344,12 @@ public class Entity {
         }
 
         boundingBox = new BoundingBox(Vector3f.sub(max,min));
-        boundingBox.setCenter( Vector3f.add( Vector3f.scale( boundingBox.getRadius(),0.5f ), min ) );
+        boundingBox.setCenter( Vector3f.add( Vector3f.scale( boundingBox.getDiameter(),0.5f ), min ) );
     }
 
     public void alignCollidersToBoundingBox(){
         for (Collider collider: colliders) {
-            collider.radius = Vector3f.scale(boundingBox.getRadius().copy(),0.5f);
+            collider.radius = Vector3f.scale(boundingBox.getDiameter().copy(),0.5f);
             collider.setPosition(boundingBox.getCenter().copy());
         }
     }

@@ -1,5 +1,6 @@
 package com.glu.engine.Objects.CustomObjects;
 
+import android.opengl.Matrix;
 import android.util.Log;
 
 import com.glu.engine.Objects.BoundingBox;
@@ -37,6 +38,8 @@ public class RubikCube extends CustomObject{
     private int[] Ylayer = new int[26];
     private int[] Zlayer = new int[26];
 
+    private Vector3f prevPos;
+
     private enum State{
         IDLE,
         CATCHED,
@@ -57,37 +60,37 @@ public class RubikCube extends CustomObject{
         Vector3f min = new Vector3f(Float.MAX_VALUE);
 
         for (int i = 0; i < blocs.length; i++) {
-            if(blocs[i].boundingBox.getMax().x > max.x){
-                max.x = blocs[i].boundingBox.getMax().x;
+            if(blocs[i].boundingBox.getMax().x * blocs[i].getScale(0).x > max.x){
+                max.x = blocs[i].boundingBox.getMax().x * blocs[i].getScale(0).x;
             }
-            if(blocs[i].boundingBox.getMax().y > max.y){
-                max.y = blocs[i].boundingBox.getMax().y;
+            if(blocs[i].boundingBox.getMax().y * blocs[i].getScale(0).y > max.y){
+                max.y = blocs[i].boundingBox.getMax().y * blocs[i].getScale(0).y;
             }
-            if(blocs[i].boundingBox.getMax().z > max.z){
-                max.z = blocs[i].boundingBox.getMax().z;
+            if(blocs[i].boundingBox.getMax().z * blocs[i].getScale(0).z > max.z){
+                max.z = blocs[i].boundingBox.getMax().z * blocs[i].getScale(0).z;
             }
 
-            if(blocs[i].boundingBox.getMin().x < min.x){
-                min.x = blocs[i].boundingBox.getMin().x;
+            if(blocs[i].boundingBox.getMin().x * blocs[i].getScale(0).x < min.x){
+                min.x = blocs[i].boundingBox.getMin().x * blocs[i].getScale(0).x;
             }
-            if(blocs[i].boundingBox.getMin().y < min.y){
-                min.y = blocs[i].boundingBox.getMin().y;
+            if(blocs[i].boundingBox.getMin().y * blocs[i].getScale(0).y < min.y){
+                min.y = blocs[i].boundingBox.getMin().y * blocs[i].getScale(0).y;
             }
-            if(blocs[i].boundingBox.getMin().z < min.z){
-                min.z = blocs[i].boundingBox.getMin().z;
+            if(blocs[i].boundingBox.getMin().z * blocs[i].getScale(0).z < min.z){
+                min.z = blocs[i].boundingBox.getMin().z * blocs[i].getScale(0).z;
             }
         }
 
-        BB.setCenter( Vector3f.add( Vector3f.scale( Vector3f.sub(max,min),0.5f ), min ) );
-        BB.setRadius(Vector3f.sub(max,min));
+        BB.setDiameter(Vector3f.sub(max,min));
+        BB.setCenter( Vector3f.add( Vector3f.scale( BB.getDiameter(),0.5f ), min ) );
 
-        collider.radius = Vector3f.scale(BB.getRadius(),0.5f);
-        collider.setPosition(BB.getCenter());
+        collider.radius = Vector3f.scale(BB.getDiameter(),0.5f);
+        collider.setPosition(BB.getCenter().copy());
 
         for (int i = 0; i < blocs.length; i++) {
-            char X = blocs[i].name.charAt(blocs[i].name.length() - 1 - 2);
-            char Y = blocs[i].name.charAt(blocs[i].name.length() - 1 - 1);
-            char Z = blocs[i].name.charAt(blocs[i].name.length() - 1 - 0);
+            char X = blocs[i].model.name.charAt(blocs[i].model.name.length() - 1 - 2);
+            char Y = blocs[i].model.name.charAt(blocs[i].model.name.length() - 1 - 1);
+            char Z = blocs[i].model.name.charAt(blocs[i].model.name.length() - 1 - 0);
             if (X == '+'){
                 Xlayer[i] = 1;
             }else if( X == '0'){
@@ -124,9 +127,10 @@ public class RubikCube extends CustomObject{
         }
         ActionManager actionManager = scene.actionManager;
         Matrix4f proj = scene.PROJECTION_MATRIX;
-        Matrix4f rView = scene.camera.getRotationMat();
         Matrix4f iProj = Matrix4f.inverse(proj);
-        Matrix4f irView = Matrix4f.inverse(rView);
+        Matrix4f rView = scene.camera.getRotationMat();
+        Matrix4f irView = rView.copy();
+        irView.inverse();
 
         if(state == State.IDLE && actionManager.isTouching[0] && actionManager.pointerNumber == 1) {
             if(!snappedBlocs) {
@@ -136,8 +140,11 @@ public class RubikCube extends CustomObject{
 
             Vector3f pointer = new Vector3f((actionManager.lastPoint[0].x / ressources.viewport.x) * 2f - 1f, (actionManager.lastPoint[0].y / ressources.viewport.y) * 2f - 1f, 0);
             pointer = Matrix4f.MultiplyMV(iProj, pointer);
-            pointer = Matrix4f.MultiplyMV(irView, pointer);
-            Raycast raycast = new Raycast(scene.camera.getPosition(), pointer);
+            pointer = Matrix4f.MultiplyMV( irView, pointer);
+
+            Vector3f rayPos = scene.camera.getPosition().copy();
+
+            Raycast raycast = new Raycast(rayPos, pointer);
 
             raycast = collider.rayCast(raycast);
             Raycast result = new Raycast(raycast.pos, raycast.dir);
@@ -152,11 +159,12 @@ public class RubikCube extends CustomObject{
                         catchedBlocIndex = (byte) i;
                     }
                 }
-                //state = State.CATCHED;
+                state = State.CATCHED;
                 cachedPointerPos = actionManager.lastPoint[0];
                 hitPos = result.hitpos.get(0);
                 hitPos = Matrix4f.MultiplyMV(Matrix4f.inverse(catchedBloc.getTransformMatrix(0)),hitPos);
                 prevAngle = 0;
+                prevPos = hitPos;
 
                 if (ball != null) {
                     ball.setPosition(raycast.hitpos.get(0), 0);
@@ -216,52 +224,52 @@ public class RubikCube extends CustomObject{
                 for (int i = 0; i < blocs.length; i++) {
                     if (rotAxis == 1 && Xlayer[catchedBlocIndex] == Xlayer[i]) {
                         int y = Ylayer[i];
-                        int z = -Zlayer[i];
+                        int z = Zlayer[i];
                         if(angle > 315f){
                         }else if(angle > 225f){
-                            Ylayer[i] = z;
-                            Zlayer[i] = -y;
+                            Ylayer[i] = -z;
+                            Zlayer[i] = y;
                         }else if(angle > 135f){
                             Ylayer[i] = -y;
                             Zlayer[i] = -z;
                         }else if(angle > 45f){
-                            Ylayer[i] = -z;
-                            Zlayer[i] = y;
-                        }else if(angle > -45f){
-                        }else if(angle > -135f){
                             Ylayer[i] = z;
                             Zlayer[i] = -y;
+                        }else if(angle > -45f){
+                        }else if(angle > -135f){
+                            Ylayer[i] = -z;
+                            Zlayer[i] = y;
                         }else if(angle > -225f){
                             Ylayer[i] = -y;
                             Zlayer[i] = -z;
                         }else if(angle > -315f){
-                            Ylayer[i] = -z;
-                            Zlayer[i] = y;
+                            Ylayer[i] = z;
+                            Zlayer[i] = -y;
                         }
-                    }else if (rotAxis == 2 && Ylayer[catchedBlocIndex] == Ylayer[i]) {
+                    } else if (rotAxis == 2 && Ylayer[catchedBlocIndex] == Ylayer[i]) {
                         Log.w("rotate","rotate face");
+                        int z = Zlayer[i];
                         int x = Xlayer[i];
-                        int z = -Zlayer[i];
                         if(angle > 315f){
                         }else if(angle > 225f){
-                            Xlayer[i] = z;
                             Zlayer[i] = -x;
+                            Xlayer[i] = z;
                         }else if(angle > 135f){
-                            Xlayer[i] = -x;
                             Zlayer[i] = -z;
+                            Xlayer[i] = -x;
                         }else if(angle > 45f){
-                            Xlayer[i] = -z;
                             Zlayer[i] = x;
+                            Xlayer[i] = -z;
                         }else if(angle > -45f){
                         }else if(angle > -135f){
-                            Xlayer[i] = z;
                             Zlayer[i] = -x;
+                            Xlayer[i] = z;
                         }else if(angle > -225f){
-                            Xlayer[i] = -x;
                             Zlayer[i] = -z;
+                            Xlayer[i] = -x;
                         }else if(angle > -315f){
-                            Xlayer[i] = -z;
                             Zlayer[i] = x;
+                            Xlayer[i] = -z;
                         }
                     }else if (rotAxis == 3 && Zlayer[catchedBlocIndex] == Zlayer[i]) {
                         int y = Ylayer[i];
@@ -362,7 +370,7 @@ public class RubikCube extends CustomObject{
         }else if(state == State.CATCHED){
             return true;
         }else if(!actionManager.isTouching[0]){
-            snapBlocs(0.5f);
+            snapBlocs(0.01f);
             state = State.IDLE;
             return false;
         }
@@ -370,7 +378,7 @@ public class RubikCube extends CustomObject{
     }
 
     private void snapBlocs(float mSpeed){
-        float mixSpeed = mSpeed * 10f * deltaTime;
+        float mixSpeed = (deltaTime * (1f - mSpeed)) + mSpeed;
         for (Entity bloc : blocs) {
             Vector3f deltaR = new Vector3f(0);
             Vector3f blocRotation = bloc.getRotation(0);
@@ -390,7 +398,7 @@ public class RubikCube extends CustomObject{
                 rotation = (rotation * (1f - mixSpeed)) + (180f * mixSpeed);
             } else if (snap270 <= snap0 && snap270 <= snap90 && snap270 <= snap180 && snap270 <= snap360) {
                 rotation = (rotation * (1f - mixSpeed)) + (270f * mixSpeed);
-            } else if (snap360 <= snap0 && snap360 <= snap90 && snap360 <= snap180 && snap360 <= snap270) {
+            } else {
                 rotation = (rotation * (1f - mixSpeed)) + (360f * mixSpeed);
             }
 
@@ -412,7 +420,7 @@ public class RubikCube extends CustomObject{
                 rotation = (rotation * (1f - mixSpeed)) + (180f * mixSpeed);
             } else if (snap270 <= snap0 && snap270 <= snap90 && snap270 <= snap180 && snap270 <= snap360) {
                 rotation = (rotation * (1f - mixSpeed)) + (270f * mixSpeed);
-            } else if (snap360 <= snap0 && snap360 <= snap90 && snap360 <= snap180 && snap360 <= snap270) {
+            } else {
                 rotation = (rotation * (1f - mixSpeed)) + (360f * mixSpeed);
             }
 
@@ -434,7 +442,7 @@ public class RubikCube extends CustomObject{
                 rotation = (rotation * (1f - mixSpeed)) + (180f * mixSpeed);
             } else if (snap270 <= snap0 && snap270 <= snap90 && snap270 <= snap180 && snap270 <= snap360) {
                 rotation = (rotation * (1f - mixSpeed)) + (270f * mixSpeed);
-            } else if (snap360 <= snap0 && snap360 <= snap90 && snap360 <= snap180 && snap360 <= snap270) {
+            } else {
                 rotation = (rotation * (1f - mixSpeed)) + (360f * mixSpeed);
             }
 

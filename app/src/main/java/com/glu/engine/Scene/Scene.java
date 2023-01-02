@@ -88,7 +88,7 @@ public final class Scene {
         state = 0;
 
         camera = new Camera();
-        camera.setPosition(new Vector3f(-5,5,-5));
+        camera.setPosition(new Vector3f(-1,1,-1));
         camera.setRotation( Vector3f.lookAt(camera.getPosition(), new Vector3f(0,0,0), 0));
         this.actionManager = new ActionManager();
         this.inputManager = new InputManager(actionManager,this);
@@ -263,7 +263,7 @@ public final class Scene {
                 DirtyEntities.get(0).model.makeModel();
             }
             Entities.add(DirtyEntities.get(0));
-            String name = DirtyEntities.get(0).model.name;
+            String name = DirtyEntities.get(0).name;
             DirtyEntities.remove(0);
             Log.w("cleanEntity", (System.currentTimeMillis() - timer) + " milliseconds to clean Entity "+ name);
         }

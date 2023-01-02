@@ -30,8 +30,6 @@ public class InputManager {
     long timeOfLastMovement = System.currentTimeMillis();
 
     Entity ball;
-    Entity RCCube;
-    Entity collider;
     int movingEntityIndex;
     float lastAngle;
     int rotationAxis = 0;
@@ -59,6 +57,23 @@ public class InputManager {
         Slider s = scene.getSlider("slider");
         if (ball == null){
             ball = scene.getEntity("ball");
+        }
+
+        if(cube == null){
+            Entity[] es = new Entity[26];
+            int i = 0;
+            for (Entity e : scene.Entities) {
+                if(e.name.contains("Rubiks cube")){
+                    e.calculateBoundingBox();
+                    e.setCollider(0, Collider.Shape.BOX);
+                    e.alignCollidersToBoundingBox();
+                    es[i] = e;
+                    i++;
+                }
+            }
+            if(i > 25) {
+                cube = new RubikCube(es);
+            }
         }
 
         for (int index = 0; index < ActionManager.MAX_POINTERS; index++) {
@@ -95,6 +110,10 @@ public class InputManager {
                 }
             }
 
+            if(!updatedAction && cube != null){
+                updatedAction = cube.update(scene);
+            }
+
             if(!updatedAction) {
                 if(actionManager.isTouching[index] && actionManager.pointerNumber == 1 && (movementType == 0 || movementType == 1)) {
                     scene.camera.setRotation(Vector3f.add(new Vector3f(actionManager.velocity[index].y * 5f * deltaTime,-actionManager.velocity[index].x * 5f * deltaTime,0f),scene.camera.getRotation()));
@@ -115,7 +134,7 @@ public class InputManager {
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().x,1,0,0);
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().z,0,0,1);
-            Matrix.translateM(m.mat,0,m.mat,0,move.x * deltaTime,move.y * deltaTime, zoom * deltaTime);
+            Matrix.translateM(m.mat,0,m.mat,0,move.x * deltaTime * 0.3f,move.y * deltaTime * 0.3f, zoom * deltaTime * 0.3f);
             scene.camera.setPosition(Matrix4f.MultiplyMV(m,new Vector3f(0)));
             Log.w("cameraRotation","cameraRotation : " + scene.camera.getRotation().x + " " + scene.camera.getRotation().y + " " + scene.camera.getRotation().z);
 
@@ -125,15 +144,10 @@ public class InputManager {
         }
 
         Vector3f pointer = new Vector3f(0,0, -1);
-        Matrix4f mat = new Matrix4f();
-        mat.setIdentity();
-        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().y, 0, 1, 0);
-        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().x, 1, 0, 0);
-        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().z, 0, 0, 1);
-        pointer = Matrix4f.MultiplyMV( mat, pointer);
+        pointer = Matrix4f.MultiplyMV( scene.camera.getRotationMat(), pointer);
         Raycast raycast = scene.raycast(scene.camera.getPosition(),pointer);
         if (raycast.hit){
-            ball.setPosition(raycast.hitpos.get(0),0);
+            //ball.setPosition(raycast.hitpos.get(0),0);
         }
 
         //if(actionManager.pointerNumber == 0){

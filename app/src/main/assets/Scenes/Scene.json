@@ -63,7 +63,7 @@
       "mesh" : "icosphere",
       "SeparateMesh" : false,
       "material" : "metal",
-      "position" : [0.0,0.0,0.0],
+      "position" : [-3.0,0.0,0.0],
       "rotation" : [0.0,0.0,0.0],
       "scale" : [0.1,0.1,0.1]
     },{
@@ -79,7 +79,7 @@
       "mesh" : "icosphere",
       "SeparateMesh" : false,
       "material" : "glow",
-      "position" : [0.0,0.0,0.0],
+      "position" : [3.0,0.0,0.0],
       "rotation" : [0.0,0.0,0.0],
       "scale" : [0.5,0.5,0.5]
     },{

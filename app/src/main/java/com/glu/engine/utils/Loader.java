@@ -469,6 +469,10 @@ public class Loader {
 						endOfLine = true;
 						line = new StringBuilder(line.toString().replace("\n", ""));
 					}
+					if(line.toString().endsWith("\r")){
+						endOfLine = true;
+						line = new StringBuilder(line.toString().replace("\r", ""));
+					}
 				}else{
 					continueReading = false;
 					endOfLine = true;

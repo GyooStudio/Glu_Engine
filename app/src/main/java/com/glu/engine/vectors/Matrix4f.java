@@ -4,13 +4,13 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 /* index:
-* 0 ; 1 ; 2 ; 3
-* 4 ; 5 ; 6 ; 7
-* 8 ; 9 ; 10; 11
-* 12; 13; 14; 15
-*
-* use : x + y*4
-* */
+ * 0 ; 1 ; 2 ; 3
+ * 4 ; 5 ; 6 ; 7
+ * 8 ; 9 ; 10; 11
+ * 12; 13; 14; 15
+ *
+ * use : x + y*4
+ * */
 
 public class Matrix4f {
     public float[] mat;
@@ -31,14 +31,14 @@ public class Matrix4f {
     public void setIdentity(){
         mat = new float[]
                 {1.0f, 0.0f, 0.0f, 0.0f,
-                0.0f, 1.0f, 0.0f, 0.0f,
-                0.0f, 0.0f, 1.0f, 0.0f,
-                0.0f, 0.0f, 0.0f, 1.0f};
+                        0.0f, 1.0f, 0.0f, 0.0f,
+                        0.0f, 0.0f, 1.0f, 0.0f,
+                        0.0f, 0.0f, 0.0f, 1.0f};
     }
 
     public Matrix4f returnIndentity(){
         mat = new float[]
-                       {1.0f, 0.0f, 0.0f, 0.0f,
+                {1.0f, 0.0f, 0.0f, 0.0f,
                         0.0f, 1.0f, 0.0f, 0.0f,
                         0.0f, 0.0f, 1.0f, 0.0f,
                         0.0f, 0.0f, 0.0f, 1.0f};

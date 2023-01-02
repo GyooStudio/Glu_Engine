@@ -131,7 +131,6 @@ public final class ActionManager {
                     processAction(index);
                     pointerIndices[index] = false;
                     isTouching[index] = false;
-                    Log.w("actionManager", "stopped action " + index + ". actionNumber: " + pointerNumber + " isTouching: " + isTouching[index]);
                     processAction(index);
                     timeOfLastRecording = System.currentTimeMillis();
                     hasManuallyUpdated = false;
@@ -155,14 +154,15 @@ public final class ActionManager {
     }
 
     public void manualUpdate(){
-        long tmp = System.currentTimeMillis()-timeOfLastRecording;
-        if(tmp > 41){ // if it has been more than a 24th of a second (2.5 60fps frames and 1.25 30fps frames) since the last update.
-            for(int i = 0; i < pointerNumber; i ++){
-                if(lastPoint[i] != null) {
+        long time = System.currentTimeMillis()-timeOfLastRecording;
+        if(time > 41 && !hasManuallyUpdated){ // if it has been more than a 24th of a second (2.5 60fps frames and 1.25 30fps frames) since the last update.
+            for(int i = 0; i < MAX_POINTERS; i ++){
+                if(lastPoint[i] != null && isTouching[i]) {
                     addPoint(i, lastPoint[i].x, ressources.viewport.y - lastPoint[i].y);
                 }
             }
-            //Log.w("ManualUpdate","Updated");
+            hasManuallyUpdated = true;
+            Log.w("ManualUpdate","Updated after " + time + " milliseconds");
             timeOfLastRecording = System.currentTimeMillis();
         }
     }
@@ -175,6 +175,8 @@ public final class ActionManager {
             lastPoint[index] = actionTrack.get(index).get(actionTrack.get(index).size() - 1);
             distanceTravelled[index] = Vector2f.distance(lastPoint[index], lastPoint[index]);
             velocity[index] = Vector2f.sub(lastPoint[index], previousPoint[index]);
+
+            //Log.w("readAction", "index: " + index + "last point: " + lastPoint[index].x + " " + lastPoint[index].y + " previous point: " + previousPoint[index].x + " " + previousPoint[index].y + " velocity: " + velocity[index].x + " " + velocity[index].y);
 
             averagePosition[index] = new Vector2f(0, 0);
             for (int i = 0; i < actionTrack.get(index).size(); i++) {

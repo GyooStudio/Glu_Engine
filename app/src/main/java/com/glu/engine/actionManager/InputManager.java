@@ -30,6 +30,8 @@ public class InputManager {
     long timeOfLastMovement = System.currentTimeMillis();
 
     Entity ball;
+    Entity RCCube;
+    Entity collider;
     int movingEntityIndex;
     float lastAngle;
     int rotationAxis = 0;
@@ -66,7 +68,7 @@ public class InputManager {
             for (Button button : scene.Buttons) {
                 for (int i = 0; i < button.name.size(); i++) {
                     if (actionManager.pointerIndices[index]) {
-                        if (actionManager.isTouching[index] && !updatedAction){
+                        if (actionManager.isTouching[index] && !updatedAction) {
                             if (button.hasReleased.get(i)) {
                                 button.checkPassAt(actionManager.lastPoint[index], i, index);
                                 button.checkClickAt(actionManager.startPosition[index], i, index);
@@ -93,13 +95,15 @@ public class InputManager {
                 }
             }
 
-            if(!updatedAction && cube != null){
+            if(!updatedAction){
                 updatedAction = cube.update(scene);
             }
 
             if(!updatedAction) {
                 if(actionManager.isTouching[index] && actionManager.pointerNumber == 1 && (movementType == 0 || movementType == 1)) {
                     scene.camera.setRotation(Vector3f.add(new Vector3f(actionManager.velocity[index].y * 5f * deltaTime,-actionManager.velocity[index].x * 5f * deltaTime,0f),scene.camera.getRotation()));
+                    //Log.w("rotate camera","action index: " + index);
+                    //Log.w("rotate camera", "index: " + index + "last point: " + actionManager.lastPoint[index].x + " " + actionManager.lastPoint[index].y + " previous point: " + actionManager.previousPoint[index].x + " " + actionManager.previousPoint[index].y + " velocity: " + actionManager.velocity[index].x + " " + actionManager.velocity[index].y);
                     movementType = 1;
                     timeOfLastMovement = System.currentTimeMillis();
                 }
@@ -117,9 +121,8 @@ public class InputManager {
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().x,1,0,0);
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().z,0,0,1);
-            Matrix.translateM(m.mat,0,m.mat,0,move.x * deltaTime * 0.3f,move.y * deltaTime * 0.3f, zoom * deltaTime * 0.3f);
+            Matrix.translateM(m.mat,0,m.mat,0,move.x * deltaTime,move.y * deltaTime, zoom * deltaTime);
             scene.camera.setPosition(Matrix4f.MultiplyMV(m,new Vector3f(0)));
-            Log.w("cameraRotation","cameraRotation : " + scene.camera.getRotation().x + " " + scene.camera.getRotation().y + " " + scene.camera.getRotation().z);
 
             movementType = 2;
             timeOfLastMovement = System.currentTimeMillis();
@@ -127,10 +130,15 @@ public class InputManager {
         }
 
         Vector3f pointer = new Vector3f(0,0, -1);
-        pointer = Matrix4f.MultiplyMV( scene.camera.getRotationMat(), pointer);
+        Matrix4f mat = new Matrix4f();
+        mat.setIdentity();
+        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().y, 0, 1, 0);
+        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().x, 1, 0, 0);
+        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().z, 0, 0, 1);
+        pointer = Matrix4f.MultiplyMV( mat, pointer);
         Raycast raycast = scene.raycast(scene.camera.getPosition(),pointer);
         if (raycast.hit){
-            //ball.setPosition(raycast.hitpos.get(0),0);
+            ball.setPosition(raycast.hitpos.get(0),0);
         }
 
         //if(actionManager.pointerNumber == 0){

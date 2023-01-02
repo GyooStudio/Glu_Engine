@@ -353,4 +353,19 @@ public class Entity {
             collider.setPosition(boundingBox.getCenter().copy());
         }
     }
+
+    public void setCollider(int index, Collider.Shape shape){
+        if(colliders.get(index) == null) {
+            colliders.set(index,new Collider());
+        }
+
+        switch (shape){
+            case BOX:
+                colliders.get(index).setShapeBox(new Vector3f(1f));
+                break;
+            case SPHERE:
+                colliders.get(index).setShapeSphere(new Vector3f(1f));
+                break;
+        }
+    }
 }

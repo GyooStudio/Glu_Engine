@@ -61,6 +61,23 @@ public class InputManager {
             ball = scene.getEntity("ball");
         }
 
+        if(cube == null){
+            Entity[] es = new Entity[26];
+            int i = 0;
+            for (Entity e : scene.Entities) {
+                if(e.name.contains("Rubiks cube")){
+                    e.calculateBoundingBox();
+                    e.setCollider(0, Collider.Shape.BOX);
+                    e.alignCollidersToBoundingBox();
+                    es[i] = e;
+                    i++;
+                }
+            }
+            if(i > 25) {
+                cube = new RubikCube(es);
+            }
+        }
+
         for (int index = 0; index < ActionManager.MAX_POINTERS; index++) {
 
             boolean updatedAction = false; // if true, the action was handled and won't update other stuff (like clicking a menu won't update the background game)
@@ -93,6 +110,10 @@ public class InputManager {
                 } else {
                     slider.release(index);
                 }
+            }
+
+            if(!updatedAction){
+                updatedAction = cube.update(scene);
             }
 
             if(!updatedAction) {

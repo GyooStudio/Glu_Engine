@@ -95,10 +95,6 @@ public class InputManager {
                 }
             }
 
-            if(!updatedAction){
-                updatedAction = cube.update(scene);
-            }
-
             if(!updatedAction) {
                 if(actionManager.isTouching[index] && actionManager.pointerNumber == 1 && (movementType == 0 || movementType == 1)) {
                     scene.camera.setRotation(Vector3f.add(new Vector3f(actionManager.velocity[index].y * 5f * deltaTime,-actionManager.velocity[index].x * 5f * deltaTime,0f),scene.camera.getRotation()));

@@ -380,7 +380,7 @@ public final class Scene {
             isLightSorted = true;
         }
     }
-
+    
     public void callNewFrame(){
         for (Entity e : Entities) {
             e.callNewFrame();
@@ -455,7 +455,7 @@ public final class Scene {
 
     public Matrix4f getWorldTransfomMatrix(Entity e, int indexE){
         //if(e.parentID.get(indexE) == -1){
-        return Maths.createTransformationMatrix(e.getPosition(indexE),e.getRotation(indexE),e.getScale(indexE));
+            return Maths.createTransformationMatrix(e.getPosition(indexE),e.getRotation(indexE),e.getScale(indexE));
         /*}else{
             Matrix4f mat = getWorldTransfomMatrix(Entities.get(e.parentID.get(indexE)),e.parentInstanceID.get(indexE));
             Matrix.multiplyMM(mat.mat,0,mat.mat,0,Maths.createTransformationMatrix(e.getPosition(indexE),e.getRotation(indexE),e.getScale(indexE)).mat,0);

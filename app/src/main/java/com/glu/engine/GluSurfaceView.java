@@ -73,15 +73,15 @@ public final class GluSurfaceView extends GLSurfaceView implements Runnable {
 
                 if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                     //stopAction lets the program know that an action has stopped
-                    scene.actionManager.stopAction(0);
+                    scene.actionManager.stopAction(ID);
                     Log.w("onTouchListener", "first Action stopped");
                     return true;
                 }
 
                 if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                     //addAction lets the program know to start a knew array to store Pointers positions
-                    scene.actionManager.addAction(0);
-                    scene.actionManager.addPoint(0, motionEvent.getX(0), motionEvent.getY(0));
+                    scene.actionManager.addAction(ID);
+                    scene.actionManager.addPoint(ID, motionEvent.getX(index), motionEvent.getY(index));
                     Log.w("onTouchListener", "first Action!");
                     return true;
                 }

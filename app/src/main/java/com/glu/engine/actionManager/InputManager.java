@@ -98,6 +98,8 @@ public class InputManager {
             if(!updatedAction) {
                 if(actionManager.isTouching[index] && actionManager.pointerNumber == 1 && (movementType == 0 || movementType == 1)) {
                     scene.camera.setRotation(Vector3f.add(new Vector3f(actionManager.velocity[index].y * 5f * deltaTime,-actionManager.velocity[index].x * 5f * deltaTime,0f),scene.camera.getRotation()));
+                    //Log.w("rotate camera","action index: " + index);
+                    //Log.w("rotate camera", "index: " + index + "last point: " + actionManager.lastPoint[index].x + " " + actionManager.lastPoint[index].y + " previous point: " + actionManager.previousPoint[index].x + " " + actionManager.previousPoint[index].y + " velocity: " + actionManager.velocity[index].x + " " + actionManager.velocity[index].y);
                     movementType = 1;
                     timeOfLastMovement = System.currentTimeMillis();
                 }
@@ -117,7 +119,6 @@ public class InputManager {
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().z,0,0,1);
             Matrix.translateM(m.mat,0,m.mat,0,move.x * deltaTime,move.y * deltaTime, zoom * deltaTime);
             scene.camera.setPosition(Matrix4f.MultiplyMV(m,new Vector3f(0)));
-            Log.w("cameraRotation","cameraRotation : " + scene.camera.getRotation().x + " " + scene.camera.getRotation().y + " " + scene.camera.getRotation().z);
 
             movementType = 2;
             timeOfLastMovement = System.currentTimeMillis();

@@ -18,6 +18,8 @@ public class Font {
     private float[] charDropDown;
     private float[] charFarLeft;
 
+    public String name = "name";
+
     public Font(GTexture textureAtlas, int textureAtlasWidth,float[] charHeight, float[] charWidth, float[] charDropDown, float[] charFarLeft, int charNumber, int atlasCharWidth, int cellWidth, int padding, int[] ranges){
         this.textureAtlas = textureAtlas;
         this.charNumber = charNumber;

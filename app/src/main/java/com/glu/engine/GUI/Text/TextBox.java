@@ -32,9 +32,8 @@ public class TextBox {
 
     public int id = 0;
 
-    public TextBox(Font font, TextShader shader, Vector2f size, Vector2f position, Vector2f scale, float rotation){
+    public TextBox(Font font, Vector2f size, Vector2f position, Vector2f scale, float rotation){
         this.font = font;
-        this.shader = shader;
         this.position = position;
         this.size = size;
         this.scale = scale;
@@ -43,9 +42,8 @@ public class TextBox {
         show = true;
     }
 
-    public TextBox(Font font, TextShader shader){
+    public TextBox(Font font){
         this.font = font;
-        this.shader = shader;
         this.position = new Vector2f(0,0);
         this.size = new Vector2f(400,400);
         this.scale = new Vector2f(1,1);
@@ -55,6 +53,7 @@ public class TextBox {
     }
 
     public void setText(String text, float charSpacing, float lineSpacing, Alignment al){
+        //while(!canSetText){}
         if(canSetText && text != this.text) {
             this.text = text;
             this.charSpacing = charSpacing;
@@ -65,28 +64,29 @@ public class TextBox {
     }
 
     public void makeText(){
-        canSetText = false;
-        long timer = System.currentTimeMillis();
+        canSetText = false; // make sure the text isn't changing while building
+        long timer = System.currentTimeMillis(); // just a timer
 
-        Log.w("makeText", "" + text);
+        Log.w("makeText", "" + text); // logging
 
-        float[] pos = new float[text.length()*6*2];
-        float[] UV = new float[text.length()*6*2];
+        float[] pos = new float[text.length()*6*2]; //the vertices's final positions
+        float[] UV = new float[text.length()*6*2]; // the vertices's final UV coordinates
 
-        float scaler = 30f/ (font.cellWidth - font.padding);
-        Vector2f cursorPos;
-        Vector2f cursorUV;
-        Vector2f charSize;
-        float charDropDown;
+        float scaler = 30f / (font.cellWidth - font.padding);
+        Vector2f cursorPos; //we will be building from the cursor's position, moving it at each character
+        Vector2f cursorUV; // the cursor's position on the texture atlas
+        Vector2f charSize; // the current character's size
+        float charDropDown; // the current character's bounding boxe's min y with respect to the bottom line ( how much lower than ____ is the min y of the bounding box?)
 
-        String line;
-        String word;
-        int wordSize;
-        int lineSize;
-        boolean isFirstWord = true;
+        String line; // current line
+        String word; // We will build the line word by word, this enables us to cut between words when we need to come back to line
+        int wordSize; // the visual length of the word
+        int lineSize; // the visual length of the line
+        boolean isFirstWord = true; // is it the first word of the line?
         boolean hasCompletedWord;
         boolean hasCompletedLine;
 
+        //setup cursor position according to the alignment
         switch (al){
             case LEFT:
                 cursorPos = new Vector2f(-size.x, size.y-(font.cellWidth*scaler));
@@ -105,39 +105,46 @@ public class TextBox {
         for (int j = 1; j < text.length(); j++) {
 
             hasCompletedLine = false;
+            isFirstWord = true;
             line = "";
             lineSize = 0;
             j--;
 
+            // build a line
             while (!hasCompletedLine) {
                 word = "";
                 hasCompletedWord = false;
 
+                // build a word
                 while (!hasCompletedWord) {
-                    if (j < text.length()) {
+                    if (j < text.length()) { //just make sure we didn't hit the end of the text
                         char a = text.charAt(j);
+                        // these characters are tested to split the line ( [space] - , . ! ? / : ;)
                         if (a == ' ' || a == '-' || a == ',' || a == '.' || a == '!' || a == '?' || a == '/' || a == ':' || a == ';') {
                             hasCompletedWord = true;
                             word += text.charAt(j);
-                        }else if(a == '\n'){
+                        }else if(a == '\n'){ // check for return to line
                             word += text.charAt(j);
                             hasCompletedWord = true;
                             hasCompletedLine = true;
-                        } else {
+                        } else { // otherwise, just add the character to the line
                             word += text.charAt(j);
                         }
                         j++;
                     } else {
+                        //if we hit the end of the text
                         hasCompletedWord = true;
                         hasCompletedLine = true;
                     }
                 }
 
+                //get the word's visual length
                 wordSize = 0;
                 for (int i = 0; i < word.length(); i++) {
                     wordSize += (float) font.getCharWidth(word.charAt(i)) * scaler;
                 }
 
+                //check to see if we should return to line
                 if (lineSize + wordSize > size.x && !isFirstWord && returnToLine) {
                     hasCompletedLine = true;
                     j -= word.length();

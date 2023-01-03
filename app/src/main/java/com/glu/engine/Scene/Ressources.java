@@ -146,7 +146,8 @@ public class Ressources {
             return fonts.get(fontIndex.get(index));
         }else{
             Font font = loader.loadAssetFont(fontDirectories.get(index), fontSize.get(index), fontPadding.get(index), fontRanges.get(index));
-            fontIndex.set(index,fontIndex.size());
+            font.name = fontNames.get(index);
+            fontIndex.set(index,fonts.size());
             fontIsLoaded.set(index,true);
             fonts.add(font);
             return font;
@@ -175,6 +176,33 @@ public class Ressources {
         }
         if(!shadowShader.isShaderBuilt){
             shadowShader.buildShader();
+        }
+    }
+
+    public void feedTextures(Scene scene, ArrayList<String> textureUsed , ArrayList<String> fontUsed){
+
+        ArrayList<String> proposedNames = new ArrayList<>();
+
+        if(textureUsed != null) {
+            for (int i = 0; i < textureUsed.size(); i++) {
+                if (!proposedNames.contains(textureUsed.get(i))) {
+
+                    scene.addTexture(getTexture(textureUsed.get(i)));
+                    proposedNames.add(textureUsed.get(i));
+                }
+            }
+        }
+
+        proposedNames = new ArrayList<>();
+
+        if(fontUsed != null) {
+            for (int i = 0; i < fontUsed.size(); i++) {
+                if (!proposedNames.contains(fontUsed.get(i))) {
+
+                    scene.addTexture(getFont(fontUsed.get(i)).textureAtlas);
+                    proposedNames.add(fontUsed.get(i));
+                }
+            }
         }
     }
 

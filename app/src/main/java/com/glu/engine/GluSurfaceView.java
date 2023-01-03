@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MotionEventCompat;
 
+import com.glu.engine.GUI.Text.TextBox;
 import com.glu.engine.Objects.Collider;
 import com.glu.engine.Objects.Entity;
 import com.glu.engine.Postprocessing.PostProcessing;
@@ -39,6 +40,8 @@ public final class GluSurfaceView extends GLSurfaceView implements Runnable {
     private boolean doRun = true;
     private final Thread renderThread = new Thread(this);
     private final Loader loader;
+
+    private TextBox fpsText;
 
     @SuppressLint("ClickableViewAccessibility")
     public void onConfigurationChanged(Configuration config){
@@ -139,6 +142,10 @@ public final class GluSurfaceView extends GLSurfaceView implements Runnable {
 
                             scene.sunLight.shadowDist = 30f;
 
+                            while(fpsText == null){
+                                fpsText = scene.getTextBox("FPS");
+                            }
+
                             hasInit = true;
 
                             Log.w("OnCreate", (float) (System.currentTimeMillis() - timer) / 1000.0f + " seconds to initialize");
@@ -216,7 +223,7 @@ public final class GluSurfaceView extends GLSurfaceView implements Runnable {
                         fpsCounter++;
                         if(System.currentTimeMillis() - fpsTimer > 5000){
                             Log.w("Game", "Time : " + ((float)(System.currentTimeMillis() - fpsTimer)/(float) fpsCounter) + "ms | FPS : " + ((float)fpsCounter/((float) (System.currentTimeMillis() - fpsTimer)/1000f)));
-                            //textBox.setText("GameLoop \n Time : " + ((float)(System.currentTimeMillis() - fpsTimer)/(float) fpsCounter) + "ms \n FPS : " + ((float)fpsCounter/((float) (System.currentTimeMillis() - fpsTimer)/1000f)) + "\nDraw \n" + renderer.FPS,4,5, TextBox.Alignment.LEFT);
+                            fpsText.setText("GameLoop \n Time : " + ((float)(System.currentTimeMillis() - fpsTimer)/(float) fpsCounter) + "ms \n FPS : " + ((float)fpsCounter/((float) (System.currentTimeMillis() - fpsTimer)/1000f)) + "\nDraw \n" + renderer.FPS,4,5, TextBox.Alignment.LEFT);
                             fpsCounter = 0;
                             fpsTimer = System.currentTimeMillis();
                         }

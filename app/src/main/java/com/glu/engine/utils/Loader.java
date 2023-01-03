@@ -13,6 +13,7 @@ import android.util.Log;
 import com.glu.engine.GUI.ColorSquare;
 import com.glu.engine.GUI.TexQuad;
 import com.glu.engine.GUI.Text.Font;
+import com.glu.engine.GUI.Text.TextBox;
 import com.glu.engine.MainActivity;
 import com.glu.engine.Objects.Entity;
 import com.glu.engine.Objects.GTexture;
@@ -784,6 +785,8 @@ public class Loader {
 
 			ArrayList<Material> materials = new ArrayList<>();
 			ArrayList<String> materialNames = new ArrayList<>();
+			ArrayList<String> textureUsed = new ArrayList<>();
+			ArrayList<String> fontUsed = new ArrayList<>();
 
 			jsonSceneReader.beginObject();
 			while (jsonSceneReader.hasNext()) {
@@ -858,11 +861,11 @@ public class Loader {
 
 								Material mat = new Material(name, MatType, isColorTextured, textureName, color, alphaClipped, eIntensity, isRoughnessMapped, roughness, isNormalMapped, normalMapName);
 								if (isColorTextured) {
-									scene.addTexture(ressources.getTexture(textureName));
+									textureUsed.add(textureName);
 									mat.setTexture(ressources.getTexture(textureName));
 								}
 								if (isNormalMapped) {
-									scene.addTexture(ressources.getTexture(normalMapName));
+									textureUsed.add(normalMapName);
 									mat.setNormal(ressources.getTexture(normalMapName));
 								}
 
@@ -877,15 +880,14 @@ public class Loader {
 						if (true) {
 							jsonSceneReader.beginObject();
 
-							GTexture texture = null;
+							String textureName = null;
 							RawModel model = null;
 							float intensity = 0f;
 							while (jsonSceneReader.hasNext()) {
 								String tag = jsonSceneReader.nextName();
 								switch (tag) {
 									case "HDRI":
-										String textureName = jsonSceneReader.nextString();
-										texture = ressources.getTexture(textureName);
+										textureName = jsonSceneReader.nextString();
 										break;
 									case "Mesh":
 										String meshName = jsonSceneReader.nextString();
@@ -900,6 +902,8 @@ public class Loader {
 								}
 							}
 
+							GTexture texture = ressources.getTexture(textureName);
+							textureUsed.add(textureName);
 							SkyBox skyBox = new SkyBox(model, texture);
 							skyBox.strength = intensity;
 							scene.setSkybox(skyBox);
@@ -1095,9 +1099,8 @@ public class Loader {
 											}
 											jsonSceneReader.endObject();
 
-											GTexture texture = ressources.getTexture(textureName);
-											scene.addTexture(texture);
-											TexQuad tq = new TexQuad(ressources.viewport,texture);
+											textureUsed.add(textureName);
+											TexQuad tq = new TexQuad(ressources.viewport, ressources.getTexture(textureName));
 											tq.name = name;
 											tq.position.set(0, position);
 											tq.rotation.set(0, rotation);
@@ -1169,6 +1172,73 @@ public class Loader {
 										}
 										jsonSceneReader.endArray();
 										break;
+									case "TextBoxes":
+										jsonSceneReader.beginArray();
+										while (jsonSceneReader.hasNext()){
+											jsonSceneReader.beginObject();
+
+											String name = null;
+											String fontName = null;
+											String text = null;
+											Vector2f size = null;
+											Vector2f position = null;
+											float rotation = 0f;
+											Vector2f scale = null;
+
+											while (jsonSceneReader.hasNext()){
+												String textTag = jsonSceneReader.nextName();
+												switch (textTag){
+													case "name":
+														name = jsonSceneReader.nextString();
+														break;
+													case "font":
+														fontName = jsonSceneReader.nextString();
+														break;
+													case "text":
+														text = jsonSceneReader.nextString();
+														break;
+													case "size" :
+														jsonSceneReader.beginArray();
+														float[] s = new float[2];
+														for (int i = 0; i < 2; i++) {
+															s[i] = (float) jsonSceneReader.nextDouble();
+														}
+														jsonSceneReader.endArray();
+														size = new Vector2f(s[0],s[1]);
+														break;
+													case "position" :
+														jsonSceneReader.beginArray();
+														float[] p = new float[2];
+														for (int i = 0; i < 2; i++) {
+															p[i] = (float) jsonSceneReader.nextDouble();
+														}
+														jsonSceneReader.endArray();
+														position = new Vector2f(p[0],p[1]);
+														break;
+													case "rotation" :
+														rotation = (float) jsonSceneReader.nextDouble();
+														break;
+													case "scale" :
+														jsonSceneReader.beginArray();
+														float[] sc = new float[2];
+														for (int i = 0; i < 2; i++) {
+															sc[i] = (float) jsonSceneReader.nextDouble();
+														}
+														jsonSceneReader.endArray();
+														scale = new Vector2f(sc[0],sc[1]);
+														break;
+												}
+											}
+											jsonSceneReader.endObject();
+
+											fontUsed.add(fontName);
+											TextBox textBox = new TextBox(ressources.getFont(fontName),size,position,scale,rotation);
+											textBox.setText(text,2,4, TextBox.Alignment.LEFT);
+											textBox.name = name;
+											scene.addTextBox(textBox);
+										}
+										jsonSceneReader.endArray();
+										break;
 									default:
 										jsonSceneReader.skipValue();
 										break;
@@ -1183,6 +1253,8 @@ public class Loader {
 				}
 			}
 			jsonSceneReader.endObject();
+
+			ressources.feedTextures(scene,textureUsed,fontUsed);
 
 			//ressources.log();
 		}catch(Exception e){

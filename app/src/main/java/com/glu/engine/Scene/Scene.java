@@ -7,6 +7,7 @@ import com.glu.engine.GUI.Button;
 import com.glu.engine.GUI.ColorSquare;
 import com.glu.engine.GUI.Slider;
 import com.glu.engine.GUI.TexQuad;
+import com.glu.engine.GUI.Text.Font;
 import com.glu.engine.GUI.Text.TextBox;
 import com.glu.engine.Objects.CustomObjects.CustomObject;
 import com.glu.engine.Objects.Entity;
@@ -274,6 +275,7 @@ public final class Scene {
         for (int i = 0; i < textures.size(); i++) {
             if (textures.get(i) != null && textures.get(i).isDirty) {
                 textures.get(i).makeTexture();
+                Log.w("cleanTextures",textures.get(i).name + " cleaned");
                 Log.w("cleanTextures",(System.currentTimeMillis()-timer) + " milliseconds to clean textures");
             }
         }
@@ -351,7 +353,6 @@ public final class Scene {
         if(DirtyTextBoxes.size() > 0){
             TextBox textBox = DirtyTextBoxes.get(0);
             textBox.makeText();
-            textBox.shader.buildShader();
             TextBoxes.add(textBox);
             DirtyTextBoxes.remove(0);
         }

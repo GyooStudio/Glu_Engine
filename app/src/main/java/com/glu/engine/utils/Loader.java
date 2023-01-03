@@ -1100,7 +1100,7 @@ public class Loader {
 											jsonSceneReader.endObject();
 
 											textureUsed.add(textureName);
-											TexQuad tq = new TexQuad( ressources.getTexture(textureName));
+											TexQuad tq = new TexQuad(ressources.getTexture(textureName));
 											tq.name = name;
 											tq.position.set(0, position);
 											tq.rotation.set(0, rotation);
@@ -1163,7 +1163,7 @@ public class Loader {
 											}
 											jsonSceneReader.endObject();
 
-											ColorSquare cs = new ColorSquare(color);
+											ColorSquare cs = new ColorSquare( color);
 											cs.name = name;
 											cs.scale.set(0, scale);
 											cs.position.set(0, position);

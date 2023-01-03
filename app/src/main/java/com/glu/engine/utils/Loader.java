@@ -1048,7 +1048,7 @@ public class Loader {
 							while (jsonSceneReader.hasNext()) {
 								String tag = jsonSceneReader.nextName();
 								switch (tag) {
-									case "TexQuad":
+									case "TexQuads":
 										jsonSceneReader.beginArray();
 										while (jsonSceneReader.hasNext()) {
 											String name = null;
@@ -1064,14 +1064,16 @@ public class Loader {
 													case "name":
 														name = jsonSceneReader.nextString();
 														break;
-													case "textureName":
+													case "texture":
 														textureName = jsonSceneReader.nextString();
 														break;
 													case "position":
 														float[] pos = new float[2];
+														jsonSceneReader.beginArray();
 														for (int i = 0; i < 2; i++) {
 															pos[i] = (float) jsonSceneReader.nextDouble();
 														}
+														jsonSceneReader.endArray();
 														position = new Vector2f(pos[0], pos[1]);
 														break;
 													case "rotation":
@@ -1079,9 +1081,11 @@ public class Loader {
 														break;
 													case "scale":
 														float[] sc = new float[2];
+														jsonSceneReader.beginArray();
 														for (int i = 0; i < 2; i++) {
 															sc[i] = (float) jsonSceneReader.nextDouble();
 														}
+														jsonSceneReader.endArray();
 														scale = new Vector2f(sc[0], sc[1]);
 														break;
 													default:
@@ -1091,7 +1095,9 @@ public class Loader {
 											}
 											jsonSceneReader.endObject();
 
-											TexQuad tq = new TexQuad(ressources.viewport, ressources.getTexture(textureName));
+											GTexture texture = ressources.getTexture(textureName);
+											scene.addTexture(texture);
+											TexQuad tq = new TexQuad(ressources.viewport,texture);
 											tq.name = name;
 											tq.position.set(0, position);
 											tq.rotation.set(0, rotation);

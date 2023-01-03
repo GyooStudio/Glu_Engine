@@ -10,7 +10,7 @@ import com.glu.engine.vectors.Vector2f;
 import java.util.ArrayList;
 
 
-/*
+/**
 * ActionManager is a class that takes track of a point array for multiple touch inputs called
 * "pointers", extracts useful information from those points and process this information to
 * detect some movement types, called "actions", that are visible in the //action ID.
@@ -38,7 +38,7 @@ public final class ActionManager {
     public ArrayList<Slider> sliders = new ArrayList<>();
     private Ressources ressources;
 
-    // action ID
+    /** action ID*/
     public final ArrayList<ArrayList<actionType>> actions = new ArrayList<>();
     public enum actionType{
         TOUCH,
@@ -50,7 +50,7 @@ public final class ActionManager {
     }
 
 
-    //action variables
+    /**action variables*/
     public final Vector2f[] startPosition = new Vector2f[MAX_POINTERS];
     public final Vector2f[] averagePosition = new Vector2f[MAX_POINTERS];
     public final Vector2f[] averageDirectionVector = new Vector2f[MAX_POINTERS];
@@ -84,7 +84,7 @@ public final class ActionManager {
         }
     }
 
-    //starts an action to track
+    /**starts an action to track*/
     public synchronized void addAction(int index){
         //if(!pointerIndices[index]) {
             pointerNumber++;
@@ -102,6 +102,7 @@ public final class ActionManager {
         //}
     }
 
+    /** add a point to an action */
     public void addPoint(int index,float x,float y){
         actionTrack.get(index).add(new Vector2f(x, ressources.viewport.y - y));
 
@@ -121,7 +122,7 @@ public final class ActionManager {
         hasManuallyUpdated = false;
     }
 
-    //stop an on-going action
+    /** stop an on-going action */
     public void stopAction(int index){
         //if(pointerIndices[index]) {
             boolean succeeded = false;
@@ -151,7 +152,7 @@ public final class ActionManager {
                 timeOfLastRecording = System.currentTimeMillis();
                 hasManuallyUpdated = false;
             }
-        //}
+       // }
     }
 
     public void manualUpdate(){
@@ -168,7 +169,7 @@ public final class ActionManager {
         }
     }
 
-    //readAction extracts all the useful information about the array of points given by the system
+    /** readAction extracts all the useful information about the array of points given by the system*/
     private void readAction(int index){
         if(actionTrack.get(index).size() > 0) {
             startPosition[index] = actionTrack.get(index).get(0);
@@ -261,12 +262,12 @@ public final class ActionManager {
     }
 
 
-    //processAction Processes the data provided by readAction to determine which action it might be
+    /** processAction Processes the data provided by readAction to determine which action it might be */
     public void processAction(int index){
         time[index] = System.currentTimeMillis()-timer[index];
         readAction(index);
 
-        //per-pointer actions
+        // per-pointer actions
         if(!isTouching[index] && time[index] < 450 && averageDistanceTravelled[index] < 20){
             actions.get(index).add(actionType.TOUCH);
         }
@@ -289,7 +290,7 @@ public final class ActionManager {
 
     }
 
-    //returns the index action in the action queue and removes it
+    /** returns the index action in the action queue and removes it */
     public actionType getAction(int index){
         if(actions.get(index).size() > 0) {
             return actions.get(index).remove(0);

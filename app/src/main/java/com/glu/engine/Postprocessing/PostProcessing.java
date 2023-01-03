@@ -137,11 +137,11 @@ public class PostProcessing {
         scene2 = new FrameBuffer((int) (min/downSizeFactor), (int) (min/downSizeFactor),true, true, false,false);
         quartA = new FrameBuffer((int) (min/downSizeFactor)/6, (int) (min/downSizeFactor)/6,true, false,false,false);
         quartB = new FrameBuffer((int) (min/downSizeFactor)/6, (int) (min/downSizeFactor)/6,true, false, false,false);
-        halfA = new FrameBuffer((int) (min/downSizeFactor)/1, (int) (min/downSizeFactor)/1,true, false,false,false);
-        halfB = new FrameBuffer((int) (min/downSizeFactor)/1, (int) (min/downSizeFactor)/1,true, false, false,false);
+        halfA = new FrameBuffer((int) (min/downSizeFactor)/2, (int) (min/downSizeFactor)/2,true, false,false,false);
+        halfB = new FrameBuffer((int) (min/downSizeFactor)/2, (int) (min/downSizeFactor)/2,true, false, false,false);
         TAAColor = new FrameBuffer((int) (min/(downSizeFactor/2)), (int) (min/(downSizeFactor/2)),false, false,false,false);
         AOColor = new FrameBuffer((int) (min/downSizeFactor/4), (int) (min/downSizeFactor/4),true, false, false,false);
-        SSRColor = new FrameBuffer((int) (min/downSizeFactor/1), (int) (min/downSizeFactor/1),true, false, false,false);
+        SSRColor = new FrameBuffer((int) (min/downSizeFactor/2), (int) (min/downSizeFactor/2),true, false, false,false);
         DitherColor = new FrameBuffer((int) (min/(downSizeFactor/2)), (int) (min/(downSizeFactor/2)),false, false, false,false);
         lastFrameExposure = new FrameBuffer(4,4,true,false,false,false);
         Shadow = new FrameBuffer(1024,1024, false,false,true,false);

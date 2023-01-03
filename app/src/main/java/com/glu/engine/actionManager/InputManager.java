@@ -16,7 +16,7 @@ import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
 import com.glu.engine.vectors.Vector3f;
 
-/*
+/**
  *   The goal of this class is to take interpreted action, and inputs and
  *   make them interact with the scene.
  */
@@ -25,7 +25,8 @@ public class InputManager {
     final Scene scene;
     float deltaTime = 0f;
     long prevFrameTime = 0;
-    //private Vector3f camCenter = new Vector3f(0);
+    private Vector3f camCenter = new Vector3f(0);
+    private float camZoom = 5f;
     int movementType = 0;
     long timeOfLastMovement = System.currentTimeMillis();
 
@@ -44,7 +45,6 @@ public class InputManager {
     public void update() {
 
         deltaTime = (float)(System.currentTimeMillis() - prevFrameTime)/1000f;
-        prevFrameTime = System.currentTimeMillis();
 
         if(System.currentTimeMillis() - timeOfLastMovement > 50){
             movementType = 0;
@@ -78,7 +78,8 @@ public class InputManager {
 
         for (int index = 0; index < ActionManager.MAX_POINTERS; index++) {
 
-            boolean updatedAction = false; // if true, the action was handled and won't update other stuff (like clicking a menu won't update the background game)
+            // if true, the action was handled and won't update other stuff (like clicking a menu won't update the background game)
+            boolean updatedAction = false;
 
             for (Button button : scene.Buttons) {
                 for (int i = 0; i < button.name.size(); i++) {
@@ -126,56 +127,32 @@ public class InputManager {
             float zoom = Vector2f.distance(actionManager.previousPoint[0], actionManager.previousPoint[1]) - Vector2f.distance(actionManager.lastPoint[0],actionManager.lastPoint[1]);
             //scene.CamDist += zoom * 0.25f;
 
-            Vector2f move = Vector2f.sub(Vector2f.scale(Vector2f.add(actionManager.previousPoint[0], actionManager.previousPoint[1]), 0.5f), Vector2f.scale(Vector2f.add(actionManager.lastPoint[0], actionManager.lastPoint[1]), 0.5f));
+            /*Vector2f move = Vector2f.sub(Vector2f.scale(Vector2f.add(actionManager.previousPoint[0], actionManager.previousPoint[1]), 0.5f), Vector2f.scale(Vector2f.add(actionManager.lastPoint[0], actionManager.lastPoint[1]), 0.5f));
 
             Matrix4f m = new Matrix4f();
-            m.setIdentity();
-            Matrix.translateM(m.mat,0,m.mat,0,scene.camera.getPosition().x,scene.camera.getPosition().y,scene.camera.getPosition().z);
+            Matrix.translateM(m.mat,0,m.mat,0,camCenter.x,camCenter.y,camCenter.z);
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().x,1,0,0);
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().z,0,0,1);
-            Matrix.translateM(m.mat,0,m.mat,0,move.x * deltaTime * 0.3f,move.y * deltaTime * 0.3f, zoom * deltaTime * 0.3f);
-            scene.camera.setPosition(Matrix4f.MultiplyMV(m,new Vector3f(0)));
-           // Log.w("cameraRotation","cameraRotation : " + scene.camera.getRotation().x + " " + scene.camera.getRotation().y + " " + scene.camera.getRotation().z);
+            Matrix.translateM(m.mat,0,m.mat,0,move.x * deltaTime * 0.3f,move.y * deltaTime * 0.3f, zoom * deltaTime * 0.3f);*/
+            //camCenter = Matrix4f.MultiplyMV(m,new Vector3f(0));
+            camZoom += zoom * deltaTime * 0.3f;
+            //Log.w("cameraRotation","cameraRotation : " + scene.camera.getRotation().x + " " + scene.camera.getRotation().y + " " + scene.camera.getRotation().z);
 
             movementType = 2;
             timeOfLastMovement = System.currentTimeMillis();
 
         }
 
-        Vector3f pointer = new Vector3f(0,0, -1);
-        pointer = Matrix4f.MultiplyMV( scene.camera.getRotationMat(), pointer);
-        Raycast raycast = scene.raycast(scene.camera.getPosition(),pointer);
-        if (raycast.hit){
-            //ball.setPosition(raycast.hitpos.get(0),0);
-        }
+        //camCenter = new Vector3f((float) Math.cos( (double) System.currentTimeMillis() / 4000.0) * 3f, 0f,(float) Math.sin( (double) System.currentTimeMillis() / 4000.0) * 3f);
+        Matrix4f m = new Matrix4f();
+        Matrix.translateM(m.mat,0,m.mat,0,camCenter.x,camCenter.y,camCenter.z);
+        Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);
+        Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().x,1,0,0);
+        Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().z,0,0,1);
+        Matrix.translateM(m.mat,0,m.mat,0,0,0,camZoom);
+        scene.camera.setPosition(Matrix4f.MultiplyMV(m,new Vector3f(0)));
 
-        //if(actionManager.pointerNumber == 0){
-        //    snapRCCube(0.1f);
-        //}
-
-        /*Matrix4f mat = new Matrix4f();
-        mat.setIdentity();
-        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().y, 0, 1, 0);
-        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().x, 1, 0, 0);
-        Matrix.rotateM(mat.mat, 0, mat.mat, 0, scene.camera.getRotation().z, 0, 0, 1);
-
-        Vector3f pointer = new Vector3f(0,0, -1);
-
-        pointer = Matrix4f.MultiplyMV(mat, pointer);
-        Raycast raycast = scene.raycast(scene.camera.getPosition(), pointer);
-        if (raycast.hit) {
-            ball.setPosition(raycast.hitpos.get(0).copy(), 0);
-        }*/
-        //ball.setPosition(new Vector3f((float) Math.cos( (float)scene.pp.inc / 10f) * 10f,0f,(float) Math.sin((float)scene.pp.inc / 10f) * 10f) , 0);
-
-        //Matrix4f m = new Matrix4f();
-        //m.setIdentity();
-        //Matrix.translateM(m.mat, 0, scene.camera.getPosition().x, scene.camera.getPosition().y, scene.camera.getPosition().z);
-        //Matrix.rotateM(m.mat, 0, scene.cameraRotation.x, 0, 1, 0);
-        //Matrix.rotateM(m.mat, 0, scene.cameraRotation.y, 1, 0, 0);
-        //scene.camera.setPosition(Matrix4f.MultiplyMV(m, new Vector3f(0, 0, 0)));
-        //scene.camera.setRotation(Vector3f.lookAt(scene.camera.getPosition(), new Vector3f(scene.cameraRotation.x,scene.cameraRotation.y,0f), 0));
-        //updatedAction = true;
+        prevFrameTime = System.currentTimeMillis();
     }
 }

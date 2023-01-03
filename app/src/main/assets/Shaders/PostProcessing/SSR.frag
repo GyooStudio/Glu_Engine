@@ -55,7 +55,7 @@ void main(){
         float specular = 0.5;
         vec3 albedo = B.rgb;
 
-        int RAY_STEP = 128;
+        int RAY_STEP = 64;
 
         //fresnel
         float F_I = (1.45-1.0)/(1.45+1.0);
@@ -64,6 +64,7 @@ void main(){
         float fresnel = (1.0-F_I)*F_A + F_I;
         fresnel *= 1.0-roughness;
         fresnel = mix(fresnel,1.0,Metaliness);
+        fresnel *= float( !(B.a > 1.9 && B.a < 2.1) );
 
         float add = E.a;
 
@@ -74,31 +75,30 @@ void main(){
         highp float depthGeo;
         vec3 specColor = vec3(0.0);
         vec3 diffColor = vec3(0.0);
-        float rayLength = 100000.0;
+        float rayLength = 0.0;
         bool isHit = false;
 
         float k = 0.0;
-        if(length(D) > 0.01){
+        if(length(D) > 0.01 && !(B.a > 1.9 && B.a < 2.1)){
             ray = reflect( normalize(pos) ,norm );
             float diffI = dot(ray,norm);
-            for (int j = 1; j < RAY_STEP+1; j++){
+            rayLength = max((STEP_SIZE * float(RAY_STEP)) - (2.0 * STEP_SIZE) + add,STEP_SIZE);
+            for (int j = 1; j < RAY_STEP+1 && !isHit; j++){
                 vec3 rayPos = (ray * float(j) * STEP_SIZE) + pos + (ray * add);
                 sampleUV = matB * vec4(rayPos, 1.0);
                 sampleUV.xyz = sampleUV.xyz/max(sampleUV.w, 0.01);
                 if (sampleUV.x < 0.99 && sampleUV.x > -0.99 && sampleUV.y < 0.99 && sampleUV.y > -0.99 && sampleUV.z > 0.0 && sampleUV.z < 1.0){
-                    highp vec4 tex4fetch = texelFetch(texture4,ivec2(vec2(textureSize(texture4,0)) * (sampleUV.xy * 0.5 + 0.5)),0);
-                    tex4fetch = matC * vec4( ( tex4fetch.xyz * 2.0 - 1.0 ) * tex4fetch.w, 1.0);
-                    depthGeo = tex4fetch.z;
+                    highp vec4 tex4fetch = texture(texture4,sampleUV.xy * 0.5 + 0.5);
+                    depthGeo = ( matC * vec4( ( tex4fetch.xyz * 2.0 - 1.0 ) * tex4fetch.w, 1.0) ).z;
                     depthSample = rayPos.z;
 
                     if (depthGeo > depthSample
-                    && length(tex4fetch) > 0.01
+                    && length(tex4fetch.xyz) > 0.01
                     && depthGeo - depthSample < 1.0
                     ){
                         rayLength = max((STEP_SIZE * float(j)) - (2.0 * STEP_SIZE) + add,0.0);
-                        specColor = textureLod(texture1, sampleUV.xy*0.5 + 0.5, 0.0).rgb * specular;
-                        j = RAY_STEP+1;
-                        isHit = true;
+                        specColor = textureLod(texture1, sampleUV.xy*0.5 + 0.5, 0.0).rgb * specular * fresnel + 1.0;
+                        isHit = rayLength > 0.01;
                     }
                 } else {
                     j = RAY_STEP+1;
@@ -111,11 +111,11 @@ void main(){
             rayLength = 0.0;
         }
 
-        vec3 color = specColor * fresnel;
+        vec3 color = specColor;
         color *= float(rayLength > 0.01);
 
-        rayLength *= float(mod(a,6.0) > 1.0 || isHit);
-        rayLength *= float(mod(a,240.0) > 1.0);
+        rayLength *= float(mod(a,5.0) > 2.0 || isHit);
+        rayLength *= float(mod(a,240.0) > 2.0);
 
         Fragment = vec4(color,rayLength);
     }else if(!isB){
@@ -145,6 +145,7 @@ void main(){
     }else{
 
         vec4 tex1 = texelFetch(texture1,ivec2(vec2(textureSize(texture1,0)) * UV),0);
+        tex1.xyz = tex1.xyz - 1.0;
         vec4 tex2 = texelFetch(texture2,ivec2(vec2(textureSize(texture2,0)) * UV),0);
         vec4 tex3 = texelFetch(texture3,ivec2(vec2(textureSize(texture3,0)) * UV),0);
 

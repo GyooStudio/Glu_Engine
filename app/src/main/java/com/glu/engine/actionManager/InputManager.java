@@ -29,7 +29,7 @@ public class InputManager {
     int movementType = 0;
     long timeOfLastMovement = System.currentTimeMillis();
 
-    Entity ball;
+    //Entity ball;
     int movingEntityIndex;
     float lastAngle;
     int rotationAxis = 0;
@@ -55,9 +55,9 @@ public class InputManager {
 
         Slider camSlider = scene.getSlider("camSlider");
         Slider s = scene.getSlider("slider");
-        if (ball == null){
+        /*if (ball == null){
             ball = scene.getEntity("ball");
-        }
+        }*/
 
         if(cube == null){
             Entity[] es = new Entity[26];
@@ -136,7 +136,7 @@ public class InputManager {
             Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().z,0,0,1);
             Matrix.translateM(m.mat,0,m.mat,0,move.x * deltaTime * 0.3f,move.y * deltaTime * 0.3f, zoom * deltaTime * 0.3f);
             scene.camera.setPosition(Matrix4f.MultiplyMV(m,new Vector3f(0)));
-            Log.w("cameraRotation","cameraRotation : " + scene.camera.getRotation().x + " " + scene.camera.getRotation().y + " " + scene.camera.getRotation().z);
+           // Log.w("cameraRotation","cameraRotation : " + scene.camera.getRotation().x + " " + scene.camera.getRotation().y + " " + scene.camera.getRotation().z);
 
             movementType = 2;
             timeOfLastMovement = System.currentTimeMillis();

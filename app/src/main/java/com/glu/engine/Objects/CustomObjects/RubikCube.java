@@ -21,7 +21,7 @@ public class RubikCube extends CustomObject{
     private Entity[] blocs = new Entity[26];
     private Collider collider = new Collider();
     private BoundingBox BB = new BoundingBox();
-    private Entity ball;
+    //private Entity ball;
     private byte catchedBlocIndex;
     private Vector2f cachedPointerPos = new Vector2f(0);
     private State state = State.IDLE;
@@ -122,9 +122,9 @@ public class RubikCube extends CustomObject{
         deltaTime = (float)( System.currentTimeMillis() - lastFrameTime) / 1000f;
         lastFrameTime = System.currentTimeMillis();
 
-        if(ball == null){
-            ball = scene.getEntity("ball");
-        }
+        //if(ball == null){
+        //    ball = scene.getEntity("ball");
+        //}
         ActionManager actionManager = scene.actionManager;
         Matrix4f proj = scene.PROJECTION_MATRIX;
         Matrix4f iProj = Matrix4f.inverse(proj);
@@ -166,10 +166,10 @@ public class RubikCube extends CustomObject{
                 prevAngle = 0;
                 prevPos = hitPos;
 
-                if (ball != null) {
-                    ball.setPosition(raycast.hitpos.get(0), 0);
-                    return true;
-                }
+                //if (ball != null) {
+                //    ball.setPosition(raycast.hitpos.get(0), 0);
+                //}
+                return true;
             }
         }else if(state == State.CATCHED && Vector2f.distance(cachedPointerPos,actionManager.lastPoint[0]) > 50){
             Vector3f X = new Vector3f(1,0,0);
@@ -361,9 +361,9 @@ public class RubikCube extends CustomObject{
                     prevAngle = moveAngle;
                 }
 
-                if (ball != null) {
-                    ball.setPosition(pos, 0);
-                }
+                //if (ball != null) {
+                //    ball.setPosition(pos, 0);
+                //}
             }
 
             return true;

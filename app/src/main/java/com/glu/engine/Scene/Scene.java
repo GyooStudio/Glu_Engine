@@ -385,41 +385,6 @@ public final class Scene {
 
         generateProjectionMatrix(ressources.viewport.x / ressources.viewport.y);
 
-        for (TexQuad t: TexQuads) {
-            t.screenDimensions = ressources.viewport;
-        }
-        for (TexQuad t: dirtyTexQuads) {
-            t.screenDimensions = ressources.viewport;
-        }
-        for (ColorSquare c: ColorSquare) {
-            c.screenDimensions = ressources.viewport;
-        }
-        for (ColorSquare c: dirtyColor) {
-            c.screenDimensions = ressources.viewport;
-        }
-        for (Button b: Buttons) {
-            b.statePressed.screenDimensions = ressources.viewport;
-            b.stateDefault.screenDimensions = ressources.viewport;
-            if(b.stateReleased != null) {
-                b.stateReleased.screenDimensions = ressources.viewport;
-            }
-        }
-        for (Button b: DirtyButtons) {
-            b.statePressed.screenDimensions = ressources.viewport;
-            b.stateDefault.screenDimensions = ressources.viewport;
-            if(b.stateReleased != null) {
-                b.stateReleased.screenDimensions = ressources.viewport;
-            }
-        }
-        for (Slider s: Sliders) {
-            s.button.screenDimensions = ressources.viewport;
-            s.slider.screenDimensions = ressources.viewport;
-        }
-        for (Slider s: DirtySliders) {
-            s.button.screenDimensions = ressources.viewport;
-            s.slider.screenDimensions = ressources.viewport;
-        }
-
         if(pp.isSetup) {
             PostProcessing t_pp = new PostProcessing(pp);
             pp.setup(t_pp.downSizeFactor, this);

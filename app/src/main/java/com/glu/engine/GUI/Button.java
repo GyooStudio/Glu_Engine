@@ -2,6 +2,7 @@ package com.glu.engine.GUI;
 
 import android.util.Log;
 
+import com.glu.engine.Scene.Ressources;
 import com.glu.engine.vectors.Vector2f;
 
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ public final class Button{
     public GUIBase stateDefault;
     public GUIBase statePressed;
     public GUIBase stateReleased;
+
+    private Ressources ressources = Ressources.getRessources();
 
     public ArrayList<Boolean> isPressed = new ArrayList<>();
     public ArrayList<Boolean> hasBeenPressed = new ArrayList<>();
@@ -318,7 +321,7 @@ public final class Button{
     }
 
     private Boolean isInside(Vector2f click, int index){
-        Vector2f pos = Vector2f.scale(Vector2f.sub(click,Vector2f.scale(stateDefault.screenDimensions,0.5f)),2f);
+        Vector2f pos = Vector2f.scale(Vector2f.sub(click,Vector2f.scale(ressources.viewport,0.5f)),2f);
         Vector2f ipos = position.get(index);
         Vector2f isize = size.get(index);
         if( (( pos.x > ipos.x-isize.x && pos.x < ipos.x+isize.x )

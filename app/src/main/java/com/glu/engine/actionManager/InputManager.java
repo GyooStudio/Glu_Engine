@@ -10,38 +10,37 @@ import com.glu.engine.Objects.Collider;
 import com.glu.engine.Objects.CustomObjects.RubikCube;
 import com.glu.engine.Objects.Entity;
 import com.glu.engine.Objects.Raycast;
+import com.glu.engine.Scene.Ressources;
 import com.glu.engine.Scene.Scene;
 import com.glu.engine.utils.Loader;
 import com.glu.engine.utils.Maths;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
 import com.glu.engine.vectors.Vector3f;
+import com.glu.engine.vectors.Vector4f;
 
 /**
  *   The goal of this class is to take interpreted action, and inputs and
  *   make them interact with the scene.
  */
 public class InputManager {
-    final ActionManager actionManager;
-    final Scene scene;
-    float deltaTime = 0f;
-    long prevFrameTime = 0;
+    private final ActionManager actionManager;
+    private Ressources ressources;
+    public final Scene scene;
+    private float deltaTime = 0f;
+    private long prevFrameTime = 0;
     private Vector3f camCenter = new Vector3f(0);
     private float camZoom = 5f;
-    int movementType = 0;
-    long timeOfLastMovement = System.currentTimeMillis();
+    private int movementType = 0;
+    private long timeOfLastMovement = System.currentTimeMillis();
 
-    //Entity ball;
-    int movingEntityIndex;
-    float lastAngle;
-    int rotationAxis = 0;
-    Vector3f hitpoint;
-    RubikCube cube;
+    public RubikCube cube;
 
-    Button button;
+    public Button button;
 
     public InputManager(Scene scene){
         this.actionManager = ActionManager.getActionManager();
+        this.ressources = Ressources.getRessources();
         this.scene = scene;
     }
 
@@ -56,8 +55,14 @@ public class InputManager {
         actionManager.manualUpdate();
         ActionManager.actionType action = actionManager.getAction(0);
 
-        //ColorSquare base = new ColorSquare(,);
-        //button = new Button()
+        ColorSquare base = new ColorSquare(new Vector4f(0.2f,0.9f,0.2f,1.0f));
+        ColorSquare pressed = new ColorSquare(new Vector4f(0.9f,0.2f,0.2f,1.0f));
+        ColorSquare released = new ColorSquare(new Vector4f(0.9f,0.9f,0.2f,1.0f));
+        button = new Button(base,pressed,released);
+        scene.addColorSquare(base);
+        scene.addColorSquare(pressed);
+        scene.addColorSquare(released);
+        scene.addButton(button);
 
         if(cube == null){
             Entity[] es = new Entity[26];

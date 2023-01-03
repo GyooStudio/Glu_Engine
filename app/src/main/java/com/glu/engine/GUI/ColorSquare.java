@@ -11,20 +11,20 @@ public class ColorSquare extends GUIBase{
     public ArrayList<Vector4f> color = new ArrayList<>();
     public float radius;
 
-    public ColorSquare(Vector2f screenDimensions, Vector4f color){
-        super(screenDimensions);
+    public ColorSquare(Vector4f color){
+        super();
         this.color.add(color);
         radius = 0.0f;
     }
 
-    public ColorSquare(Vector2f screenDimensions){
-        super(screenDimensions);
+    public ColorSquare(){
+        super();
         this.color.add(new Vector4f(0,0,0,1));
         radius = 0.0f;
     }
 
     public ColorSquare copy(){
-        ColorSquare a = new ColorSquare(screenDimensions);
+        ColorSquare a = new ColorSquare();
         a.color = (ArrayList<Vector4f>) color.clone();
         a.radius = radius;
         a.copy(this);

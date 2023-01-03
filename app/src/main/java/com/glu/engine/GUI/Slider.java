@@ -2,6 +2,7 @@ package com.glu.engine.GUI;
 
 import android.util.Log;
 
+import com.glu.engine.Scene.Ressources;
 import com.glu.engine.shader.ColorShader;
 import com.glu.engine.utils.Maths;
 import com.glu.engine.vectors.Vector2f;
@@ -27,6 +28,8 @@ public final class Slider {
     public String name = "name";
 
     public int id = 0;
+
+    private Ressources ressources = Ressources.getRessources();
 
     public Slider(GUIBase button, GUIBase slider){
         maxValue = 1;
@@ -80,7 +83,7 @@ public final class Slider {
     }
 
     public void click(Vector2f click,int pointer){
-        Vector2f pos = Vector2f.scale(Vector2f.sub(click,Vector2f.scale(button.screenDimensions,0.5f)),2f);
+        Vector2f pos = Vector2f.scale(Vector2f.sub(click,Vector2f.scale(ressources.viewport, 0.5f)),2f);
         Vector2f bpos = button.position.get(0);
         Vector2f bscale = button.scale.get(0);
         if(((pos.x>bpos.x-bscale.x)&&(pos.x<bpos.x+bscale.x))&&

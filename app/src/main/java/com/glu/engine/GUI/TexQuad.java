@@ -8,14 +8,14 @@ public class TexQuad extends GUIBase {
 
     public GTexture texture;
 
-    public TexQuad(Vector2f screenDimensions, GTexture texture){
-        super(screenDimensions);
+    public TexQuad(GTexture texture){
+        super();
 
         this.texture = texture;
     }
 
-    public TexQuad(Vector2f screenDimensions){
-        super(screenDimensions);
+    public TexQuad(){
+        super();
 
         this.texture = new GTexture(1,1,false,false,false,false,false);
 
@@ -23,7 +23,7 @@ public class TexQuad extends GUIBase {
     }
 
     public TexQuad copy(){
-        TexQuad a = new TexQuad(screenDimensions,texture);
+        TexQuad a = new TexQuad(texture);
         a.copy(this);
         return a;
     }

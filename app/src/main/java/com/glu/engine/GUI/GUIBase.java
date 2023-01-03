@@ -18,7 +18,6 @@ public abstract class GUIBase {
             -1,-1, -1,
             1, 1, -1,
             1,-1, -1};
-    public Vector2f screenDimensions;
 
     public String name = "name";
 
@@ -26,12 +25,11 @@ public abstract class GUIBase {
 
     public RawModel model;
 
-    public GUIBase(Vector2f screenDimensions){
+    public GUIBase(){
         this.position.add(new Vector2f(0,0));
         this.rotation.add(new Float(0));
         this.scale.add(new Vector2f(1,1));
         show.add(true);
-        this.screenDimensions = screenDimensions;
     }
 
     public void copy(GUIBase a){
@@ -40,7 +38,6 @@ public abstract class GUIBase {
         scale = new ArrayList<>(a.scale);
         show = new ArrayList<>(a.show);
         model = a.model;
-        screenDimensions = a.screenDimensions.copy();
     }
 
     public void makeModel(){

@@ -135,8 +135,8 @@ public class PostProcessing {
         sceneRendered = new FrameBuffer((int) (min/downSizeFactor), (int) (min/downSizeFactor),true, true, false,false);
         scene = new FrameBuffer((int) (min/downSizeFactor), (int) (min/downSizeFactor),true, true, false,false);
         scene2 = new FrameBuffer((int) (min/downSizeFactor), (int) (min/downSizeFactor),true, true, false,false);
-        quartA = new FrameBuffer((int) (min/downSizeFactor)/6, (int) (min/downSizeFactor)/6,true, false,false,false);
-        quartB = new FrameBuffer((int) (min/downSizeFactor)/6, (int) (min/downSizeFactor)/6,true, false, false,false);
+        quartA = new FrameBuffer((int) (min/downSizeFactor)/4, (int) (min/downSizeFactor)/4,true, false,false,false);
+        quartB = new FrameBuffer((int) (min/downSizeFactor)/4, (int) (min/downSizeFactor)/4,true, false, false,false);
         halfA = new FrameBuffer((int) (min/downSizeFactor)/2, (int) (min/downSizeFactor)/2,true, false,false,false);
         halfB = new FrameBuffer((int) (min/downSizeFactor)/2, (int) (min/downSizeFactor)/2,true, false, false,false);
         TAAColor = new FrameBuffer((int) (min/(downSizeFactor/2)), (int) (min/(downSizeFactor/2)),false, false,false,false);
@@ -758,8 +758,8 @@ public class PostProcessing {
                         if(true) {
                             makeMipmaps();
 
-                            GLES30.glViewport(0, 0, halfA.width, halfA.height);
-                            GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, halfA.ID);
+                            GLES30.glViewport(0, 0, quartA.width, quartA.height);
+                            GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, quartA.ID);
 
                             ppShaders[5].start();
 
@@ -778,9 +778,9 @@ public class PostProcessing {
 
                             GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
 
-                            GLES30.glBindFramebuffer(GLES30.GL_READ_FRAMEBUFFER,halfA.ID);
+                            GLES30.glBindFramebuffer(GLES30.GL_READ_FRAMEBUFFER,quartA.ID);
                             GLES30.glBindFramebuffer(GLES30.GL_DRAW_FRAMEBUFFER,AOColor.ID);
-                            GLES30.glBlitFramebuffer(0,0,halfA.width,halfA.height,0,0,AOColor.width,AOColor.height,GLES30.GL_COLOR_BUFFER_BIT,GLES30.GL_NEAREST);
+                            GLES30.glBlitFramebuffer(0,0,quartA.width,quartA.height,0,0,AOColor.width,AOColor.height,GLES30.GL_COLOR_BUFFER_BIT,GLES30.GL_NEAREST);
 
                             if (isLastEffect) {
                                 GLES30.glViewport(0, 0, (int) ressources.viewport.x, (int) ressources.viewport.y);
@@ -792,7 +792,7 @@ public class PostProcessing {
 
 
                             GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, halfA.texture.ID);
+                            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, quartA.texture.ID);
                             GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
                             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
                             GLES30.glActiveTexture(GLES30.GL_TEXTURE2);
@@ -878,21 +878,9 @@ public class PostProcessing {
 
                             GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
 
-                            GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, halfB.ID);
-
-                            GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,halfA.texture.ID);
-                            GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
-                            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,SSRColor.texture.ID);
-
-                            ppShaders[7].loadBoolean(false);
-                            ppShaders[7].loadBooleanB(false);
-
-                            GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
-
-                            GLES30.glBindFramebuffer(GLES30.GL_READ_FRAMEBUFFER,halfB.ID);
+                            GLES30.glBindFramebuffer(GLES30.GL_READ_FRAMEBUFFER,halfA.ID);
                             GLES30.glBindFramebuffer(GLES30.GL_DRAW_FRAMEBUFFER,SSRColor.ID);
-                            GLES30.glBlitFramebuffer(0,0,halfB.width,halfB.height,0,0,SSRColor.width,SSRColor.height,GLES30.GL_COLOR_BUFFER_BIT,GLES30.GL_NEAREST);
+                            GLES30.glBlitFramebuffer(0,0,halfA.width,halfA.height,0,0,SSRColor.width,SSRColor.height,GLES30.GL_COLOR_BUFFER_BIT,GLES30.GL_NEAREST);
 
                             if (isLastEffect) {
                                 GLES30.glViewport(0, 0, (int) ressources.viewport.x, (int) ressources.viewport.y);
@@ -903,7 +891,7 @@ public class PostProcessing {
                             }
 
                             GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, halfB.texture.ID);
+                            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, halfA.texture.ID);
                             GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
                             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
                             GLES30.glActiveTexture(GLES30.GL_TEXTURE2);

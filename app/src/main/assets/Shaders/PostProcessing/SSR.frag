@@ -118,30 +118,6 @@ void main(){
         rayLength *= float(mod(a,240.0) > 2.0);
 
         Fragment = vec4(color,rayLength);
-    }else if(!isB){
-        /*vec3 color = texture(texture1,UV).rgb;
-        vec3 prev = texture(texture2,UV).rgb;
-
-        vec2 texel = 1.0/vec2(textureSize(texture1,0));
-        vec3 a = texture(texture1,UV + vec2(texel.x,0.0)).rgb;
-        vec3 b = texture(texture1,UV + vec2(-texel.x,0.0)).rgb;
-        vec3 c = texture(texture1,UV + vec2(0.0,texel.y)).rgb;
-        vec3 d = texture(texture1,UV + vec2(0.0,-texel.y)).rgb;
-        vec3 Min = min(a,min(b,min(c,d)));
-        vec3 Max = max(a,max(b,max(c,d)));
-
-        //Min = min(Max,max(Min,prev));
-
-        color = ((a+b+c+d) * 0.25 * 0.5) + (color * 0.5);
-
-        float bp = max(prev.r, max(prev.g,prev.b));
-        float bc = max(color.r, max(color.g,color.b));
-
-        color = mix(color,prev,float(bp > bc) * 0.75);
-
-        float length = texelFetch(texture1,ivec2(vec2(textureSize(texture1,0)) * UV),0).a;*/
-
-        Fragment = texture(texture1,UV);
     }else{
 
         vec4 tex1 = texelFetch(texture1,ivec2(vec2(textureSize(texture1,0)) * UV),0);

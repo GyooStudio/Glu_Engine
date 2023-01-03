@@ -27,7 +27,7 @@ import java.util.ArrayList;
 *
 */
 public final class ActionManager {
-    private static ActionManager actionManager;
+    private final static ActionManager actionManager = new ActionManager();
 
     public static final int MAX_POINTERS = 20;
     public int pointerNumber = 0;
@@ -78,11 +78,7 @@ public final class ActionManager {
     public final boolean[] isTouching = new boolean[MAX_POINTERS];
 
     public synchronized static ActionManager getActionManager(){
-        if(actionManager != null){
-            return actionManager;
-        }else{
-            return new ActionManager();
-        }
+        return actionManager;
     }
 
     private ActionManager(){
@@ -111,7 +107,7 @@ public final class ActionManager {
     }
 
     /** add a point to an action */
-    public void addPoint(int index,float x,float y){
+    public synchronized void addPoint(int index,float x,float y){
         actionTrack.get(index).add(new Vector2f(x, ressources.viewport.y - y));
 
         boolean succeeded = false;
@@ -131,7 +127,7 @@ public final class ActionManager {
     }
 
     /** stop an on-going action */
-    public void stopAction(int index){
+    public synchronized void stopAction(int index){
         boolean succeeded = false;
         int attempts = 0;
         while (!succeeded && attempts < 20) {
@@ -161,7 +157,7 @@ public final class ActionManager {
         }
     }
 
-    public void manualUpdate(){
+    public synchronized void manualUpdate(){
         long time = System.currentTimeMillis()-timeOfLastRecording;
         if(time > 41 && !hasManuallyUpdated){ // if it has been more than a 24th of a second (2.5 60fps frames and 1.25 30fps frames) since the last update.
             for(int i = 0; i < pointerNumber; i ++){
@@ -269,7 +265,7 @@ public final class ActionManager {
 
 
     /** processAction Processes the data provided by readAction to determine which action it might be */
-    public void processAction(int index){
+    private void processAction(int index){
         time[index] = System.currentTimeMillis()-timer[index];
         readAction(index);
 
@@ -297,7 +293,7 @@ public final class ActionManager {
     }
 
     /** returns the index action in the action queue and removes it */
-    public actionType getAction(int index){
+    public synchronized actionType getAction(int index){
         if(actions.get(index).size() > 0) {
             return actions.get(index).remove(0);
         }else{

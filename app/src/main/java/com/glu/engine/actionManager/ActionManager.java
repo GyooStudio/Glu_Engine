@@ -77,7 +77,7 @@ public final class ActionManager {
 
     public final boolean[] isTouching = new boolean[MAX_POINTERS];
 
-    public static ActionManager getActionManager(){
+    public synchronized static ActionManager getActionManager(){
         if(actionManager != null){
             return actionManager;
         }else{

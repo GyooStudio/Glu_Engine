@@ -55,14 +55,16 @@ public class InputManager {
         actionManager.manualUpdate();
         ActionManager.actionType action = actionManager.getAction(0);
 
-        ColorSquare base = new ColorSquare(new Vector4f(0.2f,0.9f,0.2f,1.0f));
-        ColorSquare pressed = new ColorSquare(new Vector4f(0.9f,0.2f,0.2f,1.0f));
-        ColorSquare released = new ColorSquare(new Vector4f(0.9f,0.9f,0.2f,1.0f));
-        button = new Button(base,pressed,released);
-        scene.addColorSquare(base);
-        scene.addColorSquare(pressed);
-        scene.addColorSquare(released);
-        scene.addButton(button);
+        if(button == null && false) {
+            ColorSquare base = new ColorSquare(new Vector4f(0.2f, 0.9f, 0.2f, 1.0f));
+            ColorSquare pressed = new ColorSquare(new Vector4f(0.9f, 0.2f, 0.2f, 1.0f));
+            ColorSquare released = new ColorSquare(new Vector4f(0.9f, 0.9f, 0.2f, 1.0f));
+            button = new Button(base, pressed, released);
+            scene.addColorSquare(base);
+            scene.addColorSquare(pressed);
+            scene.addColorSquare(released);
+            scene.addButton(button);
+        }
 
         if(cube == null){
             Entity[] es = new Entity[26];
@@ -86,7 +88,7 @@ public class InputManager {
             // if true, the action was handled and won't update other stuff (like clicking a menu won't update the background game)
             boolean updatedAction = false;
 
-            for (Button button : scene.Buttons) {
+            /*for (Button button : scene.Buttons) {
                 for (int i = 0; i < button.name.size(); i++) {
                     if (actionManager.pointerIndices[index]) {
                         if (actionManager.isTouching[index] && !updatedAction){
@@ -114,7 +116,7 @@ public class InputManager {
                 } else {
                     slider.release(index);
                 }
-            }
+            }*/
 
             if(!updatedAction && cube != null){
                 updatedAction = cube.update(scene);
@@ -138,6 +140,7 @@ public class InputManager {
 
         }
 
+        camCenter = new Vector3f((float) Math.cos((double) System.currentTimeMillis() / 4000.0) * 3f, 0f, (float) Math.sin((double) System.currentTimeMillis() / 4000.0) * 3f );
         Matrix4f m = new Matrix4f();
         Matrix.translateM(m.mat,0,m.mat,0,camCenter.x,camCenter.y,camCenter.z);
         Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);

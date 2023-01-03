@@ -71,14 +71,14 @@ public final class Scene {
     public Scene(){
         Loader loader = Loader.getLoader();
         ressources = Ressources.getRessources();
+        this.actionManager = ActionManager.getActionManager();
+        this.inputManager = new InputManager(this);
 
         state = 0;
 
         camera = new Camera();
         camera.setPosition(new Vector3f(-1,1,-1));
         camera.setRotation( Vector3f.lookAt(camera.getPosition(), new Vector3f(0,0,0), 0));
-        this.actionManager = ActionManager.getActionManager();
-        this.inputManager = new InputManager(this);
 
         pp = new PostProcessing();
         generateProjectionMatrix(ressources.viewport.x/ ressources.viewport.y);

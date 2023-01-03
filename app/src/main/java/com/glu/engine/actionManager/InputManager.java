@@ -4,6 +4,7 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import com.glu.engine.GUI.Button;
+import com.glu.engine.GUI.ColorSquare;
 import com.glu.engine.GUI.Slider;
 import com.glu.engine.Objects.Collider;
 import com.glu.engine.Objects.CustomObjects.RubikCube;
@@ -37,8 +38,10 @@ public class InputManager {
     Vector3f hitpoint;
     RubikCube cube;
 
-    public InputManager(ActionManager actionManager, Scene scene){
-        this.actionManager = actionManager;
+    Button button;
+
+    public InputManager(Scene scene){
+        this.actionManager = ActionManager.getActionManager();
         this.scene = scene;
     }
 
@@ -53,11 +56,8 @@ public class InputManager {
         actionManager.manualUpdate();
         ActionManager.actionType action = actionManager.getAction(0);
 
-        Slider camSlider = scene.getSlider("camSlider");
-        Slider s = scene.getSlider("slider");
-        /*if (ball == null){
-            ball = scene.getEntity("ball");
-        }*/
+        //ColorSquare base = new ColorSquare(,);
+        //button = new Button()
 
         if(cube == null){
             Entity[] es = new Entity[26];
@@ -125,26 +125,14 @@ public class InputManager {
         }
         if(actionManager.pointerNumber == 2 && (movementType == 0 || movementType == 2)) {
             float zoom = Vector2f.distance(actionManager.previousPoint[0], actionManager.previousPoint[1]) - Vector2f.distance(actionManager.lastPoint[0],actionManager.lastPoint[1]);
-            //scene.CamDist += zoom * 0.25f;
 
-            /*Vector2f move = Vector2f.sub(Vector2f.scale(Vector2f.add(actionManager.previousPoint[0], actionManager.previousPoint[1]), 0.5f), Vector2f.scale(Vector2f.add(actionManager.lastPoint[0], actionManager.lastPoint[1]), 0.5f));
-
-            Matrix4f m = new Matrix4f();
-            Matrix.translateM(m.mat,0,m.mat,0,camCenter.x,camCenter.y,camCenter.z);
-            Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);
-            Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().x,1,0,0);
-            Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().z,0,0,1);
-            Matrix.translateM(m.mat,0,m.mat,0,move.x * deltaTime * 0.3f,move.y * deltaTime * 0.3f, zoom * deltaTime * 0.3f);*/
-            //camCenter = Matrix4f.MultiplyMV(m,new Vector3f(0));
             camZoom += zoom * deltaTime * 0.3f;
-            //Log.w("cameraRotation","cameraRotation : " + scene.camera.getRotation().x + " " + scene.camera.getRotation().y + " " + scene.camera.getRotation().z);
 
             movementType = 2;
             timeOfLastMovement = System.currentTimeMillis();
 
         }
 
-        //camCenter = new Vector3f((float) Math.cos( (double) System.currentTimeMillis() / 4000.0) * 3f, 0f,(float) Math.sin( (double) System.currentTimeMillis() / 4000.0) * 3f);
         Matrix4f m = new Matrix4f();
         Matrix.translateM(m.mat,0,m.mat,0,camCenter.x,camCenter.y,camCenter.z);
         Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);

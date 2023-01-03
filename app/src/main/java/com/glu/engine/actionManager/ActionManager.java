@@ -27,6 +27,8 @@ import java.util.ArrayList;
 *
 */
 public final class ActionManager {
+    private static ActionManager actionManager;
+
     public static final int MAX_POINTERS = 20;
     public int pointerNumber = 0;
     public long timeOfLastRecording;
@@ -75,7 +77,15 @@ public final class ActionManager {
 
     public final boolean[] isTouching = new boolean[MAX_POINTERS];
 
-    public ActionManager(){
+    public static ActionManager getActionManager(){
+        if(actionManager != null){
+            return actionManager;
+        }else{
+            return new ActionManager();
+        }
+    }
+
+    private ActionManager(){
         ressources = Ressources.getRessources();
 
         for (int i = 0; i < MAX_POINTERS; i++) {
@@ -86,20 +96,18 @@ public final class ActionManager {
 
     /**starts an action to track*/
     public synchronized void addAction(int index){
-        //if(!pointerIndices[index]) {
-            pointerNumber++;
-            pointerIndices[index] = true;
-            actionTrack.get(index).clear();
-            isTouching[index] = true;
-            hasSetLongTouch[index] = false;
-            isHasSetScroll[index] = false;
-            hasSetCircle[index] = false;
-            hasDoneCircle[index] = false;
-            timer[index] = System.currentTimeMillis();
-            timeOfLastRecording = System.currentTimeMillis();
-            hasManuallyUpdated = false;
-            Log.w("actionManager", "addedAction " + index + ". actionNumber: " + pointerNumber + " isTouching: " + isTouching[index]);
-        //}
+        pointerNumber++;
+        pointerIndices[index] = true;
+        actionTrack.get(index).clear();
+        isTouching[index] = true;
+        hasSetLongTouch[index] = false;
+        isHasSetScroll[index] = false;
+        hasSetCircle[index] = false;
+        hasDoneCircle[index] = false;
+        timer[index] = System.currentTimeMillis();
+        timeOfLastRecording = System.currentTimeMillis();
+        hasManuallyUpdated = false;
+        Log.w("actionManager", "addedAction " + index + ". actionNumber: " + pointerNumber + " isTouching: " + isTouching[index]);
     }
 
     /** add a point to an action */
@@ -124,35 +132,33 @@ public final class ActionManager {
 
     /** stop an on-going action */
     public void stopAction(int index){
-        //if(pointerIndices[index]) {
-            boolean succeeded = false;
-            int attempts = 0;
-            while (!succeeded && attempts < 20) {
-                try {
-                    processAction(index);
-                    pointerIndices[index] = false;
-                    isTouching[index] = false;
-                    Log.w("actionManager", "stopped action " + index + ". actionNumber: " + pointerNumber + " isTouching: " + isTouching[index]);
-                    processAction(index);
-                    timeOfLastRecording = System.currentTimeMillis();
-                    hasManuallyUpdated = false;
-                    pointerNumber--;
-                    succeeded = true;
-                } catch (Exception e) {
-                    attempts++;
-                    Log.e("stopAction", "something went wrong!");
-                    e.printStackTrace();
-                }
-            }
-            if (attempts == 20) {
-                pointerNumber--;
+        boolean succeeded = false;
+        int attempts = 0;
+        while (!succeeded && attempts < 20) {
+            try {
+                processAction(index);
                 pointerIndices[index] = false;
                 isTouching[index] = false;
                 Log.w("actionManager", "stopped action " + index + ". actionNumber: " + pointerNumber + " isTouching: " + isTouching[index]);
+                processAction(index);
                 timeOfLastRecording = System.currentTimeMillis();
                 hasManuallyUpdated = false;
+                pointerNumber--;
+                succeeded = true;
+            } catch (Exception e) {
+                attempts++;
+                Log.e("stopAction", "something went wrong!");
+                e.printStackTrace();
             }
-       // }
+        }
+        if (attempts == 20) {
+            pointerNumber--;
+            pointerIndices[index] = false;
+            isTouching[index] = false;
+            Log.w("actionManager", "stopped action " + index + ". actionNumber: " + pointerNumber + " isTouching: " + isTouching[index]);
+            timeOfLastRecording = System.currentTimeMillis();
+            hasManuallyUpdated = false;
+        }
     }
 
     public void manualUpdate(){

@@ -17,6 +17,7 @@ import com.glu.engine.Objects.Entity;
 import com.glu.engine.Postprocessing.PostProcessing;
 import com.glu.engine.Scene.Light;
 import com.glu.engine.Scene.Scene;
+import com.glu.engine.actionManager.ActionManager;
 import com.glu.engine.utils.Loader;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 public final class GluSurfaceView extends GLSurfaceView implements Runnable {
 
     final com.glu.engine.Renderer renderer;
+    final ActionManager actionManager = ActionManager.getActionManager();
     public long startTime;
     public boolean hasInit = false;
     public boolean hasSetTouch = true;
@@ -70,7 +72,7 @@ public final class GluSurfaceView extends GLSurfaceView implements Runnable {
                     //addPoint records a new Pointer's position
                     for (int i = 0; i < motionEvent.getPointerCount(); i++) {
                         int Index = motionEvent.findPointerIndex(motionEvent.getPointerId(i));
-                        scene.actionManager.addPoint(motionEvent.getPointerId(i), motionEvent.getX(Index), motionEvent.getY(Index));
+                        actionManager.addPoint(motionEvent.getPointerId(i), motionEvent.getX(Index), motionEvent.getY(Index));
                         //Log.w("onTouchListener", "action Moved");
                     }
                     return true;
@@ -78,26 +80,26 @@ public final class GluSurfaceView extends GLSurfaceView implements Runnable {
 
                 if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                     //stopAction lets the program know that an action has stopped
-                    scene.actionManager.stopAction(0);
+                    actionManager.stopAction(0);
                     Log.w("onTouchListener", "first Action stopped");
                     return true;
                 }
 
                 if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                     //addAction lets the program know to start a knew array to store Pointers positions
-                    scene.actionManager.addAction(0);
-                    scene.actionManager.addPoint(0, motionEvent.getX(0), motionEvent.getY(0));
+                    actionManager.addAction(0);
+                    actionManager.addPoint(0, motionEvent.getX(0), motionEvent.getY(0));
                     Log.w("onTouchListener", "first Action!");
                     return true;
                 }
                 if (motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
-                    scene.actionManager.addAction(ID);
-                    scene.actionManager.addPoint(ID, motionEvent.getX(index), motionEvent.getY(index));
+                    actionManager.addAction(ID);
+                    actionManager.addPoint(ID, motionEvent.getX(index), motionEvent.getY(index));
                     Log.w("onTouchListener", "new Action! " + ID);
                     return true;
                 }
                 if (motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP) {
-                    scene.actionManager.stopAction(ID);
+                    actionManager.stopAction(ID);
                     Log.w("onTouchListener", "action " + ID + " has stopped.");
                     return true;
                 }

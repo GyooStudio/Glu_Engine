@@ -68,20 +68,6 @@ public final class Scene {
 
     private Ressources ressources;
 
-    public Scene(ActionManager actionManager){
-        Loader loader = Loader.getLoader();
-        ressources = Ressources.getRessources();
-
-        state = PAUSE;
-
-        camera = new Camera();
-        this.actionManager = actionManager;
-        this.inputManager = new InputManager(actionManager,this);
-
-        pp = new PostProcessing();
-        generateProjectionMatrix(ressources.viewport.x/ ressources.viewport.y);
-    }
-
     public Scene(){
         Loader loader = Loader.getLoader();
         ressources = Ressources.getRessources();
@@ -91,19 +77,11 @@ public final class Scene {
         camera = new Camera();
         camera.setPosition(new Vector3f(-1,1,-1));
         camera.setRotation( Vector3f.lookAt(camera.getPosition(), new Vector3f(0,0,0), 0));
-        this.actionManager = new ActionManager();
-        this.inputManager = new InputManager(actionManager,this);
+        this.actionManager = ActionManager.getActionManager();
+        this.inputManager = new InputManager(this);
 
         pp = new PostProcessing();
         generateProjectionMatrix(ressources.viewport.x/ ressources.viewport.y);
-    }
-
-    public Scene(int state, ActionManager actionManager){
-        this.state = state;
-        this.actionManager = actionManager;
-        this.inputManager = new InputManager(actionManager,this);
-
-        Loader loader = Loader.getLoader();
     }
 
     public void addEntity(Entity entity){

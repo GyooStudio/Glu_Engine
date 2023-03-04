@@ -2,11 +2,10 @@ package com.glu.engine;
 
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
 
 import com.glu.engine.GUI.ColorSquare;
 import com.glu.engine.GUI.TexQuad;
@@ -44,7 +43,7 @@ public final class Renderer extends Thread implements GLSurfaceView.Renderer {
 
     private Scene scene;
 
-    Renderer(AppCompatActivity main){
+    Renderer(MainActivity main){
         View decorView = main.getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.INVISIBLE);
         decorView.setVisibility(View.INVISIBLE);
@@ -297,7 +296,7 @@ public final class Renderer extends Thread implements GLSurfaceView.Renderer {
                 ressources.colorShader.loadScreenDimensions(ressources.viewport);
                 for (int i = 0; i < quad.number; i++) {
                     if (quad.show.get(i)) {
-                        ressources.colorShader.loadRadius(quad.radius);
+                        ressources.colorShader.loadCornerRadius(quad.cornerRadius);
                         ressources.colorShader.loadColor(quad.color.get(i));
                         ressources.colorShader.loadTransformationMatrix(Maths.createTransformationMatrix(quad.position.get(0), quad.rotation.get(0), quad.scale.get(0)));
                         GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, quad.model.vertCount);

@@ -126,11 +126,28 @@
     ],
     "ColorSquare" : [
       {
-        "name" : "square",
-        "color" : [1.0,1.0,1.0,0.0],
-        "position" : [100.0,0.0],
+        "name" : "bPressé",
+        "color" : [0.8,0.8,0.8,1.0],
+        "position" : [0.0,0.0],
         "rotation" : 0.0,
-        "scale" : [80.0,80.0]
+        "scale" : [1.0,1.0],
+        "rayonCoin" : 0.1
+      },
+      {
+        "name" : "bDéfaut",
+        "color" : [0.8,0.2,0.2,1.0],
+        "position" : [0.0,0.0],
+        "rotation" : 0.0,
+        "scale" : [1.0,1.0],
+        "rayonCoin" : 0.1
+      },
+      {
+        "name" : "bSurvol",
+        "color" : [0.8,0.2,0.2,1.0],
+        "position" : [0.0,0.0],
+        "rotation" : 0.0,
+        "scale" : [1.0,1.0],
+        "rayonCoin" : 0.1
       }
     ],
     "TextBoxes" : [
@@ -142,6 +159,18 @@
         "position" : [50.0,1200.0],
         "rotation" : 0.0,
         "scale" : [2.5,2.5]
+      }
+    ],
+    "Boutons" : [
+      {
+        "nom" : "bouton",
+        "défaut" : "bDéfaut",
+        "pressé" : "bPressé",
+        "survol" : "null",
+        "préréglage" : "CONTRÔLES",
+        "taille" : [80.0,80.0],
+        "position" : [0.0,0.0],
+        "rotation" : 0.0
       }
     ]
   }

@@ -10,7 +10,10 @@ import android.graphics.Typeface;
 import android.opengl.GLES30;
 import android.util.JsonReader;
 import android.util.Log;
+
+import com.glu.engine.GUI.Button;
 import com.glu.engine.GUI.ColorSquare;
+import com.glu.engine.GUI.GUIBase;
 import com.glu.engine.GUI.TexQuad;
 import com.glu.engine.GUI.Text.Font;
 import com.glu.engine.GUI.Text.TextBox;
@@ -787,6 +790,8 @@ public class Loader {
 			ArrayList<String> materialNames = new ArrayList<>();
 			ArrayList<String> textureUsed = new ArrayList<>();
 			ArrayList<String> fontUsed = new ArrayList<>();
+			ArrayList<GUIBase> guiBaseElements = new ArrayList<>();
+			ArrayList<String> guiBaseElementsNames = new ArrayList<>();
 
 			jsonSceneReader.beginObject();
 			while (jsonSceneReader.hasNext()) {
@@ -1106,6 +1111,9 @@ public class Loader {
 											tq.rotation.set(0, rotation);
 											tq.scale.set(0, scale);
 											scene.addTexQuad(tq);
+
+											guiBaseElements.add(tq);
+											guiBaseElementsNames.add(name);
 										}
 										jsonSceneReader.endArray();
 										break;
@@ -1117,6 +1125,7 @@ public class Loader {
 											Vector2f position = null;
 											Vector2f scale = null;
 											float rotation = 0f;
+											float rayonCoin = 0f;
 
 											jsonSceneReader.beginObject();
 											while (jsonSceneReader.hasNext()) {
@@ -1156,6 +1165,9 @@ public class Loader {
 														scale = new Vector2f(sc[0], sc[1]);
 														jsonSceneReader.endArray();
 														break;
+													case "rayonCoin" :
+														rayonCoin = (float) jsonSceneReader.nextDouble();
+														break;
 													default:
 														jsonSceneReader.skipValue();
 														break;
@@ -1168,7 +1180,11 @@ public class Loader {
 											cs.scale.set(0, scale);
 											cs.position.set(0, position);
 											cs.rotation.set(0, rotation);
+											cs.cornerRadius = rayonCoin;
 											scene.addColorSquare(cs);
+
+											guiBaseElements.add(cs);
+											guiBaseElementsNames.add(name);
 										}
 										jsonSceneReader.endArray();
 										break;
@@ -1236,6 +1252,222 @@ public class Loader {
 											textBox.setText(text,2,4, TextBox.Alignment.LEFT);
 											textBox.name = name;
 											scene.addTextBox(textBox);
+										}
+										jsonSceneReader.endArray();
+										break;
+									case "Boutons" :
+										jsonSceneReader.beginArray();
+										while (jsonSceneReader.hasNext()){
+											jsonSceneReader.beginObject();
+
+											String name = null;
+											GUIBase bDéfaut = null;
+											GUIBase bPressé = null;
+											GUIBase bSurvol = null;
+											Vector2f taille = null;
+											Vector2f position = null;
+											float rotation = 0f;
+											Button.Préréglages préréglage = null;
+
+											Button.EnSurvol enSurvol = null;
+											Button.EnSurvolDébarque enSurvolDébarque = null;
+											Button.EnSurvolRelâche enSurvolRelâche = null;
+											Button.EnDoigtTouché enDoigtTouché = null;
+											Button.EnDoigtDébarque enDoigtDébarque = null;
+											Button.EnDoigtRelâche enDoigtRelâche = null;
+											Button.EnClic enClic = null;
+
+											while (jsonSceneReader.hasNext()){
+												String textTag = jsonSceneReader.nextName();
+												switch (textTag){
+													case "nom":
+														name = jsonSceneReader.nextString();
+														break;
+													case "défaut":
+														String bDéfautNom = jsonSceneReader.nextString();
+														int index = guiBaseElementsNames.indexOf(bDéfautNom);
+														bDéfaut = guiBaseElements.get(index);
+														break;
+													case "pressé":
+														String bPresséNom = jsonSceneReader.nextString();
+														index = guiBaseElementsNames.indexOf(bPresséNom);
+														bPressé = guiBaseElements.get(index);
+														break;
+													case "survol":
+														String bSurvolNom = jsonSceneReader.nextString();
+														if(!bSurvolNom.equals("null")) {
+															index = guiBaseElementsNames.indexOf(bSurvolNom);
+															bSurvol = guiBaseElements.get(index);
+														}
+														break;
+													case "taille" :
+														jsonSceneReader.beginArray();
+														float[] s = new float[2];
+														for (int i = 0; i < 2; i++) {
+															s[i] = (float) jsonSceneReader.nextDouble();
+														}
+														jsonSceneReader.endArray();
+														taille = new Vector2f(s[0],s[1]);
+														break;
+													case "position" :
+														jsonSceneReader.beginArray();
+														float[] p = new float[2];
+														for (int i = 0; i < 2; i++) {
+															p[i] = (float) jsonSceneReader.nextDouble();
+														}
+														jsonSceneReader.endArray();
+														position = new Vector2f(p[0],p[1]);
+														break;
+													case "rotation" :
+														rotation = (float) jsonSceneReader.nextDouble();
+														break;
+													case "préréglage" :
+														String prérég = jsonSceneReader.nextString();
+														switch(prérég){
+															case "BOUTON":
+																préréglage = Button.Préréglages.BOUTON;
+																break;
+															case "SÉLECTION":
+																préréglage = Button.Préréglages.SÉLECTION;
+																break;
+															case "CONTRÔLES":
+																préréglage = Button.Préréglages.CONTRÔLES;
+																break;
+															case "CASE_À_COCHER":
+																préréglage = Button.Préréglages.CASE_À_COCHER;
+																break;
+														}
+														break;
+													case "comportement" :
+														jsonSceneReader.beginObject();
+														while (jsonSceneReader.hasNext()){
+															String comp = jsonSceneReader.nextName();
+															String option;
+															switch (comp){
+																case "EnDoigtTouché" :
+																	option = jsonSceneReader.nextString();
+																	switch (option){
+																		case "rien" :
+																			enDoigtTouché = Button.EnDoigtTouché.RIEN;
+																			break;
+																		case "survol" :
+																			enDoigtTouché = Button.EnDoigtTouché.SURVOL;
+																			break;
+																		case "clic" :
+																			enDoigtTouché = Button.EnDoigtTouché.CLIC;
+																			break;
+																	}
+																	break;
+																case "EnDoigtRelâche" :
+																	option = jsonSceneReader.nextString();
+																	switch (option){
+																		case "reste" :
+																			enDoigtRelâche = Button.EnDoigtRelâche.RESTE;
+																			break;
+																		case "clic" :
+																			enDoigtRelâche = Button.EnDoigtRelâche.CLIC;
+																			break;
+																		case "retourne défaut" :
+																			enDoigtRelâche = Button.EnDoigtRelâche.RETOURNE_DÉFAUT;
+																			break;
+																		case "survol" :
+																			enDoigtRelâche = Button.EnDoigtRelâche.SURVOL;
+																			break;
+																	}
+																	break;
+																case "EnDoigtDébarque" :
+																	option = jsonSceneReader.nextString();
+																	switch (option){
+																		case "reste" :
+																			enDoigtDébarque = Button.EnDoigtDébarque.RESTE;
+																			break;
+																		case "clic" :
+																			enDoigtDébarque = Button.EnDoigtDébarque.CLIC;
+																			break;
+																		case "retourne défaut" :
+																			enDoigtDébarque = Button.EnDoigtDébarque.RETOURNE_DÉFAUT;
+																			break;
+																	}
+																	break;
+																case "EnSurvol" :
+																	option = jsonSceneReader.nextString();
+																	switch (option){
+																		case "rien" :
+																			enSurvol = Button.EnSurvol.RIEN;
+																			break;
+																		case "clic" :
+																			enSurvol = Button.EnSurvol.CLIC;
+																			break;
+																		case "survole" :
+																			enSurvol = Button.EnSurvol.SURVOLE;
+																			break;
+																	}
+																	break;
+																case "EnSurvolDébarque" :
+																	option = jsonSceneReader.nextString();
+																	switch (option){
+																		case "reste" :
+																			enSurvolDébarque = Button.EnSurvolDébarque.RESTE;
+																			break;
+																		case "clic" :
+																			enSurvolDébarque = Button.EnSurvolDébarque.CLIC;
+																			break;
+																		case "retourne défaut" :
+																			enSurvolDébarque = Button.EnSurvolDébarque.RETOURNE_DÉFAUT;
+																			break;
+																	}
+																	break;
+																case "EnSurvolRelâche" :
+																	option = jsonSceneReader.nextString();
+																	switch (option){
+																		case "reste" :
+																			enSurvolRelâche = Button.EnSurvolRelâche.RESTE;
+																			break;
+																		case "clic" :
+																			enSurvolRelâche = Button.EnSurvolRelâche.CLIC;
+																			break;
+																		case "retourne défaut" :
+																			enSurvolRelâche = Button.EnSurvolRelâche.RETOURNE_DÉFAUT;
+																			break;
+																	}
+																	break;
+																case "EnClic":
+																	option = jsonSceneReader.nextString();
+																	switch (option){
+																		case "rien" :
+																			enClic = Button.EnClic.RIEN;
+																			break;
+																		case "clic reste" :
+																			enClic = Button.EnClic.CLIC_RESTE;
+																			break;
+																		case "clic immédiat" :
+																			enClic = Button.EnClic.CLIC_IMMÉDIAT;
+																			break;
+																		case "alterne" :
+																			enClic = Button.EnClic.ALTERNE;
+																			break;
+																	}
+																	break;
+																default:
+																	jsonSceneReader.skipValue();
+																	break;
+															}
+														}
+														break;
+													default:
+														jsonSceneReader.skipValue();
+														break;
+												}
+											}
+											jsonSceneReader.endObject();
+
+											Button bouton = new Button(bDéfaut,bPressé,bSurvol);
+											bouton.changerPosition(position);
+											bouton.changerRotation(rotation);
+											bouton.changerTaille(taille);
+											bouton.changerComportement(préréglage);
+											bouton.changerComportement(enDoigtTouché,enDoigtRelâche,enDoigtDébarque,enSurvol,enSurvolDébarque,enSurvolRelâche,enClic);
+											bouton.name = name;
 										}
 										jsonSceneReader.endArray();
 										break;

@@ -1,6 +1,5 @@
 package com.glu.engine.GUI;
 
-import com.glu.engine.shader.ColorShader;
 import com.glu.engine.vectors.Vector2f;
 import com.glu.engine.vectors.Vector4f;
 
@@ -9,24 +8,24 @@ import java.util.ArrayList;
 public class ColorSquare extends GUIBase{
 
     public ArrayList<Vector4f> color = new ArrayList<>();
-    public float radius;
+    public float cornerRadius;
 
     public ColorSquare(Vector4f color){
         super();
         this.color.add(color);
-        radius = 0.0f;
+        cornerRadius = 0.0f;
     }
 
     public ColorSquare(){
         super();
         this.color.add(new Vector4f(0,0,0,1));
-        radius = 0.0f;
+        cornerRadius = 0.0f;
     }
 
     public ColorSquare copy(){
         ColorSquare a = new ColorSquare();
         a.color = (ArrayList<Vector4f>) color.clone();
-        a.radius = radius;
+        a.cornerRadius = cornerRadius;
         a.copy(this);
         return a;
     }

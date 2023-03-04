@@ -1,5 +1,6 @@
 package com.glu.engine;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.NativeActivity;
 import android.content.Context;

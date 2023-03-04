@@ -55,15 +55,19 @@ public class InputManager {
         actionManager.manualUpdate();
         ActionManager.actionType action = actionManager.getAction(0);
 
-        if(button == null && false) {
+        if(button == null) {
             ColorSquare base = new ColorSquare(new Vector4f(0.2f, 0.9f, 0.2f, 1.0f));
             ColorSquare pressed = new ColorSquare(new Vector4f(0.9f, 0.2f, 0.2f, 1.0f));
-            ColorSquare released = new ColorSquare(new Vector4f(0.9f, 0.9f, 0.2f, 1.0f));
-            button = new Button(base, pressed, released);
-            scene.addColorSquare(base);
-            scene.addColorSquare(pressed);
-            scene.addColorSquare(released);
-            scene.addButton(button);
+            ColorSquare survol = new ColorSquare(new Vector4f(0.9f, 0.6f, 0.2f, 1.0f));
+            //scene.addColorSquare(base);
+            //scene.addColorSquare(pressed);
+            //scene.addColorSquare(survol);
+            button = new Button(base, pressed, survol);
+            //scene.addButton(button);
+            button.changerTaille(new Vector2f(200f));
+            button.changerPosition(new Vector2f(100,0));
+            button.changerRotation(45f);
+            button.changerComportement(Button.Préréglages.CONTRÔLES);
         }
 
         if(cube == null){
@@ -88,21 +92,8 @@ public class InputManager {
             // if true, the action was handled and won't update other stuff (like clicking a menu won't update the background game)
             boolean updatedAction = false;
 
-            /*for (Button button : scene.Buttons) {
-                for (int i = 0; i < button.name.size(); i++) {
-                    if (actionManager.pointerIndices[index]) {
-                        if (actionManager.isTouching[index] && !updatedAction){
-                            if (button.hasReleased.get(i)) {
-                                button.checkPassAt(actionManager.lastPoint[index], i, index);
-                                button.checkClickAt(actionManager.startPosition[index], i, index);
-                            }
-                            button.checkReleaseOut(actionManager.lastPoint[index], i, index);
-                        } else {
-                            button.checkReleaseIn(actionManager.lastPoint[index], i, index);
-                            button.hasClickedOff.set(i, false);
-                        }
-                    }
-                }
+            for (Button button : scene.Buttons) {
+                updatedAction = button.actualiser(index);
             }
 
             for (Slider slider : scene.Sliders) {
@@ -116,7 +107,7 @@ public class InputManager {
                 } else {
                     slider.release(index);
                 }
-            }*/
+            }
 
             if(!updatedAction && cube != null){
                 updatedAction = cube.update(scene);

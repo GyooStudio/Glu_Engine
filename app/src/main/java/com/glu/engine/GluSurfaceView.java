@@ -1,6 +1,7 @@
 package com.glu.engine;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.opengl.GLSurfaceView;
@@ -8,7 +9,9 @@ import android.opengl.Matrix;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
+//import androidx.core.view.MotionEventCompat;
+
 import androidx.core.view.MotionEventCompat;
 
 import com.glu.engine.GUI.Text.TextBox;
@@ -51,7 +54,7 @@ public final class GluSurfaceView extends GLSurfaceView implements Runnable {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public GluSurfaceView(Context context, AppCompatActivity main) {
+    public GluSurfaceView(Context context, MainActivity main) {
         super(context);
         startTime = System.currentTimeMillis();
         loader = Loader.getLoader();

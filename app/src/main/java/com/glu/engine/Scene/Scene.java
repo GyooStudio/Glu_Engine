@@ -167,15 +167,13 @@ public final class Scene {
     }
 
     public void addButton(Button button){
-        DirtyButtons.add(button);
+        Buttons.add(button);
     }
 
     public Button getButton(String name){
         for (Button button: Buttons) {
-            for (String n : button.name) {
-                if(name.equals(n)){
-                    return button;
-                }
+            if(name.equals(button.name)){
+                return button;
             }
         }
         return null;
@@ -267,7 +265,7 @@ public final class Scene {
             quad.makeModel();
             TexQuads.add(quad);
             dirtyTexQuads.remove(0);
-            Log.w("cleanGUI", (System.currentTimeMillis() - timer) + " milliseconds to clean TexQuad " + TexQuads.size());
+            Log.w("cleanGUI", (System.currentTimeMillis() - timer) + " milliseconds to clean " + quad.name + " , quad #" + TexQuads.size());
         }
 
         if(dirtyColor.size() > 0){
@@ -276,35 +274,7 @@ public final class Scene {
             quad.makeModel();
             ColorSquare.add(quad);
             dirtyColor.remove(0);
-            Log.w("cleanGUI", (System.currentTimeMillis() - timer) + " milliseconds to clean ColorSquares " + ColorSquare.size());
-        }
-
-        if(DirtyButtons.size() > 0){
-            long timer = System.currentTimeMillis();
-            Button button = DirtyButtons.get(0);
-            button.stateDefault.makeModel();
-            if(button.stateDefault instanceof TexQuad){
-                TexQuads.add((TexQuad) button.stateDefault);
-            }else if(button.stateDefault instanceof ColorSquare){
-                ColorSquare.add((ColorSquare) button.stateDefault);
-            }
-            button.statePressed.makeModel();
-            if(button.statePressed instanceof TexQuad){
-                TexQuads.add((TexQuad) button.statePressed);
-            }else if(button.statePressed instanceof ColorSquare){
-                ColorSquare.add((ColorSquare) button.statePressed);
-            }
-            if(button.stateReleased != null) {
-                button.stateReleased.makeModel();
-                if (button.stateReleased instanceof TexQuad) {
-                    TexQuads.add((TexQuad) button.stateReleased);
-                } else if (button.stateReleased instanceof ColorSquare) {
-                    ColorSquare.add((ColorSquare) button.stateReleased);
-                }
-            }
-            Buttons.add(button);
-            DirtyButtons.remove(0);
-            Log.w("cleanGUI", (System.currentTimeMillis() - timer) + " milliseconds to clean button " + Buttons.size());
+            Log.w("cleanGUI", (System.currentTimeMillis() - timer) + " milliseconds to clean " + quad.name + ", quad #" + ColorSquare.size());
         }
 
         if(DirtySliders.size() > 0){

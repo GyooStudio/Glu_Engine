@@ -23,8 +23,6 @@ import java.util.ArrayList;
 * action individually, as multi-touch may require influence from the UI, which is a task for an
 * input manager.
 *
-* ISSUE: when performing multiple actions on multiple fingers at the same time, the program crashes.
-*
 */
 public final class ActionManager {
     private final static ActionManager actionManager = new ActionManager();

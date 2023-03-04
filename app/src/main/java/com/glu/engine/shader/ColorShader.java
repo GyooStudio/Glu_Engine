@@ -8,7 +8,7 @@ public class ColorShader extends ShaderProgram{
     private int SCREEN_DIM;
     private int TRANS_MAT;
     private int COLOR;
-    private int RADIUS;
+    private int CORNER_RADIUS;
 
     @Override
     public void bindAttributes() {
@@ -20,7 +20,7 @@ public class ColorShader extends ShaderProgram{
         SCREEN_DIM = super.getUniformLocation("screenDimensions");
         TRANS_MAT = super.getUniformLocation("transformationMatrix");
         COLOR = super.getUniformLocation("Color");
-        RADIUS = super.getUniformLocation("Radius");
+        CORNER_RADIUS = super.getUniformLocation("Radius");
     }
 
     public void loadScreenDimensions(Vector2f dim){
@@ -33,7 +33,7 @@ public class ColorShader extends ShaderProgram{
 
     public void loadColor(Vector4f color){ super.loadUniformVector(COLOR,color);}
 
-    public void loadRadius(float r){super.loadUniformFloat(RADIUS,r);}
+    public void loadCornerRadius(float r){super.loadUniformFloat(CORNER_RADIUS,r);}
 
     public ColorShader(String vertCode, String fragCode){
         super(vertCode,fragCode);

@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "$schema" : {
+      "type" : "string"
+    },
+    "Meshes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "directory": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "directory"
+        ]
+      }
+    },
+    "Textures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "directory": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "directory"
+        ]
+      }
+    },
+    "Fonts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "directory": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "padding": {
+            "type": "integer"
+          },
+          "ranges": {
+            "type": "array",
+            "items": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "directory",
+          "size",
+          "padding",
+          "ranges"
+        ]
+      }
+    }
+  },
+  "required": [
+    "$schema",
+    "Meshes",
+    "Textures",
+    "Fonts"
+  ]
+}

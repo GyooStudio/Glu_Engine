@@ -1,4 +1,5 @@
 {
+  "$schema": "RessourceSchem.json",
   "Meshes" : [
     {
       "name" : "Room",

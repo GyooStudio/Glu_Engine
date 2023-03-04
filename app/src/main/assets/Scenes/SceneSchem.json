@@ -1,0 +1,559 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "$schema": {
+        "type": "string",
+        "default": "SceneSchem.json"
+      },
+      "materials": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "default": "NouveauMatériau"
+            },
+            "type": {
+              "type": "integer",
+              "enum": [1,2,3],
+              "default": 1
+            },
+            "isColorTextured": {
+              "type": "boolean",
+              "default": false
+            },
+            "texture": {
+              "type": "string",
+              "default": null
+            },
+            "color": {
+              "type": "array",
+              "maxLength": 3,
+              "minLength": 3,
+              "items": [
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "default": 0.8
+                },
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "default": 0.8
+                },
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "default": 0.8
+                }
+              ]
+            },
+            "emissionIntensity": {
+              "type": "number",
+              "minimum": 0,
+              "default": 0
+            },
+            "isRoughnessMapped": {
+              "type": "boolean",
+              "default": false
+            },
+            "roughness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.5
+            },
+            "isNormalMapped": {
+              "type": "boolean",
+              "default": false
+            },
+            "normalMap": {
+              "type": "string",
+              "default": null
+            },
+            "alphaClip": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "required": [
+            "name",
+            "type",
+            "isColorTextured",
+            "texture",
+            "color",
+            "emissionIntensity",
+            "isRoughnessMapped",
+            "roughness",
+            "isNormalMapped",
+            "normalMap",
+            "alphaClip"
+          ]
+        }
+      },
+      "skybox": {
+        "type": "object",
+        "properties": {
+          "HDRI": {
+            "type": "string",
+            "default": null
+          },
+          "Mesh": {
+            "type": "string",
+            "default": "skybox"
+          },
+          "intensity": {
+            "type": "number",
+            "minimum": 0,
+            "default": 1
+          }
+        },
+        "required": [
+          "HDRI",
+          "Mesh",
+          "intensity"
+        ]
+      },
+      "Entities": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "default": "NouvelleEntité"
+            },
+            "mesh": {
+              "type": "string",
+              "default": "skybox"
+            },
+            "SeparateMesh": {
+              "type": "boolean",
+              "default": false
+            },
+            "material": {
+              "type": "string"
+            },
+            "position": {
+              "type": "array",
+              "minLength": 3,
+              "maxLength": 3,
+              "items": [
+                {
+                  "type": "number",
+                  "default": 0
+                },
+                {
+                  "type": "number",
+                  "default": 0
+                },
+                {
+                  "type": "number",
+                  "default": 0
+                }
+              ]
+            },
+            "rotation": {
+              "type": "array",
+              "minLength": 3,
+              "maxLength": 3,
+              "items": [
+                {
+                  "type": "number",
+                  "default": 0
+                },
+                {
+                  "type": "number",
+                  "default": 0
+                },
+                {
+                  "type": "number",
+                  "default": 0
+                }
+              ]
+            },
+            "scale": {
+              "type": "array",
+              "minLength": 3,
+              "maxLength": 3,
+              "items": [
+                {
+                  "type": "number",
+                  "default": 1
+                },
+                {
+                  "type": "number",
+                  "default": 1
+                },
+                {
+                  "type": "number",
+                  "default": 1
+                }
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "mesh",
+            "SeparateMesh",
+            "material",
+            "position",
+            "rotation",
+            "scale"
+          ]
+        }
+      },
+      "lights": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "array",
+              "minLength": 3,
+              "maxLength": 3,
+              "items": [
+                {
+                  "type": "number",
+                  "default": 0
+                },
+                {
+                  "type": "number",
+                  "default": 0
+                },
+                {
+                  "type": "number",
+                  "default": 0
+                }
+              ]
+            },
+            "color": {
+              "type": "array",
+              "minLength": 3,
+              "maxLength": 3,
+              "items": [
+                {
+                  "type": "number",
+                  "default": 1
+                },
+                {
+                  "type": "number",
+                  "default": 1
+                },
+                {
+                  "type": "number",
+                  "default": 1
+                }
+              ]
+            },
+            "intensity": {
+              "type": "number",
+              "default": 10
+            }
+          },
+          "required": [
+            "position",
+            "color",
+            "intensity"
+          ]
+        }
+      },
+      "UI": {
+        "type": "object",
+        "properties": {
+          "TexQuads": {
+            "type": "array",
+            "items":{
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "default": "NouveauTexQuad"
+                },
+                "texture": {
+                  "type": "string"
+                },
+                "position": {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items": [
+                    {
+                      "type": "number",
+                      "default": 0
+                    },
+                    {
+                      "type": "number",
+                      "default": 0
+                    }
+                  ]
+                },
+                "rotation": {
+                  "type": "number",
+                  "default": 0
+                },
+                "scale": {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items": [
+                    {
+                      "type": "number",
+                      "default": 1
+                    },
+                    {
+                      "type": "number",
+                      "default": 1
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "texture",
+                "position",
+                "rotation",
+                "scale"
+              ]
+            }
+          },
+          "ColorSquare": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "default" : "NouveauColorSquare"
+                },
+                "color": {
+                  "type": "array",
+                  "minLength": 4,
+                  "maxLength": 4,
+                  "items": [
+                    {
+                      "type": "number",
+                      "default": 0.8
+                    },
+                    {
+                      "type": "number",
+                      "default": 0.8
+                    },
+                    {
+                      "type": "number",
+                      "default": 0.8
+                    },
+                    {
+                      "type": "number",
+                      "default": 1
+                    }
+                  ]
+                },
+                "position": {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items": [
+                    {
+                      "type": "number",
+                      "default": 0
+                    },
+                    {
+                      "type": "number",
+                      "default": 0
+                    }
+                  ]
+                },
+                "rotation": {
+                  "type": "number",
+                  "default": 0
+                },
+                "scale": {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items": [
+                    {
+                      "type": "number",
+                      "default": 1
+                    },
+                    {
+                      "type": "number",
+                      "default": 1
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "color",
+                "position",
+                "rotation",
+                "scale"
+              ]
+            }
+          },
+          "Buttons" : {
+            "type": "array",
+            "items": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "défaut": {
+                  "type": "string"
+                },
+                "pressé": {
+                  "type": "string"
+                },
+                "survol": {
+                  "type": "string"
+                },
+                "taille": {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items":{
+                    "type": "number",
+                    "default": 1
+                  }
+                },
+                "position": {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items": {
+                    "type": "number",
+                    "default": 0
+                  }
+                },
+                "rotation": {
+                  "type": "number",
+                  "default": 0
+                },
+                "préréglage": {
+                  "type": "string",
+                  "enum": [
+                    "BOUTTON",
+                    "SÉLECTION",
+                    "CONTRÔLES",
+                    "CASE_À_COCHER"
+                  ],
+                  "default": "BOUTTON"
+                },
+                "comportement": {
+                  "type": "object",
+                  "properties": {
+                    "EnDoigtTouché": {
+                      "type": "string",
+                      "enum": [
+                        "rien",
+                        "survol",
+                        "clic"
+                      ],
+                      "default": null
+                    },
+                    "EnDoigtRelâche": {
+                      "type": "string",
+                      "enum": [
+                        "reste",
+                        "clic",
+                        "retourne défaut",
+                        "survol"
+                      ],
+                      "default": null
+                    },
+                    "EnDoigtDébarque": {
+                      "type": "string",
+                      "enum": [
+                        "reste",
+                        "clic",
+                        "retourne défaut"
+                      ],
+                      "default": null
+                    },
+                    "EnSurvol": {
+                      "type": "string",
+                      "enum": [
+                        "rien",
+                        "clic",
+                        "survol"
+                      ],
+                      "default": null
+                    },
+                    "EnSurvolDébarque": {
+                      "type": "string",
+                      "enum": [
+                        "reste",
+                        "clic",
+                        "retourne défaut"
+                      ],
+                      "default": null
+                    },
+                    "EnSurvolRelâche": {
+                      "type": "string",
+                      "enum": [
+                        "reste",
+                        "clic",
+                        "retourne défaut"
+                      ],
+                      "default": null
+                    },
+                    "EnClic": {
+                      "type": "string",
+                      "enum": [
+                        "rien",
+                        "clic reste",
+                        "clic immédiat",
+                        "alterne"
+                      ],
+                      "default": null
+                    }
+                  },
+                  "required": [
+                    "EnDoigtTouché",
+                    "EnDoigtRelâche",
+                    "EnDoigtDébarque",
+                    "EnSurvol",
+                    "EnSurvolDébarque",
+                    "EnSurvolRelâche",
+                    "EnClic"
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "défaut",
+                "pressé",
+                "survol",
+                "taille",
+                "position",
+                "rotation",
+                "préréglage"
+              ]
+            }
+          }
+        },
+        "required": [
+          "TexQuads",
+          "ColorSquare",
+          "Buttons"
+        ]
+      }
+    },
+    "required": [
+      "$schema",
+      "materials",
+      "skybox",
+      "Entities",
+      "lights",
+      "UI"
+    ]
+}
+  
+  

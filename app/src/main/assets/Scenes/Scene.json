@@ -1,4 +1,5 @@
 {
+  "$schema": "SceneSchem.json",
   "materials" : [
     {
       "name" : "default",
@@ -12,7 +13,8 @@
       "isNormalMapped" : false,
       "normalMap" : "metal plate normal",
       "alphaClip" : false
-    },{
+    },
+    {
       "name" : "Rubiks_Cube",
       "type" : 1,
       "isColorTextured" : true,
@@ -24,7 +26,8 @@
       "isNormalMapped" : true,
       "normalMap" : "Rubiks cube normal",
       "alphaClip" : false
-    }, {
+    },
+    {
       "name" : "metal",
       "type" : 3,
       "isColorTextured" : false,
@@ -33,10 +36,11 @@
       "emissionIntensity" : 1.0,
       "isRoughnessMapped" : false,
       "roughness" : 0.1,
-      "isNormalMapped" : true,
+      "isNormalMapped" : false,
       "normalMap" : "metal plate normal",
       "alphaClip" : false
-    }, {
+    },
+    {
       "name" : "glow",
       "type" : 2,
       "isColorTextured" : true,
@@ -66,15 +70,17 @@
       "position" : [0.0,0.0,6.0],
       "rotation" : [0.0,0.0,0.0],
       "scale" : [5.0,5.0,5.0]
-    },{
+    },
+    {
       "name" : "room",
       "mesh" : "Room",
-      "separateMesh": false,
+      "SeparateMesh": false,
       "material" : "default",
       "position" : [0.0,0.0,0.0],
       "rotation" : [0.0,0.0,0.0],
       "scale" : [10.0,10.0,10.0]
-    },{
+    },
+    {
       "name" : "ballb",
       "mesh" : "icosphere",
       "SeparateMesh" : false,
@@ -82,7 +88,8 @@
       "position" : [3.0,0.0,0.0],
       "rotation" : [0.0,0.0,0.0],
       "scale" : [0.5,0.5,0.5]
-    },{
+    },
+    {
       "name" : "Rubiks cube",
       "mesh" : "Rubiks_Cube",
       "SeparateMesh" : true,
@@ -100,19 +107,23 @@
       "position" : [2.2,5.75,-4.0],
       "color" : [1.0,0.6,0.4],
       "intensity" : 3.0
-    },{
+    },
+    {
       "position" : [-2.2,5.75,-4.0],
       "color" : [1.0,0.6,0.4],
       "intensity" : 3.0
-    },{
+    },
+    {
       "position" : [2.2,5.75, 4.0],
       "color" : [1.0,0.6,0.4],
       "intensity" : 3.0
-    },{
+    },
+    {
       "position" : [-2.2,5.75, 4.0],
       "color" : [1.0,0.6,0.4],
       "intensity" : 3.0
-  }],
+  }
+  ],
 
   "UI" : {
     "TexQuads": [
@@ -126,51 +137,44 @@
     ],
     "ColorSquare" : [
       {
-        "name" : "bPressé",
-        "color" : [0.8,0.8,0.8,1.0],
-        "position" : [0.0,0.0],
+        "name" : "carré",
+        "color" : [1.0,1.0,1.0,0.0],
+        "position" : [100.0,0.0],
         "rotation" : 0.0,
-        "scale" : [1.0,1.0],
-        "rayonCoin" : 0.1
+        "scale" : [80.0,80.0]
       },
       {
-        "name" : "bDéfaut",
-        "color" : [0.8,0.2,0.2,1.0],
+        "name" : "défaut",
+        "color" : [0.0,1.0,0.0,1.0],
         "position" : [0.0,0.0],
         "rotation" : 0.0,
-        "scale" : [1.0,1.0],
-        "rayonCoin" : 0.1
+        "scale" : [80.0,80.0]
       },
       {
-        "name" : "bSurvol",
-        "color" : [0.8,0.2,0.2,1.0],
+        "name" : "pressé",
+        "color" : [1.0,0.0,0.0,1.0],
         "position" : [0.0,0.0],
         "rotation" : 0.0,
-        "scale" : [1.0,1.0],
-        "rayonCoin" : 0.1
-      }
-    ],
-    "TextBoxes" : [
+        "scale" : [80.0,80.0]
+      },
       {
-        "name" : "FPS",
-        "font" : "normal Bold",
-        "text" : "FPS",
-        "size" : [500.0,0.0],
-        "position" : [50.0,1200.0],
-        "rotation" : 0.0,
-        "scale" : [2.5,2.5]
-      }
-    ],
-    "Boutons" : [
-      {
-        "nom" : "bouton",
-        "défaut" : "bDéfaut",
-        "pressé" : "bPressé",
-        "survol" : "null",
-        "préréglage" : "CONTRÔLES",
-        "taille" : [80.0,80.0],
+        "name" : "survol",
+        "color" : [1.0,1.0,0.0,1.0],
         "position" : [0.0,0.0],
-        "rotation" : 0.0
+        "rotation" : 0.0,
+        "scale" : [80.0,80.0]
+      }
+    ],
+    "Buttons": [
+      {
+        "name": "bouton",
+        "défaut": "défaut",
+        "pressé": "pressé",
+        "survol": "survol",
+        "taille": [1,1],
+        "position": [0,0],
+        "rotation": 0,
+        "préréglage": "BOUTTON"
       }
     ]
   }

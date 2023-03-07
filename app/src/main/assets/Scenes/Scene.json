@@ -100,32 +100,8 @@
     }
   ],
 
-  "TMP_NULL" : [],
-
-  "lights" : [
-    {
-      "position" : [2.2,5.75,-4.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 3.0
-    },
-    {
-      "position" : [-2.2,5.75,-4.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 3.0
-    },
-    {
-      "position" : [2.2,5.75, 4.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 3.0
-    },
-    {
-      "position" : [-2.2,5.75, 4.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 3.0
-  }
-  ],
-
-  "UI" : {
+  "TMP_NULL" : [
+     {
     "TexQuads": [
       {
         "name" : "pointer",
@@ -175,6 +151,46 @@
         "position": [0,0],
         "rotation": 0,
         "préréglage": "BOUTTON"
+      }
+    ]
+  }
+  ],
+
+  "lights" : [
+    {
+      "position" : [2.2,5.75,-4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 3.0
+    },
+    {
+      "position" : [-2.2,5.75,-4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 3.0
+    },
+    {
+      "position" : [2.2,5.75, 4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 3.0
+    },
+    {
+      "position" : [-2.2,5.75, 4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 3.0
+  }
+  ],
+  "UI": {
+    "ColorSquare": [],
+    "TexQuads": [],
+    "Buttons": [],
+    "TextBoxes": [
+      {
+        "name": "FPS",
+        "font": "normal Bold",
+        "text": "text",
+        "size": [300,0],
+        "position": [-300,1250],
+        "rotation": 0,
+        "scale": [2.5,2.5]
       }
     ]
   }

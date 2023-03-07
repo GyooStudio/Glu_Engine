@@ -537,12 +537,87 @@
                 "préréglage"
               ]
             }
+          },
+          "TextBoxes" : {
+            "type": "array",
+            "items": {
+              "properties": {
+                "name" : {
+                  "type" : "string"
+                },
+                "font" : {
+                  "type" : "string"
+                },
+                "text" : {
+                  "type": "string"
+                },
+                "size" : {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items" : [
+                    {
+                      "type" : "number",
+                      "default": 300
+                    },
+                    {
+                      "type": "number",
+                      "default": 300
+                    }
+                  ]
+                },
+                "position" : {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items" : [
+                    {
+                      "type" : "number",
+                      "default" : 0
+                    },
+                    {
+                      "type" : "number",
+                      "default": 0
+                    }
+                  ]
+                },
+                "rotation" : {
+                  "type" : "number",
+                  "default" : 0
+                },
+                "scale" : {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items": [
+                    {
+                      "type" : "number",
+                      "default" : 3
+                    },
+                    {
+                      "type" : "number",
+                      "default" : 3
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "font",
+                "text",
+                "size",
+                "position",
+                "rotation",
+                "scale"
+              ]
+            }
           }
         },
         "required": [
           "TexQuads",
           "ColorSquare",
-          "Buttons"
+          "Buttons",
+          "TextBoxes"
         ]
       }
     },

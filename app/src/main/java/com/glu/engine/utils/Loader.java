@@ -213,6 +213,8 @@ public class Loader {
 		int size;
 		int charCount = 0;
 
+		long timeProgressBar = System.currentTimeMillis();
+
 		try {
 			size = bis.available();
 		} catch (IOException e) {
@@ -246,8 +248,10 @@ public class Loader {
 			}
 
 			String[] currentLine = line.toString().split(" "); // split between words
-			if(Math.floorMod(charCount,10000) > 9998) {
+			//progressMarker
+			if(System.currentTimeMillis() - timeProgressBar > 1000) {
 				Log.w("loadModel", "loading... " + (100.0f * (float) charCount / (float) size) + "%");
+				timeProgressBar = System.currentTimeMillis();
 			}
 
 			// if it's a vertex position
@@ -393,7 +397,7 @@ public class Loader {
 						index[i] = preIndex.get(i);
 					}
 
-					Log.w("loading", "sizes : " + (rawPos.size() + rawNorm.size() + rawUV.size()));
+					//Log.w("loading", " : " + (rawPos.size() + rawNorm.size() + rawUV.size()));
 
 					model = new RawModel(pos, uv, norm, index);
 					model.name = dir;
@@ -455,6 +459,16 @@ public class Loader {
 		int iAN = 0;
 		int iAU = 0;
 
+		int charCount = 0;
+		int size = 0;
+		try {
+			size = bis.available();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		long timeProgressBar = System.currentTimeMillis();
+
 		while(continueReading){
 
 			boolean endOfLine = false;
@@ -464,6 +478,7 @@ public class Loader {
 				char chr = 'a';
 				try {
 					chr = (char) bis.read(); // get a char
+					charCount++;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -484,6 +499,11 @@ public class Loader {
 			}
 
 			String[] currentLine = line.toString().split(" "); // split between words
+			//progressMarker
+			if(System.currentTimeMillis() - timeProgressBar > 1000) {
+				Log.w("loadModels", "loading... " + (100.0f * (float) charCount / (float) size) + "%");
+				timeProgressBar = System.currentTimeMillis();
+			}
 
 			// if it's a vertex position
 			if(line.toString().startsWith("v ")){
@@ -599,7 +619,7 @@ public class Loader {
 							index[i] = preIndex.get(i);
 						}
 
-						Log.w("loading", "sizes : " + (rawPos.size() + rawNorm.size() + rawUV.size()));
+						//Log.w("loading", "sizes : " + (rawPos.size() + rawNorm.size() + rawUV.size()));
 
 						RawModel model = new RawModel(pos, uv, norm, index);
 						model.name = name;
@@ -1255,7 +1275,7 @@ public class Loader {
 										}
 										jsonSceneReader.endArray();
 										break;
-									case "Boutons" :
+									case "Buttons" :
 										jsonSceneReader.beginArray();
 										while (jsonSceneReader.hasNext()){
 											jsonSceneReader.beginObject();

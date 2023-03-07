@@ -26,7 +26,7 @@ import com.glu.engine.vectors.Vector4f;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public final class Renderer extends Thread implements GLSurfaceView.Renderer {
+public final class Renderer implements GLSurfaceView.Renderer {
 
     public final Loader loader;
     public Ressources ressources;
@@ -49,6 +49,7 @@ public final class Renderer extends Thread implements GLSurfaceView.Renderer {
         decorView.setVisibility(View.INVISIBLE);
         loader = Loader.getLoader();
         scene = new Scene();
+
         ressources = Ressources.getRessources();
     }
 

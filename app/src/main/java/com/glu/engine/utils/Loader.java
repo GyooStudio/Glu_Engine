@@ -1488,6 +1488,7 @@ public class Loader {
 											bouton.changerComportement(préréglage);
 											bouton.changerComportement(enDoigtTouché,enDoigtRelâche,enDoigtDébarque,enSurvol,enSurvolDébarque,enSurvolRelâche,enClic);
 											bouton.name = name;
+											scene.addButton(bouton);
 										}
 										jsonSceneReader.endArray();
 										break;

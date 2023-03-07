@@ -63,19 +63,19 @@
 
   "Entities" : [
     {
-      "name" : "ball",
-      "mesh" : "icosphere",
-      "SeparateMesh" : false,
-      "material" : "metal",
-      "position" : [0.0,0.0,6.0],
-      "rotation" : [0.0,0.0,0.0],
-      "scale" : [5.0,5.0,5.0]
-    },
-    {
       "name" : "room",
       "mesh" : "Room",
       "SeparateMesh": false,
       "material" : "default",
+      "position" : [0.0,0.0,0.0],
+      "rotation" : [0.0,0.0,0.0],
+      "scale" : [10.0,10.0,10.0]
+    },
+    {
+      "name" : "Rubiks cube",
+      "mesh" : "Rubiks_Cube",
+      "SeparateMesh" : true,
+      "material" : "Rubiks_Cube",
       "position" : [0.0,0.0,0.0],
       "rotation" : [0.0,0.0,0.0],
       "scale" : [10.0,10.0,10.0]
@@ -90,13 +90,13 @@
       "scale" : [0.5,0.5,0.5]
     },
     {
-      "name" : "Rubiks cube",
-      "mesh" : "Rubiks_Cube",
-      "SeparateMesh" : true,
-      "material" : "Rubiks_Cube",
-      "position" : [0.0,0.0,0.0],
+      "name" : "ball",
+      "mesh" : "icosphere",
+      "SeparateMesh" : false,
+      "material" : "metal",
+      "position" : [0.0,0.0,6.0],
       "rotation" : [0.0,0.0,0.0],
-      "scale" : [10.0,10.0,10.0]
+      "scale" : [5.0,5.0,5.0]
     }
   ],
 
@@ -179,9 +179,57 @@
   }
   ],
   "UI": {
-    "ColorSquare": [],
-    "TexQuads": [],
-    "Buttons": [],
+    "TexQuads": [
+      {
+        "name" : "pointer",
+        "texture" : "pointer",
+        "position" : [0.0,0.0],
+        "rotation" : 0.0,
+        "scale" : [80.0,80.0]
+      }
+    ],
+    "ColorSquare" : [
+      {
+        "name" : "carré",
+        "color" : [1.0,1.0,1.0,0.0],
+        "position" : [100.0,0.0],
+        "rotation" : 0.0,
+        "scale" : [80.0,80.0]
+      },
+      {
+        "name" : "défaut",
+        "color" : [0.0,1.0,0.0,1.0],
+        "position" : [0.0,0.0],
+        "rotation" : 0.0,
+        "scale" : [80.0,80.0]
+      },
+      {
+        "name" : "pressé",
+        "color" : [1.0,0.0,0.0,1.0],
+        "position" : [0.0,0.0],
+        "rotation" : 0.0,
+        "scale" : [80.0,80.0]
+      },
+      {
+        "name" : "survol",
+        "color" : [1.0,1.0,0.0,1.0],
+        "position" : [0.0,0.0],
+        "rotation" : 0.0,
+        "scale" : [80.0,80.0]
+      }
+    ],
+    "Buttons": [
+      {
+        "name": "bouton",
+        "défaut": "défaut",
+        "pressé": "pressé",
+        "survol": "survol",
+        "taille": [80,80],
+        "position": [0,0],
+        "rotation": 0,
+        "préréglage": "SÉLECTION"
+      }
+    ],
     "TextBoxes": [
       {
         "name": "FPS",

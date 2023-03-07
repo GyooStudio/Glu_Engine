@@ -128,12 +128,11 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                     scene = loader.loadScene("Scenes/Scene.json", new Vector2f(1));
                                     renderer.setScene(scene);
-                                    //requestRender();
 
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING, 0, 0);
-                                    scene.pp.addEffect(PostProcessing.effect.SSR, 1.0f, 0.1f);
-                                    scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
+                                    //scene.pp.addEffect(PostProcessing.effect.SSR, 1.0f, 0.1f);
+                                    //scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
                                     scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT, -1.0f, 2.2f);
                                     //scene.pp.addEffect(PostProcessing.effect.GAUSSIAN_BLUR,4.0f,1.0f);
                                     //scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,5.0f);
@@ -144,6 +143,7 @@ public final class GluSurfaceView extends GLSurfaceView {
                                     scene.pp.setBackgroundColor(renderer.color);
 
                                     scene.sunLight.shadowDist = 30f;
+                                    scene.sunLight.softness = 1f;
 
                                     while(fpsText == null){
                                         fpsText = scene.getTextBox("FPS");

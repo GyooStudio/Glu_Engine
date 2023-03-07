@@ -70,7 +70,7 @@ public class InputManager {
             button.changerComportement(Button.Préréglages.CONTRÔLES);
         }
 
-        if(cube == null){
+        /*if(cube == null){
             Entity[] es = new Entity[26];
             int i = 0;
             for (Entity e : scene.Entities) {
@@ -85,7 +85,7 @@ public class InputManager {
             if(i > 25) {
                 cube = new RubikCube(es);
             }
-        }
+        }*/
 
         for (int index = 0; index < ActionManager.MAX_POINTERS; index++) {
 

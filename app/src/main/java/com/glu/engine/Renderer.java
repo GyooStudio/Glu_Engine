@@ -76,11 +76,11 @@ public final class Renderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA,GLES30.GL_ONE_MINUS_SRC_ALPHA);
-        /*int[] ints = new int[2];
+        int[] ints = new int[2];
         GLES30.glGetIntegerv(GLES30.GL_MAX_FRAGMENT_UNIFORM_VECTORS,ints, 1);
         GLES30.glGetIntegerv(GLES30.GL_MAX_DRAW_BUFFERS,ints, 0);
         Log.w("init", "max combined texture units : "  + ints[1]);
-        Log.w("init", "max draw buffers : " + ints[0]);*/
+        Log.w("init", "max draw buffers : " + ints[0]);
     }
 
     @Override
@@ -118,15 +118,15 @@ public final class Renderer implements GLSurfaceView.Renderer {
         if(scene.pp.effects.contains(PostProcessing.effect.TAA)) {
             jitter = new Vector2f(((float) Math.random() - 0.5f) / (Math.min(ressources.viewport.x, ressources.viewport.y) / scene.pp.downSizeFactor), ((float) Math.random() - 0.5f) / (Math.min(ressources.viewport.x, ressources.viewport.y) / scene.pp.downSizeFactor));
         }
-        /*//Dithering
+       //Dithering
         if(scene.pp.effects.contains(PostProcessing.effect.DITHERING)) {
             if (inc == 1 || inc == 2) {
-                jitter.add(new Vector2f(0.5f * scene.pp.downSizeFactor / Math.min(viewPort.x, viewPort.y), 0));
+                jitter.add(new Vector2f(0.5f * scene.pp.downSizeFactor / Math.min(ressources.viewport.x, ressources.viewport.y), 0));
             }
             if (inc == 2 || inc == 3) {
-                jitter.add(new Vector2f(0f, 0.5f * scene.pp.downSizeFactor / Math.min(viewPort.x, viewPort.y)));
+                jitter.add(new Vector2f(0f, 0.5f * scene.pp.downSizeFactor / Math.min(ressources.viewport.x, ressources.viewport.y)));
             }
-        }*/
+        }
 
         scene.pp.prepareForRender();
         render(scene, jitter,true,0);

@@ -66,7 +66,7 @@ public class InputManager {
             bouton.changerComportement(Bouton.Préréglages.CONTRÔLES);
         }
 
-        /*if(cube == null){
+        if(cube == null){
             Entity[] es = new Entity[26];
             int i = 0;
             for (Entity e : scene.Entities) {
@@ -81,7 +81,7 @@ public class InputManager {
             if(i > 25) {
                 cube = new RubikCube(es);
             }
-        }*/
+        }
 
         for (int index = 0; index < ActionManager.MAX_POINTERS; index++) {
 
@@ -118,7 +118,7 @@ public class InputManager {
 
         }
 
-        camCenter = new Vector3f((float) Math.cos((double) System.currentTimeMillis() / 4000.0) * 3f, 0f, (float) Math.sin((double) System.currentTimeMillis() / 4000.0) * 3f );
+        //camCenter = new Vector3f((float) Math.cos((double) System.currentTimeMillis() / 4000.0) * 3f, 0f, (float) Math.sin((double) System.currentTimeMillis() / 4000.0) * 3f );
         Matrix4f m = new Matrix4f();
         Matrix.translateM(m.mat,0,m.mat,0,camCenter.x,camCenter.y,camCenter.z);
         Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);

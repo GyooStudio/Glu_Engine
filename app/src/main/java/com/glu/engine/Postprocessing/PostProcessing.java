@@ -411,41 +411,18 @@ public class PostProcessing {
                     offY = 1f;
                 }
 
-                Vector3f[] lightPos = new Vector3f[lights.size()];
-                float[] lightRad = new float[lights.size()];
-                Matrix4f Mat = camera.getViewMat().copy();
-                Matrix.multiplyMM(Mat.mat, 0, PROJMAT.mat, 0, Mat.mat, 0);
-                float a = (float) (1.0 / Math.tan(Math.toRadians(FOV) / 2f));
+                float tileSize = 1024f;
 
-                for (int j = 0; j < lightPos.length; j++) {
-                    float[] pos = new float[]{lights.get(j).position.x, lights.get(j).position.y, lights.get(j).position.z, 1f};
-                    float rad = lights.get(j).radius;
-                    Matrix.multiplyMV(pos,0,Mat.mat,0,pos,0);
-                    lightPos[j] = new Vector3f((pos[0]/Math.abs(pos[3]) * 0.5f + 0.5f) * scene.width * offX, (pos[1]/Math.abs(pos[3]) * 0.5f + 0.5f) * scene.height * offY, pos[2]);
-                    lightRad[j] = (a * rad / (float) Math.sqrt(Math.max(Vector3f.distance(camera.getPosition(),lights.get(j).position)*Vector3f.distance(camera.getPosition(),lights.get(j).position) - rad*rad,0.1f))) * Math.min(scene.width * offX, scene.height * offY) * 0.5f;
-                }
-
-                float tileSize = 8f;
-
-                deffShader.loadNumberOfLights(lightPos.length);
-                for (int j = 0; j < lightPos.length; j++) {
-                    if(lightPos[j].z + lights.get(j).radius > 0f) {
-                        if(Vector3f.distance(lights.get(j).position, camera.getPosition()) > lights.get(j).radius){
-                            deffShader.loadLight(j, lights.get(j).position, lights.get(j).color, lights.get(j).intensity, new Vector4f(lightPos[j].x, lightPos[j].y, lightPos[j].z, lightRad[j]));
-                            deffShader.loadLightCilpDistance(lights.get(j).radius);
-                        }else{
-                            deffShader.loadLight(j, lights.get(j).position, lights.get(j).color, lights.get(j).intensity, new Vector4f(lightPos[j].x, lightPos[j].y, lightPos[j].z, 541f));
+                deffShader.loadNumberOfLights(lights.size());
+                for (int j = 0; j < lights.size(); j++) {
+                        if(Vector3f.distance(lights.get(j).position, camera.getPosition()) < lights.get(j).radius){
+                            deffShader.loadLight(j, lights.get(j).position, lights.get(j).color, lights.get(j).intensity, new Vector4f(0f));
                             deffShader.loadLightCilpDistance(lights.get(j).radius);
                         }
-                    }else{
-                        deffShader.loadLight(j, new Vector3f(0f), new Vector3f(0f), 0f, new Vector4f(0f));
-                        deffShader.loadLightCilpDistance(0f);
-                    }
                 }
-                deffShader.loadTileSize(tileSize);
                 deffShader.loadScreenDiff(new Vector2f(offX,offY));
 
-                GLES30.glDrawArraysInstanced(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount, (int)( Math.ceil(scene.width/tileSize) * Math.ceil(scene.height/tileSize) ) );
+                GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount );
 
                 deffShader.stop();
 

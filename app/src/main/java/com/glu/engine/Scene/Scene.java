@@ -338,7 +338,7 @@ public final class Scene {
 
     public void updateGraphics(){
         if(!pp.isSetup) {
-            pp.setup(2.0f, this);
+            pp.setup(3.0f, this);
         }
         cleanTextures();
         cleanEntities();

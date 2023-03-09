@@ -26,6 +26,8 @@ public class Entity {
     private ArrayList<Matrix4f> prevRotationMatrix = new ArrayList<>();
     private ArrayList<Matrix4f> prevScaleMatrix = new ArrayList<>();
 
+    private ArrayList<Matrix4f> transformMatrix = new ArrayList<>();
+
     public ArrayList<Collider> colliders = new ArrayList<>();
     public BoundingBox boundingBox = new BoundingBox();
 
@@ -58,6 +60,7 @@ public class Entity {
         rotationMatrix.add(new Matrix4f());
         scaleMatrix.add(new Matrix4f());
         prevScaleMatrix.add(new Matrix4f());
+        transformMatrix.add(new Matrix4f());
         colliders.add(null);
         show.add(true);
         castShadow.add(true);
@@ -87,6 +90,7 @@ public class Entity {
         prevRotationMatrix = (ArrayList<Matrix4f>) entity.prevRotationMatrix.clone();
         scaleMatrix = (ArrayList<Matrix4f>) entity.scaleMatrix.clone();
         prevScaleMatrix = (ArrayList<Matrix4f>) entity.prevScaleMatrix.clone();
+        transformMatrix = (ArrayList<Matrix4f>) entity.transformMatrix.clone();
         colliders =  (ArrayList<Collider>) entity.colliders.clone();
         show = (ArrayList<Boolean>) entity.show.clone();
         castShadow = (ArrayList<Boolean>) entity.castShadow.clone();
@@ -108,6 +112,7 @@ public class Entity {
         prevTranslationMatrix.add(new Matrix4f());
         rotationMatrix.add(new Matrix4f());
         prevRotationMatrix.add(new Matrix4f());
+        transformMatrix.add(new Matrix4f());
         scaleMatrix.add(new Matrix4f());
         prevScaleMatrix.add(new Matrix4f());
         colliders.add(null);
@@ -135,6 +140,7 @@ public class Entity {
         hasChanged.add(hasChanged.get(index));
         translationMatrix.add(translationMatrix.get(index).copy());
         prevTranslationMatrix.add(prevTranslationMatrix.get(index).copy());
+        transformMatrix.add(transformMatrix.get(index).copy());
         rotationMatrix.add(rotationMatrix.get(index).copy());
         prevRotationMatrix.add(prevRotationMatrix.get(index).copy());
         scaleMatrix.add(scaleMatrix.get(index).copy());
@@ -157,6 +163,7 @@ public class Entity {
         hasChanged.remove(index);
         translationMatrix.remove(index);
         prevTranslationMatrix.remove(index);
+        transformMatrix.remove(index);
         rotationMatrix.remove(index);
         prevRotationMatrix.remove(index);
         scaleMatrix.remove(index);
@@ -170,14 +177,14 @@ public class Entity {
     }
 
     public void callNewFrame(){
-        prevPosition = (ArrayList<Vector3f>) position.clone();
+        /*prevPosition = (ArrayList<Vector3f>) position.clone();
         prevRotation = (ArrayList<Vector3f>) rotation.clone();
         prevScale = (ArrayList<Vector3f>) scale.clone();
         prevTranslationMatrix = (ArrayList<Matrix4f>) translationMatrix.clone();
         prevRotationMatrix = (ArrayList<Matrix4f>) rotationMatrix.clone();
-        prevScaleMatrix = (ArrayList<Matrix4f>) scaleMatrix.clone();
-        for (boolean a : hasChanged) {
-            a = true;
+        prevScaleMatrix = (ArrayList<Matrix4f>) scaleMatrix.clone();*/
+        for (int i = 0; i < hasChanged.size(); i++){
+            hasChanged.set(i, false);
         }
     }
 
@@ -227,7 +234,10 @@ public class Entity {
     }
 
     public Matrix4f getTransformMatrix(int index) {
-        return Matrix4f.MultiplyMM(translationMatrix.get(index),Matrix4f.MultiplyMM(rotationMatrix.get(index),scaleMatrix.get(index)));
+        if(hasChanged.get(index)){
+            transformMatrix.set(index , Matrix4f.MultiplyMM(translationMatrix.get(index),Matrix4f.MultiplyMM(rotationMatrix.get(index),scaleMatrix.get(index))) );
+        }
+        return transformMatrix.get(index);
     }
 
     public Matrix4f getPrevTransformMatrix(int index) {

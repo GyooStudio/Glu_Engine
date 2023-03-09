@@ -16,15 +16,16 @@ uniform float shadowSoftness;
 uniform highp vec3 CamPos;
 
 const lowp int MAX_LIGHTS = 5;
-flat in int lID1s[MAX_LIGHTS];
+uniform int NUMBER_OF_LIGHTS;
+//flat in int lID1s[MAX_LIGHTS];
 uniform mediump vec3 LightPos[10];
 uniform mediump vec3 LightColor[10];
 uniform mediump float LightIntensity[10];
-uniform mediump vec4 LightInfo[10];
+//uniform mediump vec4 LightInfo[10];
 uniform mediump float lightClipDistance;
 uniform mediump vec2 screenDiff;
 
-flat in int lNum1;
+//flat in int lNum1;
 
 in vec2 I_UV;
 
@@ -66,53 +67,54 @@ void main(){
     Fragment = vec4(a);
     SkyColor = vec4(0.0);
 
-    if(a.a > 0.9 && a.a < 1.1){
+    if(a.a > 0.9 && a.a < 1.1)
+    {
         //---
         highp vec3 pos = (c.xyz * 2.0 - 1.0) * c.w;
         vec3 albedo = a.rgb;
         vec3 normal = b.xyz * 2.0 - 1.0;
-        float roughness = 0.1;
+        //float roughness = 0.1;
 
         vec3 CamDir = normalize(CamPos - pos);
         //--- 1ms
 
         //Fresnel
-        float F_I = (1.45f-1.0)/(1.45f+1.0);
+        /*float F_I = (1.45f-1.0)/(1.45f+1.0);
         F_I *= F_I;
         float F_A = pow(max(1.0-dot(normal, CamDir), 0.0), 3.0);
-        float fresnel = (1.0-F_I)*F_A + F_I;
+        float fresnel = (1.0-F_I)*F_A + F_I;*/
         //--- 1.5ms
 
         vec3 diffColorMultiplier;
-        vec3 specColor;
+        //vec3 specColor;
 
-        float isHit = 0.0;
-        float numLight = 0.0;
+        //float isHit = 0.0;
+        //float numLight = 0.0;
 
         //point Lights
-        for (int i = 0;i < lNum1; i++){
+        for (int i = 0;i < NUMBER_OF_LIGHTS; i++){
 
-            vec3 lPos = LightPos[lID1s[i]];
-            vec3 lCol = LightColor[lID1s[i]];
-            float lI = LightIntensity[lID1s[i]];
+            vec3 lPos = LightPos[i];
+            vec3 lCol = LightColor[i];
+            float lI = LightIntensity[i];
 
             float LightDist = distance(lPos, pos);
             vec3 LightDir = normalize(lPos - pos);
 
-            numLight += (0.5/4.0);
+            //numLight += (0.5/4.0);
 
-            isHit = distance(gl_FragCoord.xy * screenDiff, LightInfo[lID1s[i]].xy);
-            isHit = max((LightInfo[lID1s[i]].w - isHit) / LightInfo[lID1s[i]].w,0.0);
+            //isHit = distance(gl_FragCoord.xy * screenDiff, LightInfo[lID1s[i]].xy);
+            //isHit = max((LightInfo[lID1s[i]].w - isHit) / LightInfo[lID1s[i]].w,0.0);
 
-            LightDist = 1.0/(LightDist*LightDist);
+            LightDist = inversesqrt(LightDist);
 
             //diffuse
-            float diffLightAmount = max(dot(LightDir, normal), 0.0) * LightDist * lI * isHit;
+            float diffLightAmount = max(dot(LightDir, normal), 0.0) * LightDist * lI; // * isHit;
             diffColorMultiplier += diffLightAmount  * lCol;
 
             //specular
-            float specularAmount = max( 10.0 * ( dot(reflect(-LightDir, normal), CamDir) ) - 9.0, 0.0) * lI * isHit * float(b.a < 0.5);
-            specColor += lCol * specularAmount;
+            //float specularAmount = max( 10.0 * ( dot(reflect(-LightDir, normal), CamDir) ) - 9.0, 0.0) * lI * float(b.a < 0.5); // * isHit;
+            //specColor += lCol * specularAmount;
         }
         //--- 2ms
 
@@ -138,8 +140,8 @@ void main(){
         //--- 0.5ms
 
         // SunLight specular
-        float lSpec = max( 100.0 * (dot(reflect(SunDir, normal), CamDir) ) - 90.0, 0.0 ) * shadow * SunIntensity * float(b.a < 0.5);
-        specColor += lSpec * SunColor;
+        /*float lSpec = max( 100.0 * (dot(reflect(SunDir, normal), CamDir) ) - 90.0, 0.0 ) * shadow * SunIntensity * float(b.a < 0.5);
+        specColor += lSpec * SunColor;*/
         //--- 1ms
 
         //skybox diffuse
@@ -151,20 +153,21 @@ void main(){
         //--- 2ms
 
         //skybox reflections
-        n = reflect(-CamDir, normal);
-        n.xy =  vec2( atan(n.x, n.z) * (1.0/3.14152) * 0.5 + 0.5, 1.0 - (n.y*0.5 + 0.5) );
+        /*n = reflect(-CamDir, normal);
+        //n.xy =  vec2( atan(n.x, n.z) * (1.0/3.14152) * 0.5 + 0.5, 1.0 - (n.y*0.5 + 0.5) );
         vec3 skySpecColor = texture(D,n.xy).rgb;
         skySpecColor = skySpecColor * skyboxStrength * float(b.a < 0.5);
-        specColor += skySpecColor;
+        specColor += skySpecColor;*/
         //--- 2ms
 
-        Fragment = vec4((albedo * diffColorMultiplier) + (specColor * fresnel), 1.0); //--- 2ms
-        SkyColor = vec4(skyDefColor, 1.0);
+        Fragment = vec4((albedo * diffColorMultiplier), 1.0); //--- 2ms
+        //SkyColor = vec4(skyDefColor, 1.0);
     }
     //if(a.a > 1.9 && a.a < 2.1){
     //    Fragment = vec4(a.rgb,1.0);
     //}
-    if(a.a > 2.9 && a.a < 3.1){
+    if(a.a > 2.9 && a.a < 3.1)
+    {
         highp vec3 pos = (c.xyz * 2.0 - 1.0) * c.w;
         vec3 albedo = a.rgb;
         vec3 normal = b.xyz * 2.0 - 1.0;
@@ -181,31 +184,19 @@ void main(){
 
         vec3 specColor;
 
-        float isHit = 0.0;
-        float numLight = 0.0;
-
         float r = 1.0 / max(roughness, 0.01);
 
         //point Lights
-        for (int i = 0;i < lNum1; i++){
+        for (int i = 0;i < NUMBER_OF_LIGHTS; i++){
 
-            vec3 lPos = LightPos[lID1s[i]];
-            vec3 lCol = LightColor[lID1s[i]];
-            float lI = LightIntensity[lID1s[i]];
+            vec3 lPos = LightPos[i];
+            vec3 lCol = LightColor[i];
+            float lI = LightIntensity[i];
 
-            float LightDist = distance(lPos, pos);
             vec3 LightDir = normalize(lPos - pos);
 
-            numLight += (0.5/4.0);
-
-            isHit = distance(gl_FragCoord.xy * screenDiff, LightInfo[lID1s[i]].xy);
-            isHit = max((LightInfo[lID1s[i]].w - isHit) / LightInfo[lID1s[i]].w, 0.0);
-
-            LightDist = 1.0/(LightDist*LightDist);
-
             //specular
-            float specularAmount = max(dot(reflect(-LightDir, normal), CamDir), 0.0);// 4ms
-            specularAmount = max(r * specularAmount + (1.0 - r), 0.0) * r * 0.1 * lI * isHit;// 3ms
+            float specularAmount = max( 10.0 * ( dot(reflect(-LightDir, normal), CamDir) ) - 9.0, 0.0) * lI * float(b.a < 0.5); // * isHit;
             specColor += lCol * specularAmount;
         }
         //shadow mapping
@@ -214,22 +205,6 @@ void main(){
         p.xyz = p.xyz*0.5 + 0.5;
         p.z = max(p.z,0.001);
         float shadow = float(texture(ShadowMap,p.xy).r + 0.0075 > p.z || p.x > 1.0 || p.x < 0.0 || p.y > 1.0 || p.y < 0.0 || texture(ShadowMap,p.xy).r < 0.001);
-        //Percentage closer filtering // + soft shadows
-        float CamDist = distance(CamPos,pos);
-        //float softness = max(linearize(p.z)-linearize(texture(ShadowMap,p.xy).r),0.0)*shadowSoftness;
-        //vec2 texel = 1.0/vec2(textureSize(E,0));
-        //vec3 X = normalize((texture(E,I_UV + vec2(texel.x,0.0)).xyz * 2.0 -1.0) * texture(E,I_UV + vec2(texel.x,0.0)).w - pos);
-        //vec3 Y = normalize((texture(E,I_UV + vec2(0.0,texel.y)).xyz * 2.0 -1.0) * texture(E,I_UV + vec2(0.0,texel.y)).w - pos);
-        vec2 STexel = 1.0/vec2(textureSize(ShadowMap,0));
-        vec2 pUV = p.xy;
-        for(int i = 0; i < 16; i ++){
-            p = vec4(pos + (poissonDisk[i].x + poissonDisk[i].y) * shadowSoftness,1.0);
-            //p = SunProjMat * SunViewMat * p;
-            //p.xyz = p.xyz*0.5 + 0.5;
-            p.xy = pUV + poissonDisk[i]*STexel;
-            shadow += float(texture(ShadowMap,p.xy).r + 0.0075 > p.z || p.x > 1.0 || p.x < 0.0 || p.y > 1.0 || p.y < 0.0 || texture(ShadowMap,p.xy).r < 0.001);
-        }
-        shadow = shadow/17.0;
 
         // SunLight
         float lSpec = max(dot(reflect(SunDir, normal), CamDir), 0.0) * shadow;
@@ -244,7 +219,7 @@ void main(){
         specColor += skySpecColor;
 
         Fragment = vec4(specColor * albedo, 1.0);
-        SkyColor = vec4(skySpecColor, 1.0);
+        //SkyColor = vec4(skySpecColor, 1.0);
     }
 
     /*vec3 finalColor;

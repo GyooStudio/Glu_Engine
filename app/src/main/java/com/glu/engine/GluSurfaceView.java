@@ -133,7 +133,7 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                     scene = loader.loadScene("Scenes/Scene.json", new Vector2f(1));
 
-                                    ColorSquare barre = new ColorSquare(new Vector4f(0.75f,0.75f,0.75f,1f));
+                                    /*ColorSquare barre = new ColorSquare(new Vector4f(0.75f,0.75f,0.75f,1f));
                                     barre.scale.set(0, new Vector2f(400f,30f));
                                     ColorSquare bouton = new ColorSquare( new Vector4f(0.75f,0.9f,0.75f,1f));
                                     bouton.scale.set(0, new Vector2f(80f,80f));
@@ -147,18 +147,21 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                     Ressources ressources = Ressources.getRessources();
                                     testBox = new TextBox(ressources.getFont("normal Bold"), new Vector2f(300f,0f), new Vector2f(-600f,0f), new Vector2f(2f,2f), 0f);
-                                    scene.addTextBox(testBox);
+                                    scene.addTextBox(testBox);*/
 
                                     renderer.setScene(scene);
 
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING, 0, 0);
+                                    //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.SSR, 1.0f, 0.1f);
                                     scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
                                     scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT, -1.0f, 2.2f);
+                                    //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.GAUSSIAN_BLUR,4.0f,1.0f);
                                     //scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,5.0f);
                                     scene.pp.addEffect(PostProcessing.effect.BLOOM, 4f, 10f);
+                                    scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.DITHERING,0f,0f);
                                     //scene.pp.addEffect(PostProcessing.effect.TAA,4.0f, 2.2f);
                                     //scene.pp.addEffect(PostProcessing.effect.PIXELISE,0f,0f);
@@ -230,7 +233,7 @@ public final class GluSurfaceView extends GLSurfaceView {
                                 //Log.w("update", "updated scene");
                                 //shadowTest.texture = scene.pp.Shadow.texture;
 
-                                testBox.setText("valeur  : " + glissoire.valeur,4,5, TextBox.Alignment.LEFT);
+                                //testBox.setText("valeur  : " + glissoire.valeur,4,5, TextBox.Alignment.LEFT);
 
                                 Matrix4f m = new Matrix4f();
                                 m.setIdentity();

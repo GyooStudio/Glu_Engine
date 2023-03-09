@@ -13,41 +13,44 @@ public class Camera {
     private Matrix4f rotationMat = new Matrix4f();
     private Matrix4f prevTranslationMat = new Matrix4f();
     private Matrix4f prevRotationMat = new Matrix4f();
+    private Matrix4f viewMat = new Matrix4f();
 
-    public Camera(){
-        translationMat.setIdentity();
-        rotationMat.setIdentity();
-        prevTranslationMat.setIdentity();
-        prevRotationMat.setIdentity();
-    }
+    boolean hasChanged = false;
+
+    public Camera(){}
 
     public void move(Vector3f p){
         position.add(p);
         translationMat.translate(p.negative());
+        hasChanged = true;
     }
 
     public void rotate(Vector3f r){
         rotation.add(r);
         rotationMat.rotate(r.negative());
+        hasChanged = true;
     }
 
     public void callNewFrame(){
-        prevPosition = position.copy();
+        /*prevPosition = position.copy();
         prevRotation = rotation.copy();
         prevTranslationMat = translationMat.copy();
-        prevRotationMat = rotationMat.copy();
+        prevRotationMat = rotationMat.copy();*/
+        hasChanged = false;
     }
 
     public void setPosition(Vector3f pos){
         position = pos.copy();
         translationMat.setIdentity();
         translationMat.translate(pos.negative());
+        hasChanged = true;
     }
 
     public void setRotation(Vector3f rot){
         rotation = rot.copy();
         rotationMat.setIdentity();
         rotationMat.rotate(rot.negative());
+        hasChanged = true;
     }
 
     public Vector3f getPosition(){return position;}
@@ -59,7 +62,10 @@ public class Camera {
     public Vector3f getPrevRotation(){return prevRotation;}
 
     public Matrix4f getViewMat(){
-        return Matrix4f.MultiplyMM(rotationMat,translationMat);
+        if(hasChanged){
+            viewMat = Matrix4f.MultiplyMM(rotationMat,translationMat);
+        }
+        return viewMat;
     }
 
     public Matrix4f getRotationMat(){

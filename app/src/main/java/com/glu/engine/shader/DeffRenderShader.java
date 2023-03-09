@@ -79,7 +79,7 @@ public class DeffRenderShader extends ShaderProgram {
         super.loadUniformVector(super.getUniformLocation("LightPos["+i+"]"), position);
         super.loadUniformVector(super.getUniformLocation("LightColor["+i+"]"), color);
         super.loadUniformFloat(super.getUniformLocation("LightIntensity["+i+"]"), intensity);
-        super.loadUniformVector(super.getUniformLocation("LightInfo["+i+"]"), info);
+        //super.loadUniformVector(super.getUniformLocation("LightInfo["+i+"]"), info);
     }
 
     public void loadNumberOfLights(int num){super.loadUniformInt(NUMBER_OF_LIGHTS,num);}

@@ -14,7 +14,7 @@ public class Light implements Comparable<Light>{
         position = p;
         color = c;
         intensity = i;
-        radius = (float) Math.sqrt((double) i/0.01);
+        radius = (i/0.2f)*( i/0.2f);
     }
 
     @Override

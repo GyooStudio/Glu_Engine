@@ -67,7 +67,7 @@ public class TextBox {
         canSetText = false; // make sure the text isn't changing while building
         long timer = System.currentTimeMillis(); // just a timer
 
-        Log.w("makeText", "" + text); // logging
+        //Log.w("makeText", "" + text); // logging
 
         float[] pos = new float[text.length()*6*2]; //the vertices's final positions
         float[] UV = new float[text.length()*6*2]; // the vertices's final UV coordinates

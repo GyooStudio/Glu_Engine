@@ -1,12 +1,11 @@
 package com.glu.engine;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.TestLooperManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,17 +15,19 @@ import android.view.SurfaceHolder;
 
 import androidx.core.view.MotionEventCompat;
 
+import com.glu.engine.GUI.ColorSquare;
+import com.glu.engine.GUI.Glissoire;
 import com.glu.engine.GUI.Text.TextBox;
-import com.glu.engine.Objects.Collider;
-import com.glu.engine.Objects.Entity;
 import com.glu.engine.Postprocessing.PostProcessing;
 import com.glu.engine.Scene.Light;
+import com.glu.engine.Scene.Ressources;
 import com.glu.engine.Scene.Scene;
 import com.glu.engine.actionManager.ActionManager;
 import com.glu.engine.utils.Loader;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
 import com.glu.engine.vectors.Vector3f;
+import com.glu.engine.vectors.Vector4f;
 
 import java.util.ArrayList;
 
@@ -47,6 +48,8 @@ public final class GluSurfaceView extends GLSurfaceView {
     private final Loader loader;
 
     private TextBox fpsText;
+    private TextBox testBox;
+    private Glissoire glissoire;
 
     @SuppressLint("ClickableViewAccessibility")
     public void onConfigurationChanged(Configuration config){
@@ -69,6 +72,7 @@ public final class GluSurfaceView extends GLSurfaceView {
         scene = new Scene();
 
         setOnTouchListener((view, motionEvent) -> {
+
             hasSetTouch = false;
             int index = MotionEventCompat.getActionIndex(motionEvent);
             int ID = motionEvent.getPointerId(index);
@@ -81,19 +85,20 @@ public final class GluSurfaceView extends GLSurfaceView {
                 }
                 return true;
             }
-
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                 //stopAction lets the program know that an action has stopped
                 actionManager.stopAction(0);
                 Log.w("onTouchListener", "first Action stopped");
                 return true;
             }
-
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 //addAction lets the program know to start a knew array to store Pointers positions
                 actionManager.addAction(0);
                 actionManager.addPoint(0, motionEvent.getX(0), motionEvent.getY(0));
                 Log.w("onTouchListener", "first Action!");
+
+                main.hideUI();
+
                 return true;
             }
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
@@ -127,12 +132,29 @@ public final class GluSurfaceView extends GLSurfaceView {
                                     long timer = System.currentTimeMillis();
 
                                     scene = loader.loadScene("Scenes/Scene.json", new Vector2f(1));
+
+                                    ColorSquare barre = new ColorSquare(new Vector4f(0.75f,0.75f,0.75f,1f));
+                                    barre.scale.set(0, new Vector2f(400f,30f));
+                                    ColorSquare bouton = new ColorSquare( new Vector4f(0.75f,0.9f,0.75f,1f));
+                                    bouton.scale.set(0, new Vector2f(80f,80f));
+                                    glissoire = new Glissoire(barre,bouton,0f,3f,0.1f);
+                                    //glissoire.assignerRotation(30f);
+                                    glissoire.assignerPosition(new Vector2f(200f));
+                                    glissoire.nom = "test";
+                                    scene.addColorSquare(barre);
+                                    scene.addColorSquare(bouton);
+                                    scene.addGlissoire(glissoire);
+
+                                    Ressources ressources = Ressources.getRessources();
+                                    testBox = new TextBox(ressources.getFont("normal Bold"), new Vector2f(300f,0f), new Vector2f(-600f,0f), new Vector2f(2f,2f), 0f);
+                                    scene.addTextBox(testBox);
+
                                     renderer.setScene(scene);
 
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.SSR, 1.0f, 0.1f);
-                                    //scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
+                                    scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
                                     scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT, -1.0f, 2.2f);
                                     //scene.pp.addEffect(PostProcessing.effect.GAUSSIAN_BLUR,4.0f,1.0f);
                                     //scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,5.0f);
@@ -207,6 +229,8 @@ public final class GluSurfaceView extends GLSurfaceView {
                                 scene.inputManager.update();
                                 //Log.w("update", "updated scene");
                                 //shadowTest.texture = scene.pp.Shadow.texture;
+
+                                testBox.setText("valeur  : " + glissoire.valeur,4,5, TextBox.Alignment.LEFT);
 
                                 Matrix4f m = new Matrix4f();
                                 m.setIdentity();

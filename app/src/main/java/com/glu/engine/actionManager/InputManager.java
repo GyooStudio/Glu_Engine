@@ -1,19 +1,15 @@
 package com.glu.engine.actionManager;
 
 import android.opengl.Matrix;
-import android.util.Log;
 
-import com.glu.engine.GUI.Button;
+import com.glu.engine.GUI.Bouton;
 import com.glu.engine.GUI.ColorSquare;
-import com.glu.engine.GUI.Slider;
+import com.glu.engine.GUI.Glissoire;
 import com.glu.engine.Objects.Collider;
 import com.glu.engine.Objects.CustomObjects.RubikCube;
 import com.glu.engine.Objects.Entity;
-import com.glu.engine.Objects.Raycast;
 import com.glu.engine.Scene.Ressources;
 import com.glu.engine.Scene.Scene;
-import com.glu.engine.utils.Loader;
-import com.glu.engine.utils.Maths;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
 import com.glu.engine.vectors.Vector3f;
@@ -36,7 +32,7 @@ public class InputManager {
 
     public RubikCube cube;
 
-    public Button button;
+    public Bouton bouton;
 
     public InputManager(Scene scene){
         this.actionManager = ActionManager.getActionManager();
@@ -55,19 +51,19 @@ public class InputManager {
         actionManager.manualUpdate();
         ActionManager.actionType action = actionManager.getAction(0);
 
-        if(button == null) {
+        if(bouton == null) {
             ColorSquare base = new ColorSquare(new Vector4f(0.2f, 0.9f, 0.2f, 1.0f));
             ColorSquare pressed = new ColorSquare(new Vector4f(0.9f, 0.2f, 0.2f, 1.0f));
             ColorSquare survol = new ColorSquare(new Vector4f(0.9f, 0.6f, 0.2f, 1.0f));
             //scene.addColorSquare(base);
             //scene.addColorSquare(pressed);
             //scene.addColorSquare(survol);
-            button = new Button(base, pressed, survol);
-            //scene.addButton(button);
-            button.changerTaille(new Vector2f(200f));
-            button.changerPosition(new Vector2f(100,0));
-            button.changerRotation(45f);
-            button.changerComportement(Button.Préréglages.CONTRÔLES);
+            bouton = new Bouton(base, pressed, survol);
+            //scene.addButton(bouton);
+            bouton.changerTaille(new Vector2f(200f));
+            bouton.changerPosition(new Vector2f(100,0));
+            bouton.changerRotation(45f);
+            bouton.changerComportement(Bouton.Préréglages.CONTRÔLES);
         }
 
         /*if(cube == null){
@@ -92,21 +88,12 @@ public class InputManager {
             // if true, the action was handled and won't update other stuff (like clicking a menu won't update the background game)
             boolean updatedAction = false;
 
-            for (Button button : scene.Buttons) {
-                updatedAction = button.actualiser(index);
+            for (Bouton bouton : scene.boutons) {
+                updatedAction = bouton.actualiser(index);
             }
 
-            for (Slider slider : scene.Sliders) {
-                if (actionManager.isTouching[index] && !updatedAction) {
-                    if (!slider.isClicked) {
-                        slider.click(actionManager.startPosition[index], index);
-                    } else {
-                        slider.click(actionManager.lastPoint[index], index);
-                        updatedAction = true;
-                    }
-                } else {
-                    slider.release(index);
-                }
+            for (Glissoire glissoire : scene.glissoires) {
+                updatedAction = glissoire.actualiser(index);
             }
 
             if(!updatedAction && cube != null){

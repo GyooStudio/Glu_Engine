@@ -44,9 +44,6 @@ public final class Renderer implements GLSurfaceView.Renderer {
     private Scene scene;
 
     Renderer(MainActivity main){
-        View decorView = main.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.INVISIBLE);
-        decorView.setVisibility(View.INVISIBLE);
         loader = Loader.getLoader();
         scene = new Scene();
 

@@ -11,7 +11,7 @@ import android.opengl.GLES30;
 import android.util.JsonReader;
 import android.util.Log;
 
-import com.glu.engine.GUI.Button;
+import com.glu.engine.GUI.Bouton;
 import com.glu.engine.GUI.ColorSquare;
 import com.glu.engine.GUI.GUIBase;
 import com.glu.engine.GUI.TexQuad;
@@ -1275,7 +1275,7 @@ public class Loader {
 										}
 										jsonSceneReader.endArray();
 										break;
-									case "Buttons" :
+									case "boutons" :
 										jsonSceneReader.beginArray();
 										while (jsonSceneReader.hasNext()){
 											jsonSceneReader.beginObject();
@@ -1287,15 +1287,15 @@ public class Loader {
 											Vector2f taille = null;
 											Vector2f position = null;
 											float rotation = 0f;
-											Button.Préréglages préréglage = null;
+											Bouton.Préréglages préréglage = null;
 
-											Button.EnSurvol enSurvol = null;
-											Button.EnSurvolDébarque enSurvolDébarque = null;
-											Button.EnSurvolRelâche enSurvolRelâche = null;
-											Button.EnDoigtTouché enDoigtTouché = null;
-											Button.EnDoigtDébarque enDoigtDébarque = null;
-											Button.EnDoigtRelâche enDoigtRelâche = null;
-											Button.EnClic enClic = null;
+											Bouton.EnSurvol enSurvol = null;
+											Bouton.EnSurvolDébarque enSurvolDébarque = null;
+											Bouton.EnSurvolRelâche enSurvolRelâche = null;
+											Bouton.EnDoigtTouché enDoigtTouché = null;
+											Bouton.EnDoigtDébarque enDoigtDébarque = null;
+											Bouton.EnDoigtRelâche enDoigtRelâche = null;
+											Bouton.EnClic enClic = null;
 
 											while (jsonSceneReader.hasNext()){
 												String textTag = jsonSceneReader.nextName();
@@ -1345,16 +1345,16 @@ public class Loader {
 														String prérég = jsonSceneReader.nextString();
 														switch(prérég){
 															case "BOUTON":
-																préréglage = Button.Préréglages.BOUTON;
+																préréglage = Bouton.Préréglages.BOUTON;
 																break;
 															case "SÉLECTION":
-																préréglage = Button.Préréglages.SÉLECTION;
+																préréglage = Bouton.Préréglages.SÉLECTION;
 																break;
 															case "CONTRÔLES":
-																préréglage = Button.Préréglages.CONTRÔLES;
+																préréglage = Bouton.Préréglages.CONTRÔLES;
 																break;
 															case "CASE_À_COCHER":
-																préréglage = Button.Préréglages.CASE_À_COCHER;
+																préréglage = Bouton.Préréglages.CASE_À_COCHER;
 																break;
 														}
 														break;
@@ -1368,13 +1368,13 @@ public class Loader {
 																	option = jsonSceneReader.nextString();
 																	switch (option){
 																		case "rien" :
-																			enDoigtTouché = Button.EnDoigtTouché.RIEN;
+																			enDoigtTouché = Bouton.EnDoigtTouché.RIEN;
 																			break;
 																		case "survol" :
-																			enDoigtTouché = Button.EnDoigtTouché.SURVOL;
+																			enDoigtTouché = Bouton.EnDoigtTouché.SURVOL;
 																			break;
 																		case "clic" :
-																			enDoigtTouché = Button.EnDoigtTouché.CLIC;
+																			enDoigtTouché = Bouton.EnDoigtTouché.CLIC;
 																			break;
 																	}
 																	break;
@@ -1382,16 +1382,16 @@ public class Loader {
 																	option = jsonSceneReader.nextString();
 																	switch (option){
 																		case "reste" :
-																			enDoigtRelâche = Button.EnDoigtRelâche.RESTE;
+																			enDoigtRelâche = Bouton.EnDoigtRelâche.RESTE;
 																			break;
 																		case "clic" :
-																			enDoigtRelâche = Button.EnDoigtRelâche.CLIC;
+																			enDoigtRelâche = Bouton.EnDoigtRelâche.CLIC;
 																			break;
 																		case "retourne défaut" :
-																			enDoigtRelâche = Button.EnDoigtRelâche.RETOURNE_DÉFAUT;
+																			enDoigtRelâche = Bouton.EnDoigtRelâche.RETOURNE_DÉFAUT;
 																			break;
 																		case "survol" :
-																			enDoigtRelâche = Button.EnDoigtRelâche.SURVOL;
+																			enDoigtRelâche = Bouton.EnDoigtRelâche.SURVOL;
 																			break;
 																	}
 																	break;
@@ -1399,13 +1399,13 @@ public class Loader {
 																	option = jsonSceneReader.nextString();
 																	switch (option){
 																		case "reste" :
-																			enDoigtDébarque = Button.EnDoigtDébarque.RESTE;
+																			enDoigtDébarque = Bouton.EnDoigtDébarque.RESTE;
 																			break;
 																		case "clic" :
-																			enDoigtDébarque = Button.EnDoigtDébarque.CLIC;
+																			enDoigtDébarque = Bouton.EnDoigtDébarque.CLIC;
 																			break;
 																		case "retourne défaut" :
-																			enDoigtDébarque = Button.EnDoigtDébarque.RETOURNE_DÉFAUT;
+																			enDoigtDébarque = Bouton.EnDoigtDébarque.RETOURNE_DÉFAUT;
 																			break;
 																	}
 																	break;
@@ -1413,13 +1413,13 @@ public class Loader {
 																	option = jsonSceneReader.nextString();
 																	switch (option){
 																		case "rien" :
-																			enSurvol = Button.EnSurvol.RIEN;
+																			enSurvol = Bouton.EnSurvol.RIEN;
 																			break;
 																		case "clic" :
-																			enSurvol = Button.EnSurvol.CLIC;
+																			enSurvol = Bouton.EnSurvol.CLIC;
 																			break;
 																		case "survole" :
-																			enSurvol = Button.EnSurvol.SURVOLE;
+																			enSurvol = Bouton.EnSurvol.SURVOLE;
 																			break;
 																	}
 																	break;
@@ -1427,13 +1427,13 @@ public class Loader {
 																	option = jsonSceneReader.nextString();
 																	switch (option){
 																		case "reste" :
-																			enSurvolDébarque = Button.EnSurvolDébarque.RESTE;
+																			enSurvolDébarque = Bouton.EnSurvolDébarque.RESTE;
 																			break;
 																		case "clic" :
-																			enSurvolDébarque = Button.EnSurvolDébarque.CLIC;
+																			enSurvolDébarque = Bouton.EnSurvolDébarque.CLIC;
 																			break;
 																		case "retourne défaut" :
-																			enSurvolDébarque = Button.EnSurvolDébarque.RETOURNE_DÉFAUT;
+																			enSurvolDébarque = Bouton.EnSurvolDébarque.RETOURNE_DÉFAUT;
 																			break;
 																	}
 																	break;
@@ -1441,13 +1441,13 @@ public class Loader {
 																	option = jsonSceneReader.nextString();
 																	switch (option){
 																		case "reste" :
-																			enSurvolRelâche = Button.EnSurvolRelâche.RESTE;
+																			enSurvolRelâche = Bouton.EnSurvolRelâche.RESTE;
 																			break;
 																		case "clic" :
-																			enSurvolRelâche = Button.EnSurvolRelâche.CLIC;
+																			enSurvolRelâche = Bouton.EnSurvolRelâche.CLIC;
 																			break;
 																		case "retourne défaut" :
-																			enSurvolRelâche = Button.EnSurvolRelâche.RETOURNE_DÉFAUT;
+																			enSurvolRelâche = Bouton.EnSurvolRelâche.RETOURNE_DÉFAUT;
 																			break;
 																	}
 																	break;
@@ -1455,16 +1455,16 @@ public class Loader {
 																	option = jsonSceneReader.nextString();
 																	switch (option){
 																		case "rien" :
-																			enClic = Button.EnClic.RIEN;
+																			enClic = Bouton.EnClic.RIEN;
 																			break;
 																		case "clic reste" :
-																			enClic = Button.EnClic.CLIC_RESTE;
+																			enClic = Bouton.EnClic.CLIC_RESTE;
 																			break;
 																		case "clic immédiat" :
-																			enClic = Button.EnClic.CLIC_IMMÉDIAT;
+																			enClic = Bouton.EnClic.CLIC_IMMÉDIAT;
 																			break;
 																		case "alterne" :
-																			enClic = Button.EnClic.ALTERNE;
+																			enClic = Bouton.EnClic.ALTERNE;
 																			break;
 																	}
 																	break;
@@ -1481,7 +1481,7 @@ public class Loader {
 											}
 											jsonSceneReader.endObject();
 
-											Button bouton = new Button(bDéfaut,bPressé,bSurvol);
+											Bouton bouton = new Bouton(bDéfaut,bPressé,bSurvol);
 											bouton.changerPosition(position);
 											bouton.changerRotation(rotation);
 											bouton.changerTaille(taille);

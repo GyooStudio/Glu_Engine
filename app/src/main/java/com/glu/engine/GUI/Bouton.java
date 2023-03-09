@@ -6,7 +6,7 @@ import com.glu.engine.vectors.Vector2f;
 
 import java.util.ArrayList;
 
-public final class Button{
+public final class Bouton {
     public GUIBase bouttonPressé;
     public GUIBase bouttonDéfaut;
     public GUIBase bouttonSurvol;
@@ -115,7 +115,7 @@ public final class Button{
     private ActionManager actionManager = ActionManager.getActionManager();
     private Ressources ressources = Ressources.getRessources();
 
-    public Button(GUIBase bouttonDéfaut, GUIBase bouttonPressé){
+    public Bouton(GUIBase bouttonDéfaut, GUIBase bouttonPressé){
         this.bouttonDéfaut = bouttonDéfaut;
         this.bouttonPressé = bouttonPressé;
         this.bouttonSurvol = null;
@@ -131,7 +131,7 @@ public final class Button{
         changerÉtat(État.DÉFAUT);
     }
 
-    public Button(GUIBase bouttonDéfaut, GUIBase bouttonPressé, GUIBase bouttonSurvol){
+    public Bouton(GUIBase bouttonDéfaut, GUIBase bouttonPressé, GUIBase bouttonSurvol){
         this.bouttonDéfaut = bouttonDéfaut;
         this.bouttonPressé = bouttonPressé;
         this.bouttonSurvol = bouttonSurvol;
@@ -194,7 +194,9 @@ public final class Button{
             pointeurDébutDedant[indexPointeur] = débutDedant;
             pointeurFinDedant[indexPointeur] = finDedant;
 
-        }else if(pointeurTouchants[indexPointeur]){ // si le doigt a relâché
+        }
+        else if(pointeurTouchants[indexPointeur])
+        { // si le doigt a relâché
 
             pointeurTouchants[indexPointeur] = false;
 
@@ -230,7 +232,8 @@ public final class Button{
                 enDoigtRelâche();
             }
 
-        }else{
+        } else
+        {
             boolean touché = false;
             for (int i = 0; i < pointeurTouchants.length; i++) {
                 touché = touché || pointeurTouchants[i];

@@ -3,11 +3,10 @@ package com.glu.engine.Scene;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.glu.engine.GUI.Button;
+import com.glu.engine.GUI.Bouton;
 import com.glu.engine.GUI.ColorSquare;
-import com.glu.engine.GUI.Slider;
+import com.glu.engine.GUI.Glissoire;
 import com.glu.engine.GUI.TexQuad;
-import com.glu.engine.GUI.Text.Font;
 import com.glu.engine.GUI.Text.TextBox;
 import com.glu.engine.Objects.CustomObjects.CustomObject;
 import com.glu.engine.Objects.Entity;
@@ -36,10 +35,10 @@ public final class Scene {
     public ArrayList<TexQuad> dirtyTexQuads = new ArrayList<>();
     public ArrayList<ColorSquare> dirtyColor = new ArrayList<>();
     public ArrayList<ColorSquare> ColorSquare = new ArrayList<>();
-    public ArrayList<Button> DirtyButtons = new ArrayList<>();
-    public ArrayList<Button> Buttons = new ArrayList<>();
-    public ArrayList<Slider> DirtySliders = new ArrayList<>();
-    public ArrayList<Slider> Sliders = new ArrayList<>();
+    public ArrayList<Bouton> dirtyBoutons = new ArrayList<>();
+    public ArrayList<Bouton> boutons = new ArrayList<>();
+    public ArrayList<Glissoire> dirtyGlissoires = new ArrayList<>();
+    public ArrayList<Glissoire> glissoires = new ArrayList<>();
     public ArrayList<TextBox> DirtyTextBoxes = new ArrayList<>();
     public ArrayList<TextBox> TextBoxes = new ArrayList<>();
     public ArrayList<Light> Lights = new ArrayList<>();
@@ -166,26 +165,26 @@ public final class Scene {
         return null;
     }
 
-    public void addButton(Button button){
-        Buttons.add(button);
+    public void addButton(Bouton bouton){
+        boutons.add(bouton);
     }
 
-    public Button getButton(String name){
-        for (Button button: Buttons) {
-            if(name.equals(button.name)){
-                return button;
+    public Bouton getButton(String name){
+        for (Bouton bouton : boutons) {
+            if(name.equals(bouton.name)){
+                return bouton;
             }
         }
         return null;
     }
 
-    public void addSlider(Slider slider){
-        DirtySliders.add(slider);
+    public void addGlissoire(Glissoire glissoire){
+        glissoires.add(glissoire);
     }
 
-    public Slider getSlider(String name){
-        for (Slider s: Sliders) {
-            if(s.name.equals(name)){
+    public Glissoire getGlissoire(String nom){
+        for (Glissoire s: glissoires) {
+            if(s.nom.equals(nom)){
                 return s;
             }
         }
@@ -277,26 +276,26 @@ public final class Scene {
             Log.w("cleanGUI", (System.currentTimeMillis() - timer) + " milliseconds to clean " + quad.name + ", quad #" + ColorSquare.size());
         }
 
-        if(DirtySliders.size() > 0){
+        /*if(dirtyGlissoires.size() > 0){
             long timer = System.currentTimeMillis();
-            Slider slider = DirtySliders.get(0);
-            slider.button.makeModel();
-            slider.slider.makeModel();
-            if(slider.slider instanceof TexQuad){
-                TexQuads.add((TexQuad) slider.slider);
-            }else if(slider.slider instanceof ColorSquare){
-                ColorSquare.add((ColorSquare) slider.slider);
+            Glissoire glissoire = dirtyGlissoires.get(0);
+            glissoire.button.makeModel();
+            glissoire.slider.makeModel();
+            if(glissoire.slider instanceof TexQuad){
+                TexQuads.add((TexQuad) glissoire.slider);
+            }else if(glissoire.slider instanceof ColorSquare){
+                ColorSquare.add((ColorSquare) glissoire.slider);
             }
-            slider.button.makeModel();
-            if(slider.button instanceof TexQuad){
-                TexQuads.add((TexQuad) slider.button);
-            }else if(slider.button instanceof ColorSquare){
-                ColorSquare.add((ColorSquare) slider.button);
+            glissoire.button.makeModel();
+            if(glissoire.button instanceof TexQuad){
+                TexQuads.add((TexQuad) glissoire.button);
+            }else if(glissoire.button instanceof ColorSquare){
+                ColorSquare.add((ColorSquare) glissoire.button);
             }
-            Sliders.add(slider);
-            DirtySliders.remove(0);
-            Log.w("cleanGUI", (System.currentTimeMillis() - timer) + " milliseconds to clean slider " + Sliders.size());
-        }
+            glissoires.add(glissoire);
+            dirtyGlissoires.remove(0);
+            Log.w("cleanGUI", (System.currentTimeMillis() - timer) + " milliseconds to clean glissoire " + glissoires.size());
+        }*/
 
         if(DirtyTextBoxes.size() > 0){
             TextBox textBox = DirtyTextBoxes.get(0);

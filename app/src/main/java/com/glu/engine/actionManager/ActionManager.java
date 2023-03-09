@@ -2,8 +2,8 @@ package com.glu.engine.actionManager;
 
 import android.util.Log;
 
-import com.glu.engine.GUI.Button;
-import com.glu.engine.GUI.Slider;
+import com.glu.engine.GUI.Bouton;
+import com.glu.engine.GUI.Glissoire;
 import com.glu.engine.Scene.Ressources;
 import com.glu.engine.vectors.Vector2f;
 
@@ -34,8 +34,8 @@ public final class ActionManager {
 
     final boolean[] pointerIndices = new boolean[MAX_POINTERS];
     final ArrayList<ArrayList<Vector2f>> actionTrack = new ArrayList<>();
-    public ArrayList<Button> buttons = new ArrayList<>();
-    public ArrayList<Slider> sliders = new ArrayList<>();
+    public ArrayList<Bouton> boutons = new ArrayList<>();
+    public ArrayList<Glissoire> glissoires = new ArrayList<>();
     private Ressources ressources;
 
     /** action ID*/

@@ -13,20 +13,24 @@
           "properties": {
             "name": {
               "type": "string",
-              "default": "NouveauMatériau"
+              "default": "NouveauMatériau",
+              "description": "Utilisé comme identificateur. Doit être unique"
             },
             "type": {
               "type": "integer",
               "enum": [1,2,3],
-              "default": 1
+              "default": 1,
+              "description": "1 : Matériau rugueux à réflection diffuse, 2 : Matériau éméteur de lumière, 3 : Métal"
             },
             "isColorTextured": {
               "type": "boolean",
-              "default": false
+              "default": false,
+              "description": "Si vrai, vas utiliser une texture pour colorer l'objet et l'attribut «texture» pour faire référence à la texture dans les ressources. Si faux, vas utiliser l'attribut «color» pour colorer l'objet. L'un des deux attribut doit être inclut"
             },
             "texture": {
               "type": "string",
-              "default": null
+              "default": null,
+              "description": "Fait référence à une texture dans les ressources. «isColorTextured» doit être vrai pour prendre effet."
             },
             "color": {
               "type": "array",
@@ -51,73 +55,83 @@
                   "maximum": 1,
                   "default": 0.8
                 }
-              ]
+              ],
+              "description": "Vecteur de 3 éléments : rouge, vert et bleu (rvb), définissant la couleur de la surface. «isColorTextured» doit être faux pour prendre effet."
             },
             "emissionIntensity": {
               "type": "number",
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Définit la luminosité de la surface. «type» doit être 2 pour prendre effet"
             },
             "isRoughnessMapped": {
               "type": "boolean",
-              "default": false
+              "default": false,
+              "description": "Si vrai, vas utiliser la portion alpha de la texture albedo pour définir la ruguosité et l'attribut «texture» pour faire référence à la texture dans les ressources. Si faux, vas utiliser l'attribut «roughness» pour définir la rugosité de la surface"
             },
             "roughness": {
               "type": "number",
               "minimum": 0,
               "maximum": 1,
-              "default": 0.5
+              "default": 0.5,
+              "description": "Définit la rugosité de la surface. 0 est très polie et 1 est parfaitement mat. «isRoughnessMapped» doit être faux pour prendre effet."
             },
             "isNormalMapped": {
               "type": "boolean",
-              "default": false
+              "default": false,
+              "description": "Si vrai, vas utiliser une texture pour définir la normale de la surface et l'attribut «normalMap» pour faire référence à la texture dans les ressources."
             },
             "normalMap": {
               "type": "string",
-              "default": null
+              "default": null,
+              "description": "Fait référence à une texture dans les ressources pour définir la normale de la surface. «isNormalMapped» doit être vrai pour prendre effet."
             },
             "alphaClip": {
               "type": "boolean",
-              "default": false
+              "default": false,
+              "description": "Si vrai, vas utiliser la portion alpha de la texture albedo pour rendre transparent des portions des la surface et l'attribut «texture» pour faire référence à la texture dans les ressources. «isColorMapped» doit être vrai pour prendre effet. Incompatible avec «isRoughnessMapped» = vrai"
             }
           },
           "required": [
             "name",
             "type",
             "isColorTextured",
-            "texture",
-            "color",
             "emissionIntensity",
             "isRoughnessMapped",
-            "roughness",
             "isNormalMapped",
-            "normalMap",
             "alphaClip"
-          ]
-        }
+          ],
+          "additionalProperties": false
+        },
+        "description": "Les matériaux doivent êtrent utilisés par les objets (Entities) pour définir comment leur surface est peinte par le GPU"
       },
       "skybox": {
         "type": "object",
         "properties": {
           "HDRI": {
             "type": "string",
-            "default": null
+            "default": null,
+            "description": "Fait référence à une texture dans les ressources. Définit la couleur du ciel."
           },
           "Mesh": {
             "type": "string",
-            "default": "skybox"
+            "default": "skybox",
+            "description": "Le modèle utilisé pour la boîte célèste. Le modèle doit être convexe et pas trop gros. CONSEIL : NE PAS MODIFIER."
           },
           "intensity": {
             "type": "number",
             "minimum": 0,
-            "default": 1
+            "default": 1,
+            "description": "Intensité lumineuse du ciel."
           }
         },
         "required": [
           "HDRI",
           "Mesh",
           "intensity"
-        ]
+        ],
+        "additionalProperties": false,
+        "description": "Objet possédant une texture de ciel qui serat toujours dans l'arrière-plan. Projette de la lumière sur toute la scène."
       },
       "Entities": {
         "type": "array",
@@ -126,18 +140,22 @@
           "properties": {
             "name": {
               "type": "string",
-              "default": "NouvelleEntité"
+              "default": "NouvelleEntité",
+              "description": "Utilisé comme identificateur. Doit être unique"
             },
             "mesh": {
               "type": "string",
-              "default": "skybox"
+              "default": "skybox",
+              "description": "Fait référence à un modèle dans les ressources. Définit la forme physique de l'objet."
             },
             "SeparateMesh": {
               "type": "boolean",
-              "default": false
+              "default": false,
+              "description": "Des fois, les objets peuvent êtrent composés de plusieurs morceaux clairement définits dans le fichier. Si vrai, vas créer une entité séparée par morceau. Si faux, vas regrouper chaque morceau en une seule entitée. Pour de meilleures performances, mettre faux."
             },
             "material": {
-              "type": "string"
+              "type": "string",
+              "description": "Fait référence à un matériau précédement définit. Définit comment la surface du modèl est peinte par le GPU"
             },
             "position": {
               "type": "array",
@@ -205,7 +223,9 @@
             "position",
             "rotation",
             "scale"
-          ]
+          ],
+          "additionalProperties": false,
+          "description": "Les objets peuplants la scène."
         }
       },
       "lights": {
@@ -260,7 +280,8 @@
             "position",
             "color",
             "intensity"
-          ]
+          ],
+          "additionalProperties": false
         }
       },
       "UI": {
@@ -319,7 +340,8 @@
                 "position",
                 "rotation",
                 "scale"
-              ]
+              ],
+              "additionalProperties": false
             }
           },
           "ColorSquare": {
@@ -387,6 +409,10 @@
                       "default": 1
                     }
                   ]
+                },
+                "rayonCoin" : {
+                  "type": "number",
+                  "default": 0
                 }
               },
               "required": [
@@ -395,7 +421,8 @@
                 "position",
                 "rotation",
                 "scale"
-              ]
+              ],
+              "additionalProperties": false
             }
           },
           "Buttons" : {
@@ -515,27 +542,18 @@
                       "default": null
                     }
                   },
-                  "required": [
-                    "EnDoigtTouché",
-                    "EnDoigtRelâche",
-                    "EnDoigtDébarque",
-                    "EnSurvol",
-                    "EnSurvolDébarque",
-                    "EnSurvolRelâche",
-                    "EnClic"
-                  ]
+                  "additionalProperties": false
                 }
               },
               "required": [
                 "name",
                 "défaut",
                 "pressé",
-                "survol",
                 "taille",
                 "position",
-                "rotation",
-                "préréglage"
-              ]
+                "rotation"
+              ],
+              "additionalProperties": false
             }
           },
           "TextBoxes" : {
@@ -604,12 +622,12 @@
               "required": [
                 "name",
                 "font",
-                "text",
                 "size",
                 "position",
                 "rotation",
                 "scale"
-              ]
+              ],
+              "additionalProperties": false
             }
           }
         },

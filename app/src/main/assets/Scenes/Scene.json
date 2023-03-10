@@ -79,90 +79,6 @@
       "position" : [0.0,0.0,0.0],
       "rotation" : [0.0,0.0,0.0],
       "scale" : [10.0,10.0,10.0]
-    },
-    {
-      "name" : "ballb",
-      "mesh" : "icosphere",
-      "SeparateMesh" : false,
-      "material" : "glow",
-      "position" : [4.0,0.0,2.0],
-      "rotation" : [0.0,0.0,0.0],
-      "scale" : [0.5,0.5,0.5]
-    },
-    {
-      "name" : "ball",
-      "mesh" : "icosphere",
-      "SeparateMesh" : false,
-      "material" : "metal",
-      "position" : [0.0,0.0,9.0],
-      "rotation" : [0.0,0.0,0.0],
-      "scale" : [5.0,5.0,5.0]
-    }
-  ],
-
-  "TMP_NULL" : [
-    {
-      "TexQuads": [
-        {
-          "name" : "pointer",
-          "texture" : "pointer",
-          "position" : [0.0,0.0],
-          "rotation" : 0.0,
-          "scale" : [80.0,80.0]
-        }
-      ],
-      "ColorSquare" : [
-        {
-          "name" : "carré",
-          "color" : [1.0,1.0,1.0,0.0],
-          "position" : [100.0,0.0],
-          "rotation" : 0.0,
-          "scale" : [80.0,80.0]
-        },
-        {
-          "name" : "défaut",
-          "color" : [0.0,1.0,0.0,1.0],
-          "position" : [0.0,0.0],
-          "rotation" : 0.0,
-          "scale" : [80.0,80.0]
-        },
-        {
-          "name" : "pressé",
-          "color" : [1.0,0.0,0.0,1.0],
-          "position" : [0.0,0.0],
-          "rotation" : 0.0,
-          "scale" : [80.0,80.0]
-        },
-        {
-          "name" : "survol",
-          "color" : [1.0,1.0,0.0,1.0],
-          "position" : [0.0,0.0],
-          "rotation" : 0.0,
-          "scale" : [80.0,80.0]
-        }
-      ],
-      "Buttons": [
-        {
-          "name": "bouton",
-          "défaut": "défaut",
-          "pressé": "pressé",
-          "survol": "survol",
-          "taille": [1,1],
-          "position": [0,0],
-          "rotation": 0,
-          "préréglage": "BOUTTON"
-        }
-      ]
-    },
-    {
-      "position" : [-2.2,5.75,-4.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 0.5
-    },
-    {
-      "position" : [-2.2,5.75, 4.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 0.5
     }
   ],
 
@@ -200,7 +116,6 @@
       }
     ],
     "ColorSquare" : [
-
     ],
     "Buttons": [
     ],
@@ -214,6 +129,39 @@
         "rotation": 0,
         "scale": [2.5,2.5]
       }
+    ],
+    "Glissoires": [
     ]
-  }
+  },
+
+  "TMP_NULL" : [
+    {
+      "position" : [-2.2,5.75,-4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 0.5
+    },
+    {
+      "position" : [-2.2,5.75, 4.0],
+      "color" : [1.0,0.6,0.4],
+      "intensity" : 0.5
+    },
+    {
+      "name" : "ballb",
+      "mesh" : "icosphere",
+      "SeparateMesh" : false,
+      "material" : "glow",
+      "position" : [4.0,0.0,2.0],
+      "rotation" : [0.0,0.0,0.0],
+      "scale" : [0.5,0.5,0.5]
+    },
+    {
+      "name" : "ball",
+      "mesh" : "icosphere",
+      "SeparateMesh" : false,
+      "material" : "metal",
+      "position" : [0.0,0.0,9.0],
+      "rotation" : [0.0,0.0,0.0],
+      "scale" : [5.0,5.0,5.0]
+    }
+  ]
 }

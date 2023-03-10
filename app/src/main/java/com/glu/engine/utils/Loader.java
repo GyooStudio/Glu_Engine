@@ -14,6 +14,7 @@ import android.util.Log;
 import com.glu.engine.GUI.Bouton;
 import com.glu.engine.GUI.ColorSquare;
 import com.glu.engine.GUI.GUIBase;
+import com.glu.engine.GUI.Glissoire;
 import com.glu.engine.GUI.TexQuad;
 import com.glu.engine.GUI.Text.Font;
 import com.glu.engine.GUI.Text.TextBox;
@@ -1489,6 +1490,78 @@ public class Loader {
 											bouton.changerComportement(enDoigtTouché,enDoigtRelâche,enDoigtDébarque,enSurvol,enSurvolDébarque,enSurvolRelâche,enClic);
 											bouton.name = name;
 											scene.addButton(bouton);
+										}
+										jsonSceneReader.endArray();
+										break;
+									case "Glissoires" :
+										jsonSceneReader.beginArray();
+										while (jsonSceneReader.hasNext()){
+											jsonSceneReader.beginObject();
+
+											String name = null;
+											GUIBase barre = null;
+											GUIBase bouton = null;
+											Vector2f position = null;
+											float rotation = 0f;
+											float valMax = 0f;
+											float valMin = 0f;
+											float valDéfaut = 0f;
+											float échelonsTaille = 0f;
+
+											while (jsonSceneReader.hasNext()){
+												String textTag = jsonSceneReader.nextName();
+												switch (textTag){
+													case "nom":
+														name = jsonSceneReader.nextString();
+														break;
+													case "barre":
+														String barreNom = jsonSceneReader.nextString();
+														int index = guiBaseElementsNames.indexOf(barreNom);
+														barre = guiBaseElements.get(index);
+														break;
+													case "bouton":
+														String boutonNom = jsonSceneReader.nextString();
+														index = guiBaseElementsNames.indexOf(boutonNom);
+														bouton = guiBaseElements.get(index);
+														break;
+													case "position" :
+														jsonSceneReader.beginArray();
+														float[] p = new float[2];
+														for (int i = 0; i < 2; i++) {
+															p[i] = (float) jsonSceneReader.nextDouble();
+														}
+														jsonSceneReader.endArray();
+														position = new Vector2f(p[0],p[1]);
+														break;
+													case "rotation" :
+														rotation = (float) jsonSceneReader.nextDouble();
+														break;
+													case "Valeur Min":
+														valMin = (float) jsonSceneReader.nextDouble();
+														break;
+													case "Valeur Max":
+														valMax = (float) jsonSceneReader.nextDouble();
+														break;
+													case "Valeur Défaut" :
+														valDéfaut = (float) jsonSceneReader.nextDouble();
+														break;
+													case "ÉchelonTaille" :
+														échelonsTaille = (float) jsonSceneReader.nextDouble();
+														break;
+													default:
+														jsonSceneReader.skipValue();
+														break;
+												}
+											}
+											jsonSceneReader.endObject();
+
+											Glissoire glissoire = new Glissoire(barre,bouton,valMin,valMax,échelonsTaille);
+											glissoire.assignerValeur(valDéfaut);
+											glissoire.assignerRotation(rotation);
+											glissoire.assignerPosition(position);
+											glissoire.nom = name;
+											scene.addGlissoire(glissoire);
+
 										}
 										jsonSceneReader.endArray();
 										break;

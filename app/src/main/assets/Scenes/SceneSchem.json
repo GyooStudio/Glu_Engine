@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$schema": "https://json-schema.org/draft-07/schema",
     "type": "object",
     "properties": {
       "$schema": {
@@ -151,7 +151,7 @@
             "SeparateMesh": {
               "type": "boolean",
               "default": false,
-              "description": "Des fois, les objets peuvent êtrent composés de plusieurs morceaux clairement définits dans le fichier. Si vrai, vas créer une entité séparée par morceau. Si faux, vas regrouper chaque morceau en une seule entitée. Pour de meilleures performances, mettre faux."
+              "description": "Des fois, les objets peuvent êtrent composés de plusieurs morceaux clairement définits dans le fichier. Si vrai, vas créer une entité séparée pour chaque morceau. Si faux, vas regrouper chaque morceau en une seule entitée. Pour de meilleures performances, mettre faux."
             },
             "material": {
               "type": "string",
@@ -174,7 +174,8 @@
                   "type": "number",
                   "default": 0
                 }
-              ]
+              ],
+              "description": "Vecteur de 3 éléments : x, y et z. Définit la position de l'objet."
             },
             "rotation": {
               "type": "array",
@@ -193,7 +194,8 @@
                   "type": "number",
                   "default": 0
                 }
-              ]
+              ],
+              "description": "Vecteur de 3 éléments : x, y et z. Définit un angle de rotation autour de chacuns de ces trois axes pour tourner l'objet."
             },
             "scale": {
               "type": "array",
@@ -212,7 +214,8 @@
                   "type": "number",
                   "default": 1
                 }
-              ]
+              ],
+              "description": "Vecteur de 3 éléments : x, y et z. Définit la grandeur de l'objet sur chacun des trois axes locaux."
             }
           },
           "required": [
@@ -224,9 +227,9 @@
             "rotation",
             "scale"
           ],
-          "additionalProperties": false,
-          "description": "Les objets peuplants la scène."
-        }
+          "additionalProperties": false
+        },
+        "description": "Les objets peuplants la scène."
       },
       "lights": {
         "type": "array",
@@ -250,7 +253,8 @@
                   "type": "number",
                   "default": 0
                 }
-              ]
+              ],
+              "description": "Vecteur de 3 éléments : x, y et z. Détermine la position de la lumière."
             },
             "color": {
               "type": "array",
@@ -269,11 +273,13 @@
                   "type": "number",
                   "default": 1
                 }
-              ]
+              ],
+              "description": "Vecteur de 3 éléments : rouge, vert et bleu (rvb). Détermine la couleur de la lumière."
             },
             "intensity": {
               "type": "number",
-              "default": 10
+              "default": 10,
+              "description": "Intensité lumineuse de la lumière."
             }
           },
           "required": [
@@ -282,7 +288,8 @@
             "intensity"
           ],
           "additionalProperties": false
-        }
+        },
+        "description": "Objets de la grosseur d'un point, produisant de la lumière dans le monde."
       },
       "UI": {
         "type": "object",
@@ -294,10 +301,12 @@
               "properties": {
                 "name": {
                   "type": "string",
-                  "default": "NouveauTexQuad"
+                  "default": "NouveauTexQuad",
+                  "description": "Utilisé comme identificateur. Doit être unique."
                 },
                 "texture": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "Fait référence à une texture dans les ressources, qui serat utilisée pour colorier le rectangle."
                 },
                 "position": {
                   "type": "array",
@@ -312,11 +321,13 @@
                       "type": "number",
                       "default": 0
                     }
-                  ]
+                  ],
+                  "description": "Vecteur de 2 éléments : x et y. Définit la position sur l'écran du rectangle en pixels."
                 },
                 "rotation": {
                   "type": "number",
-                  "default": 0
+                  "default": 0,
+                  "description": "Définit un angle de rotation pour tourner le rectangle."
                 },
                 "scale": {
                   "type": "array",
@@ -331,7 +342,8 @@
                       "type": "number",
                       "default": 1
                     }
-                  ]
+                  ],
+                  "description": "Vecteur de 2 éléments : x et y. Définit la grandeur du rectangle dans chacuns des axes, en pixels."
                 }
               },
               "required": [
@@ -342,7 +354,8 @@
                 "scale"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Un rectangle contenant une texture."
           },
           "ColorSquare": {
             "type": "array",
@@ -351,7 +364,8 @@
               "properties": {
                 "name": {
                   "type": "string",
-                  "default" : "NouveauColorSquare"
+                  "default" : "NouveauColorSquare",
+                  "description": "Utilisé comme identificateur. Doit être unique."
                 },
                 "color": {
                   "type": "array",
@@ -374,7 +388,8 @@
                       "type": "number",
                       "default": 1
                     }
-                  ]
+                  ],
+                  "description": "Vecteur de 4 éléments : rouge, vert, bleu et alpha (rvba). Définit la couleur (rvb) et la transparance (a, 0 est transparent 1 est opaque) du rectangle."
                 },
                 "position": {
                   "type": "array",
@@ -389,11 +404,13 @@
                       "type": "number",
                       "default": 0
                     }
-                  ]
+                  ],
+                  "description": "Vecteur de 2 éléments : x et y. Définit la position du carré sur l'écran, en pixels."
                 },
                 "rotation": {
                   "type": "number",
-                  "default": 0
+                  "default": 0,
+                  "description": "Définit un angle de rotation pour tourner le rectangle."
                 },
                 "scale": {
                   "type": "array",
@@ -408,11 +425,13 @@
                       "type": "number",
                       "default": 1
                     }
-                  ]
+                  ],
+                  "description": "Vecteur de 2 élément : x et y. Définit la grandeur du rectangle sur chacun des axe, en pixels."
                 },
                 "rayonCoin" : {
                   "type": "number",
-                  "default": 0
+                  "default": 0,
+                  "description": "Utilisé pour arrondir les coins du rectangle. 0 : les coins sonts parfaitement carré et 0.5 : le carré devient un cercle."
                 }
               },
               "required": [
@@ -423,23 +442,28 @@
                 "scale"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Un rectangle avec une couleur unie."
           },
           "Buttons" : {
             "type": "array",
             "items": {
               "properties": {
                 "name": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "Utilisé comme identificateur. Doit être unique."
                 },
                 "défaut": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "Fait référence à un «TexQuad» ou à un «ColorSquare». Serat le visuel du bouton par défaut."
                 },
                 "pressé": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "Fait référence à un «TexQuad» ou à un «ColorSquare». Serat le visuel du bouton lorsque pressé."
                 },
                 "survol": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "Fait référence à un «TexQuad» ou à un «ColorSquare». Serat le visuel du bouton lorsqu'en survol."
                 },
                 "taille": {
                   "type": "array",
@@ -448,7 +472,8 @@
                   "items":{
                     "type": "number",
                     "default": 1
-                  }
+                  },
+                  "description": "Vecteur de 2 éléments : x et y. Définit la grandeur du bouton sur chacuns des axes, en pixels. Vas ajuster la taille de «défaut», «pressé» et «survol»."
                 },
                 "position": {
                   "type": "array",
@@ -457,11 +482,13 @@
                   "items": {
                     "type": "number",
                     "default": 0
-                  }
+                  },
+                  "description": "Vecteur de 2 éléments : x et y. Définit la position du bouton sur l'écran, en pixels. Vas ajuster la position de «défaut», «pressé» et «survol»."
                 },
                 "rotation": {
                   "type": "number",
-                  "default": 0
+                  "default": 0,
+                  "description": "Définit un angle de rotation pour tourner le bouton. Vas ajuster la rotation de «défaut», «pressé» et «survol»."
                 },
                 "préréglage": {
                   "type": "string",
@@ -471,7 +498,15 @@
                     "CONTRÔLES",
                     "CASE_À_COCHER"
                   ],
-                  "default": "BOUTTON"
+                  "$comment": "anyOf est utilisé pour la description.",
+                  "anyOf": [
+                    {"const": "BOUTON : Vas rester en défaut jusqu'à ce que le doigt relève. Alors il cliquera et reviendra à défaut immédiatement. À utiliser pour des boutons de menus."},
+                    {"const": "SÉLECTION : Vas enfoncer lorsque cliqué et rester ainsi jusqu'à ce que le code le réinitialise. À utiliser pour faire une liste à un seul choix."},
+                    {"const": "CONTRÔLES : Vas enfoncer lorsque cliqué et remonter immédiatement une fois le doigt relevé. À utiliser pour des contrôles de navigation."},
+                    {"const": "CASE_À_COCHER : Vas enconcer lorsqeu cliqué et ne remonter que lorsque cliqué une deuxième fois. À utiliser pour de cases à cocher."}
+                  ],
+                  "default": "BOUTTON",
+                  "description": "Des préréglages définissants le comportement du bouton."
                 },
                 "comportement": {
                   "type": "object",
@@ -483,7 +518,14 @@
                         "survol",
                         "clic"
                       ],
-                      "default": null
+                      "$comment": "anyOf est utilisé comme description",
+                      "anyOf": [
+                        {"const": "rien : ne fera rien."},
+                        {"const": "survol : changera l'état en «survol»."},
+                        {"const": "clic : cliquera le bouton. Définit par «EnClic»"}
+                      ],
+                      "default": null,
+                      "description": "Définit ce qui arrivera lorsque le doigt touche l'écran sur le bouton."
                     },
                     "EnDoigtRelâche": {
                       "type": "string",
@@ -493,7 +535,15 @@
                         "retourne défaut",
                         "survol"
                       ],
-                      "default": null
+                      "$comment": "anyOf est utilisé comme description",
+                      "anyOf": [
+                        {"const": "reste : il ne se passera rien, le bouton restera sur l'état dans lequel il est."},
+                        {"const": "clic : le bouton sera cliqué. Définit par «EnClic»."},
+                        {"const": "retourne défaut : le bouton retournera dans l'état «défaut»."},
+                        {"const": "survl : le bouton ira dans l'état «survol»."}
+                      ],
+                      "default": null,
+                      "description": "Définit ce qui ce passe lorsque le doigt relâche l'écran sur le bouton."
                     },
                     "EnDoigtDébarque": {
                       "type": "string",
@@ -502,7 +552,14 @@
                         "clic",
                         "retourne défaut"
                       ],
-                      "default": null
+                      "$comment": "anyOf est utilisé comme description",
+                      "anyOf": [
+                        {"const": "reste : il ne se passra rien, le bouton restera dans l'état dans lequel il est."},
+                        {"const": "clic : le bouton serat cliqué. Définit par «EnClic»."},
+                        {"const": "retourne défaut : le bouton retournerat à l'état «défaut»."}
+                      ],
+                      "default": null,
+                      "description": "Ce qui se passera lorsque le doigt glisse hors du bouton."
                     },
                     "EnSurvol": {
                       "type": "string",
@@ -511,7 +568,14 @@
                         "clic",
                         "survol"
                       ],
-                      "default": null
+                      "$comment": "anyOf est utilisé comme description",
+                      "anyOf": [
+                        {"const": "rien : il ne se passera rien."},
+                        {"const": "clic : le bouton serat cliqué. Définit par «EnClic»."},
+                        {"const": "survol : le bouton irat dans l'état «survol»."}
+                      ],
+                      "default": null,
+                      "description": "Ce qui se passera si le doigt touche l'écran hors du bouton et qu'il glisse sur le bouton."
                     },
                     "EnSurvolDébarque": {
                       "type": "string",
@@ -520,7 +584,14 @@
                         "clic",
                         "retourne défaut"
                       ],
-                      "default": null
+                      "$comment": "anyOf est utilisé comme description",
+                      "anyOf": [
+                        {"const": "reste : il ne se passera rien, le bouton restera dans l'état dans lequel il est."},
+                        {"const": "clic : le bouton serat cliqué. Définit par «EnClic»."},
+                        {"const": "retourne défaut : le bouton retournerat dans l'état «défaut»."}
+                      ],
+                      "default": null,
+                      "description": "Ce qui se passera lorsque le doigt qui survolait le bouton glisse hors du bouton."
                     },
                     "EnSurvolRelâche": {
                       "type": "string",
@@ -529,7 +600,14 @@
                         "clic",
                         "retourne défaut"
                       ],
-                      "default": null
+                      "$comment": "anyOf est utilisé comme description",
+                      "anyOf": [
+                        {"const": "reste : il ne se passera rien, le bouton restera dans l'état dans lequel il est."},
+                        {"const": "clic : le bouton serat cliqué. Définit par «EnClic»."},
+                        {"const": "retourne défaut : le bouton retournerat dans l'état «défaut»."}
+                      ],
+                      "default": null,
+                      "description": "Ce qui se passera lorsque le doigt qui survolait le bouton relâche l'écran sur le bouton."
                     },
                     "EnClic": {
                       "type": "string",
@@ -539,10 +617,19 @@
                         "clic immédiat",
                         "alterne"
                       ],
-                      "default": null
+                      "$comment": "anyOf est utilisé comme description",
+                      "anyOf": [
+                        {"const": "rien : il ne se passera rien."},
+                        {"const": "clic reste : le bouton irat dans l'état «pressé» et y resterat jusqu'à ce qu'un autre état soit définit."},
+                        {"const": "clic immédiat : le bouton irat dans l'état «pressé» et reviendras à l'état «défaut» aussitôt que possible."},
+                        {"const": "alterne : le bouton irat dans l'état «pressé» s'il est dans l'état «défaut» et vice-versa"}
+                      ],
+                      "default": null,
+                      "description": "Ce qui se passerat lorsque le bouton est cliqué. Un des autres attributs doit être définit «clic», pour prendre effet."
                     }
                   },
-                  "additionalProperties": false
+                  "additionalProperties": false,
+                  "description": "Diverses propriétés qui définissent le comportement du bouton. Passera par-dessus «préréglage»."
                 }
               },
               "required": [
@@ -554,20 +641,24 @@
                 "rotation"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Objet avec lequel on peut interragir en appuyant dessus."
           },
           "TextBoxes" : {
             "type": "array",
             "items": {
               "properties": {
                 "name" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "description": "Utilisé comme identificateur. Doit être unique."
                 },
                 "font" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "description": "Fait référence à une police dans les ressources. Définit la forme de chaques charactères."
                 },
                 "text" : {
-                  "type": "string"
+                  "type": "string",
+                  "description": "Texte qui serat affiché dans la boîte de texte."
                 },
                 "size" : {
                   "type": "array",
@@ -582,7 +673,8 @@
                       "type": "number",
                       "default": 300
                     }
-                  ]
+                  ],
+                  "description": "Vecteur de 2 éléments : x et y. Définit la taille des bornes de la boîte de texte en pixels. Les charactères peuvent interragir avec ces limites."
                 },
                 "position" : {
                   "type": "array",
@@ -597,11 +689,13 @@
                       "type" : "number",
                       "default": 0
                     }
-                  ]
+                  ],
+                  "description": "Vecteur de 2 éléments : x et y. Définit la position sur l'écran de la boîte de texte, en pixels."
                 },
                 "rotation" : {
                   "type" : "number",
-                  "default" : 0
+                  "default" : 0,
+                  "description": "Définit un angle de rotation pour tourner la boîte de texte."
                 },
                 "scale" : {
                   "type": "array",
@@ -616,7 +710,8 @@
                       "type" : "number",
                       "default" : 3
                     }
-                  ]
+                  ],
+                  "description": "Vecteur de 2 éléments : x et y. Définit la taille de la boîte de texte et de ses charactère."
                 }
               },
               "required": [
@@ -628,15 +723,88 @@
                 "scale"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Des boîtes pouvant contenir du texte."
+          },
+          "Glissoires" : {
+            "type": "array",
+            "items": {
+              "properties": {
+                "nom":{
+                  "type": "string",
+                  "default": "glissoire",
+                  "description": "Utilisé comme identificateur. Doit être unique."
+                },
+                "barre": {
+                  "type": "string",
+                  "description": "Fait référence à un «TexQuad» ou un «ColorSquare» définit précédemment pour former la barre sur laquelle le bouton vas glisser."
+                },
+                "bouton": {
+                  "type": "string",
+                  "description": "Fait référence à un «TexQuad» ou un «ColorSquare» définit précédemment pour former le bouton qui vas glisser sur la barre."
+                },
+                "Valeur Min": {
+                  "type": "number",
+                  "default": -10,
+                  "description": "La plus petite valeur admise sur la glissoire."
+                },
+                "Valeur Max": {
+                  "type": "number",
+                  "default": 10,
+                  "description": "La plus grande valeur admise sur la glissoire."
+                },
+                "Valeur Défaut": {
+                  "type": "number",
+                  "default": 0,
+                  "description": "La valeur par défaut de la glissoire."
+                },
+                "ÉchelonTaille": {
+                  "type": "number",
+                  "default": 0.1,
+                  "description": "La taille de l'échelon des valeurs possibles sur la glissoire."
+                },
+                "position": {
+                  "type": "array",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "items": [
+                    {
+                      "type": "number",
+                      "default": 0
+                    },
+                    {
+                      "type": "number",
+                      "default": 0
+                    }
+                  ],
+                  "description": "Vecteur de 2 éléments : x et y. Définit la position de la glissoire."
+                },
+                "rotation": {
+                  "type": "number",
+                  "default": 0,
+                  "description": "Définit un angle de rotation pour touner la glissoire."
+                }
+              },
+              "required": [
+                "nom",
+                "barre",
+                "bouton",
+                "position",
+                "rotation"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Des barres avec des boutons qu'on peut faire glisser pour changer une valeur."
           }
         },
         "required": [
           "TexQuads",
           "ColorSquare",
           "Buttons",
-          "TextBoxes"
-        ]
+          "TextBoxes",
+          "Glissoires"
+        ],
+        "description": "Contient l'ensemble des éléments d'interface utilisateur."
       }
     },
     "required": [

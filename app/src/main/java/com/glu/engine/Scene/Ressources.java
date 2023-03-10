@@ -51,6 +51,9 @@ public class Ressources {
 
     public Vector2f viewport;
 
+    public boolean isRendering = false;
+    public boolean isModifyingScene = false;
+
     public static Ressources getRessources(){
         if(ressources == null){
             ressources = new Ressources();

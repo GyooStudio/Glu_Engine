@@ -36,6 +36,7 @@ public final class GluSurfaceView extends GLSurfaceView {
 
     final com.glu.engine.Renderer renderer;
     final ActionManager actionManager = ActionManager.getActionManager();
+    private Ressources ressources = Ressources.getRessources();
     public long startTime;
     public boolean hasSetTouch = true;
 
@@ -48,8 +49,6 @@ public final class GluSurfaceView extends GLSurfaceView {
     private final Loader loader;
 
     private TextBox fpsText;
-    private TextBox testBox;
-    private Glissoire glissoire;
 
     @SuppressLint("ClickableViewAccessibility")
     public void onConfigurationChanged(Configuration config){
@@ -87,14 +86,20 @@ public final class GluSurfaceView extends GLSurfaceView {
             }
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                 //stopAction lets the program know that an action has stopped
-                actionManager.stopAction(0);
+                //Log.w("onTouchListener", "ACTION_UP");
+                //actionManager.log();
+                actionManager.stopAction( ID);
+                //actionManager.log();
                 Log.w("onTouchListener", "first Action stopped");
                 return true;
             }
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 //addAction lets the program know to start a knew array to store Pointers positions
-                actionManager.addAction(0);
-                actionManager.addPoint(0, motionEvent.getX(0), motionEvent.getY(0));
+                //Log.w("onTouchListener", "ACTION_DOWN");
+                //actionManager.log();
+                actionManager.addAction(ID);
+                actionManager.addPoint(ID, motionEvent.getX(ID), motionEvent.getY(ID));
+                //actionManager.log();
                 Log.w("onTouchListener", "first Action!");
 
                 main.hideUI();
@@ -102,13 +107,19 @@ public final class GluSurfaceView extends GLSurfaceView {
                 return true;
             }
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
+                //Log.w("onTouchListener", "ACTION_POINTER_DOWN");
+                //actionManager.log();
                 actionManager.addAction(ID);
                 actionManager.addPoint(ID, motionEvent.getX(index), motionEvent.getY(index));
+                //actionManager.log();
                 Log.w("onTouchListener", "new Action! " + ID);
                 return true;
             }
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP) {
+                //Log.w("onTouchListener", "ACTION_POINTER_UP");
+                //actionManager.log();
                 actionManager.stopAction(ID);
+                //actionManager.log();
                 Log.w("onTouchListener", "action " + ID + " has stopped.");
                 return true;
             }
@@ -133,22 +144,6 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                     scene = loader.loadScene("Scenes/Scene.json", new Vector2f(1));
 
-                                    /*ColorSquare barre = new ColorSquare(new Vector4f(0.75f,0.75f,0.75f,1f));
-                                    barre.scale.set(0, new Vector2f(400f,30f));
-                                    ColorSquare bouton = new ColorSquare( new Vector4f(0.75f,0.9f,0.75f,1f));
-                                    bouton.scale.set(0, new Vector2f(80f,80f));
-                                    glissoire = new Glissoire(barre,bouton,0f,3f,0.1f);
-                                    //glissoire.assignerRotation(30f);
-                                    glissoire.assignerPosition(new Vector2f(200f));
-                                    glissoire.nom = "test";
-                                    scene.addColorSquare(barre);
-                                    scene.addColorSquare(bouton);
-                                    scene.addGlissoire(glissoire);
-
-                                    Ressources ressources = Ressources.getRessources();
-                                    testBox = new TextBox(ressources.getFont("normal Bold"), new Vector2f(300f,0f), new Vector2f(-600f,0f), new Vector2f(2f,2f), 0f);
-                                    scene.addTextBox(testBox);*/
-
                                     renderer.setScene(scene);
 
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
@@ -169,6 +164,8 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                     scene.sunLight.shadowDist = 30f;
                                     scene.sunLight.softness = 1f;
+
+                                    //requestRender();
 
                                     while(fpsText == null){
                                         fpsText = scene.getTextBox("FPS");
@@ -226,14 +223,14 @@ public final class GluSurfaceView extends GLSurfaceView {
                             Log.e("oups!", e.getMessage());
                         }
 
-                        if (renderer.hasRendered && hasInit) {
+                        if (!ressources.isRendering && hasInit) {
                             try {
+
+                                ressources.isModifyingScene = true;
 
                                 scene.inputManager.update();
                                 //Log.w("update", "updated scene");
                                 //shadowTest.texture = scene.pp.Shadow.texture;
-
-                                //testBox.setText("valeur  : " + glissoire.valeur,4,5, TextBox.Alignment.LEFT);
 
                                 Matrix4f m = new Matrix4f();
                                 m.setIdentity();
@@ -250,6 +247,10 @@ public final class GluSurfaceView extends GLSurfaceView {
                                         lamps[i].intensity = 0f;
                                     }
                                 }*/
+
+                                //requestRender();
+
+                                ressources.isModifyingScene = false;
 
                                 fpsCounter++;
                                 if (System.currentTimeMillis() - fpsTimer > 5000) {

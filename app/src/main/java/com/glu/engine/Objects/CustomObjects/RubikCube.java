@@ -122,9 +122,6 @@ public class RubikCube extends CustomObject{
         deltaTime = (float)( System.currentTimeMillis() - lastFrameTime) / 1000f;
         lastFrameTime = System.currentTimeMillis();
 
-        //if(ball == null){
-        //    ball = scene.getEntity("ball");
-        //}
         ActionManager actionManager = scene.actionManager;
         Matrix4f proj = scene.PROJECTION_MATRIX;
         Matrix4f iProj = Matrix4f.inverse(proj);
@@ -138,7 +135,7 @@ public class RubikCube extends CustomObject{
                 snappedBlocs = true;
             }
 
-            Vector3f pointer = new Vector3f((actionManager.lastPoint[0].x / ressources.viewport.x) * 2f - 1f, (actionManager.lastPoint[0].y / ressources.viewport.y) * 2f - 1f, 0);
+            Vector3f pointer = new Vector3f((actionManager.startPosition[0].x / ressources.viewport.x) * 2f - 1f, (actionManager.startPosition  [0].y / ressources.viewport.y) * 2f - 1f, 0);
             pointer = Matrix4f.MultiplyMV(iProj, pointer);
             pointer = Matrix4f.MultiplyMV( irView, pointer);
 
@@ -171,7 +168,8 @@ public class RubikCube extends CustomObject{
                 //}
                 return true;
             }
-        }else if(state == State.CATCHED && Vector2f.distance(cachedPointerPos,actionManager.lastPoint[0]) > 50){
+        }
+        else if(state == State.CATCHED && Vector2f.distance(cachedPointerPos,actionManager.lastPoint[0]) > 50){
             Vector3f X = new Vector3f(1,0,0);
             Vector3f Y = new Vector3f(0,1,0);
             Vector3f Z = new Vector3f(0,0,1);
@@ -215,7 +213,8 @@ public class RubikCube extends CustomObject{
             snappedBlocs = false;
 
             return true;
-        }else if(state == State.MOVING){
+        }
+        else if(state == State.MOVING){
 
             if (!actionManager.isTouching[0]){
 
@@ -367,9 +366,11 @@ public class RubikCube extends CustomObject{
             }
 
             return true;
-        }else if(state == State.CATCHED){
+        }
+        else if(state == State.CATCHED){
             return true;
-        }else if(!actionManager.isTouching[0]){
+        }
+        else if(!actionManager.isTouching[0]){
             snapBlocs(0.01f);
             state = State.IDLE;
             return false;

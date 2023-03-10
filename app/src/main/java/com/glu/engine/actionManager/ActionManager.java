@@ -27,15 +27,13 @@ import java.util.ArrayList;
 public final class ActionManager {
     private final static ActionManager actionManager = new ActionManager();
 
-    public static final int MAX_POINTERS = 20;
+    public static final int MAX_POINTERS = 3;
     public int pointerNumber = 0;
     public long timeOfLastRecording;
     public boolean hasManuallyUpdated = false;
 
     final boolean[] pointerIndices = new boolean[MAX_POINTERS];
     final ArrayList<ArrayList<Vector2f>> actionTrack = new ArrayList<>();
-    public ArrayList<Bouton> boutons = new ArrayList<>();
-    public ArrayList<Glissoire> glissoires = new ArrayList<>();
     private Ressources ressources;
 
     /** action ID*/
@@ -133,11 +131,11 @@ public final class ActionManager {
                 processAction(index);
                 pointerIndices[index] = false;
                 isTouching[index] = false;
-                Log.w("actionManager", "stopped action " + index + ". actionNumber: " + pointerNumber + " isTouching: " + isTouching[index]);
                 processAction(index);
                 timeOfLastRecording = System.currentTimeMillis();
                 hasManuallyUpdated = false;
                 pointerNumber--;
+                Log.w("actionManager", "stopped action " + index + ". actionNumber: " + pointerNumber + " isTouching: " + isTouching[index]);
                 succeeded = true;
             } catch (Exception e) {
                 attempts++;
@@ -298,5 +296,19 @@ public final class ActionManager {
             return actionType.NO_ACTION;
         }
 
+    }
+
+    public void log(){
+        for (int i = 0; i < MAX_POINTERS; i++) {
+            try {
+                Log.w("actionManager.Log", "pointerNumber : " + pointerNumber + " isTouching : " + isTouching[i] + " lastPoint : " + lastPoint[i].x + "; " + lastPoint[i].y + " startPosition : " + startPosition[i].x + "; " + startPosition[i].y + " velocity : " + velocity[i].x + "; " + velocity[i].y);
+            }catch (Exception ignored){}
+        }
+    }
+
+    public void log(int i){
+        try {
+            Log.w("actionManager.Log", "pointerNumber : " + pointerNumber + " isTouching : " + isTouching[i] + " lastPoint : " + lastPoint[i].x + "; " + lastPoint[i].y + " startPosition : " + startPosition[i].x + "; " + startPosition[i].y + " velocity : " + velocity[i].x + "; " + velocity[i].y);
+        }catch (Exception ignored){}
     }
 }

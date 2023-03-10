@@ -92,6 +92,18 @@ public final class Renderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl10) {
+
+        //wait until whatever is modifying the scene stops.
+        while (ressources.isModifyingScene){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        ressources.isRendering = true;
+
         //if the shaders aren't built, it will build them.
         ressources.buildShaders();
 
@@ -108,9 +120,9 @@ public final class Renderer implements GLSurfaceView.Renderer {
         //GLES30.glClearColor(color.x, color.y,color.z,color.w);
         GLES30.glClearColor(0f,0f,0f,0f);
 
-        hasRendered = false;
-
         scene.updateGraphics();
+
+        //Scene scene = this.scene.copy();
 
         //TAA
         inc = (short) Math.floorMod(scene.pp.inc + 1,4);
@@ -143,7 +155,7 @@ public final class Renderer implements GLSurfaceView.Renderer {
 
         scene.callNewFrame();
 
-        hasRendered = true;
+        ressources.isRendering = false;
 
         fpsCount ++;
         if (System.currentTimeMillis()-fpsTime > 5000){

@@ -63,7 +63,7 @@ public final class Scene {
     public boolean hasFirstUpdated = false;
     public boolean CleanEntities = true;
 
-    public SunLight sunLight = new SunLight(new Vector3f(-1f,-1f,0f), new Vector3f(1f,0.9f,0.8f), 3.0f);
+    public SunLight sunLight = new SunLight(new Vector3f(-1f,-0.65f,0f), new Vector3f(1f,0.9f,0.8f), 3.0f);
 
     private Ressources ressources;
 
@@ -81,6 +81,51 @@ public final class Scene {
 
         pp = new PostProcessing();
         generateProjectionMatrix(ressources.viewport.x/ ressources.viewport.y);
+    }
+
+    public Scene(Scene scene){
+        Loader loader = Loader.getLoader();
+        ressources = Ressources.getRessources();
+        this.actionManager = ActionManager.getActionManager();
+        this.inputManager = new InputManager(this);
+
+        generateProjectionMatrix(ressources.viewport.x/ ressources.viewport.y);
+
+        state = scene.state;
+        Entities = (ArrayList<Entity>) scene.Entities.clone();
+        DirtyEntities = (ArrayList<Entity>) scene.DirtyEntities.clone();
+        TexQuads = (ArrayList<TexQuad>) scene.TexQuads.clone();
+        dirtyTexQuads = (ArrayList<TexQuad>) scene.dirtyTexQuads.clone();
+        dirtyColor = (ArrayList<com.glu.engine.GUI.ColorSquare>) scene.dirtyColor.clone();
+        ColorSquare = (ArrayList<com.glu.engine.GUI.ColorSquare>) scene.ColorSquare.clone();
+        dirtyBoutons = (ArrayList<Bouton>) scene.dirtyBoutons.clone();
+        boutons = (ArrayList<Bouton>) scene.boutons.clone();
+        dirtyGlissoires = (ArrayList<Glissoire>) scene.dirtyGlissoires.clone();
+        glissoires = (ArrayList<Glissoire>) scene.glissoires.clone();
+        DirtyTextBoxes = (ArrayList<TextBox>) scene.DirtyTextBoxes.clone();
+        TextBoxes = (ArrayList<TextBox>) scene.TextBoxes.clone();
+        Lights = (ArrayList<Light>) scene.Lights.clone();
+        textures = (ArrayList<GTexture>) scene.textures.clone();
+        objects = (ArrayList<CustomObject>) scene.objects.clone();
+        skybox = scene.skybox;
+        pp = new PostProcessing(scene.pp);
+        camera = scene.camera;
+        isLightSorted = true;
+        isSkyboxClean = false;
+
+        //PROJECTION_MATRIX = new Matrix4f();
+
+        renderGUIas3D = scene.renderGUIas3D;
+
+        entityIncrement = scene.entityIncrement;
+        hasFirstUpdated = scene.hasFirstUpdated;
+        CleanEntities = scene.CleanEntities;
+
+        sunLight = scene.sunLight;
+    }
+
+    public Scene copy(){
+        return new Scene(this);
     }
 
     public void addEntity(Entity entity){
@@ -338,7 +383,7 @@ public final class Scene {
 
     public void updateGraphics(){
         if(!pp.isSetup) {
-            pp.setup(3.0f, this);
+            pp.setup(2.5f, this);
         }
         cleanTextures();
         cleanEntities();

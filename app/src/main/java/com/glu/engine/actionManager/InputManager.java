@@ -1,6 +1,7 @@
 package com.glu.engine.actionManager;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.glu.engine.GUI.Bouton;
 import com.glu.engine.GUI.ColorSquare;
@@ -89,20 +90,30 @@ public class InputManager {
             boolean updatedAction = false;
 
             for (Bouton bouton : scene.boutons) {
-                updatedAction = bouton.actualiser(index);
+                if(!updatedAction) {
+                    updatedAction = bouton.actualiser(index);
+                }else{
+                    break;
+                }
             }
 
             for (Glissoire glissoire : scene.glissoires) {
-                updatedAction = glissoire.actualiser(index);
+                if(!updatedAction) {
+                    updatedAction = glissoire.actualiser(index);
+                }else{
+                    break;
+                }
             }
 
             if(!updatedAction && cube != null){
                 updatedAction = cube.update(scene);
             }
 
+            //Log.w("InputManager", "moving camera");
+            //actionManager.log(index);
             if(!updatedAction) {
                 if(actionManager.isTouching[index] && actionManager.pointerNumber == 1 && (movementType == 0 || movementType == 1)) {
-                    scene.camera.setRotation(Vector3f.add(new Vector3f(actionManager.velocity[index].y * 5f * deltaTime,-actionManager.velocity[index].x * 5f * deltaTime,0f),scene.camera.getRotation()));
+                    scene.camera.setRotation(Vector3f.add(new Vector3f(actionManager.velocity[index].y * 10f * deltaTime,-actionManager.velocity[index].x * 10f * deltaTime,0f),scene.camera.getRotation()));
                     movementType = 1;
                     timeOfLastMovement = System.currentTimeMillis();
                 }

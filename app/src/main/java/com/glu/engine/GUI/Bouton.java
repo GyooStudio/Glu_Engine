@@ -441,29 +441,44 @@ public final class Bouton {
     }
 
     public void changerTaille(Vector2f taille){
-        this.taille = taille.copy();
-        bouttonDéfaut.scale.set( 0, Vector2f.scale(taille.copy(),2f) );
-        bouttonPressé.scale.set( 0, Vector2f.scale(taille.copy(),2f) );
+        bouttonDéfaut.scale.get(0).divide( Vector2f.scale(this.taille.copy(),2f) );
+        bouttonPressé.scale.get(0).divide( Vector2f.scale(this.taille.copy(),2f) );
         if(bouttonSurvol != null){
-            bouttonSurvol.scale.set( 0, Vector2f.scale(taille.copy(),2f) );
+            bouttonSurvol.scale.get(0).divide( Vector2f.scale(this.taille.copy(),2f) );
+        }
+        this.taille = taille.copy();
+        bouttonDéfaut.scale.get(0).multiply( Vector2f.scale(this.taille.copy(),2f) );
+        bouttonPressé.scale.get(0).multiply( Vector2f.scale(this.taille.copy(),2f) );
+        if(bouttonSurvol != null){
+            bouttonSurvol.scale.get(0).multiply( Vector2f.scale(this.taille.copy(),2f) );
         }
     }
 
     public void changerPosition(Vector2f position){
-        this.position = position.copy();
-        bouttonDéfaut.position.set( 0, Vector2f.scale(position.copy(),4f) );
-        bouttonPressé.position.set( 0, Vector2f.scale(position.copy(),4f) );
+        bouttonDéfaut.position.get(0).sub( Vector2f.scale(this.position.copy(),4f) );
+        bouttonPressé.position.get(0).sub( Vector2f.scale(this.position.copy(),4f) );
         if(bouttonSurvol != null){
-            bouttonSurvol.position.set( 0, Vector2f.scale(position.copy(),4f) );
+            bouttonSurvol.position.get(0).sub( Vector2f.scale(this.position.copy(),4f) );
+        }
+        this.position = position.copy();
+        bouttonDéfaut.position.get(0).add( Vector2f.scale(this.position.copy(),4f) );
+        bouttonPressé.position.get(0).add( Vector2f.scale(this.position.copy(),4f) );
+        if(bouttonSurvol != null){
+            bouttonSurvol.position.get(0).add( Vector2f.scale(this.position.copy(),4f) );
         }
     }
 
     public void changerRotation(float rotation){
-        this.rotation = rotation;
-        bouttonDéfaut.rotation.set( 0, rotation );
-        bouttonPressé.rotation.set( 0, rotation );
+        bouttonDéfaut.rotation.set( 0, bouttonDéfaut.rotation.get(0) - this.rotation );
+        bouttonPressé.rotation.set( 0, bouttonDéfaut.rotation.get(0) - this.rotation );
         if(bouttonSurvol != null){
-            bouttonSurvol.rotation.set( 0, rotation );
+            bouttonSurvol.rotation.set( 0, bouttonDéfaut.rotation.get(0) - this.rotation );
+        }
+        this.rotation = rotation;
+        bouttonDéfaut.rotation.set( 0, bouttonDéfaut.rotation.get(0) + this.rotation );
+        bouttonPressé.rotation.set( 0, bouttonDéfaut.rotation.get(0) + this.rotation );
+        if(bouttonSurvol != null){
+            bouttonSurvol.rotation.set( 0, bouttonDéfaut.rotation.get(0) + this.rotation );
         }
     }
 }

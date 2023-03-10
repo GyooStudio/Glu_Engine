@@ -157,6 +157,7 @@ public class PostProcessing {
         this.sunLight = sc.sunLight;
         readyForRendering = false;
         isSetup = true;
+        Log.w("pp", "setup");
     }
 
     public int addEffect(effect eff, float a, float b){
@@ -415,10 +416,10 @@ public class PostProcessing {
 
                 deffShader.loadNumberOfLights(lights.size());
                 for (int j = 0; j < lights.size(); j++) {
-                        if(Vector3f.distance(lights.get(j).position, camera.getPosition()) < lights.get(j).radius){
+                        //if(Vector3f.distance(lights.get(j).position, camera.getPosition()) < lights.get(j).radius){
                             deffShader.loadLight(j, lights.get(j).position, lights.get(j).color, lights.get(j).intensity, new Vector4f(0f));
                             deffShader.loadLightCilpDistance(lights.get(j).radius);
-                        }
+                        //}
                 }
                 deffShader.loadScreenDiff(new Vector2f(offX,offY));
 

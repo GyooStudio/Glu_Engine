@@ -26,7 +26,7 @@ import java.util.Collections;
 
 public final class Scene {
     public static final float NEAR_PLANE = 0.1f;
-    public static final float FAR_PLANE = 30.0f;
+    public static final float FAR_PLANE = 40.0f;
     public final int FOV = 70;
     public int state;
     public ArrayList<Entity> Entities = new ArrayList<>();
@@ -63,7 +63,7 @@ public final class Scene {
     public boolean hasFirstUpdated = false;
     public boolean CleanEntities = true;
 
-    public SunLight sunLight = new SunLight(new Vector3f(-1f,-0.65f,0f), new Vector3f(1f,0.9f,0.8f), 3.0f);
+    public SunLight sunLight = new SunLight(new Vector3f(-1f,0f,0.65f), new Vector3f(1f,0.9f,0.8f), 3.0f);
 
     private Ressources ressources;
 

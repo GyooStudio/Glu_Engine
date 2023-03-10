@@ -125,7 +125,7 @@ public final class Renderer implements GLSurfaceView.Renderer {
         //Scene scene = this.scene.copy();
 
         //TAA
-        inc = (short) Math.floorMod(scene.pp.inc + 1,4);
+        /*inc = (short) Math.floorMod(scene.pp.inc + 1,4);
         Vector2f jitter = new Vector2f(0);
         if(scene.pp.effects.contains(PostProcessing.effect.TAA)) {
             jitter = new Vector2f(((float) Math.random() - 0.5f) / (Math.min(ressources.viewport.x, ressources.viewport.y) / scene.pp.downSizeFactor), ((float) Math.random() - 0.5f) / (Math.min(ressources.viewport.x, ressources.viewport.y) / scene.pp.downSizeFactor));
@@ -138,20 +138,20 @@ public final class Renderer implements GLSurfaceView.Renderer {
             if (inc == 2 || inc == 3) {
                 jitter.add(new Vector2f(0f, 0.5f * scene.pp.downSizeFactor / Math.min(ressources.viewport.x, ressources.viewport.y)));
             }
-        }
+        }*/
 
         scene.pp.prepareForRender();
-        render(scene, jitter,true,0);
+        render(scene, new Vector2f(0f),true,0);
 
         Matrix4f[] mats = Maths.generateSunTransformMatrix(scene);
         scene.sunLight.view = mats[0];
         scene.sunLight.proj = mats[1];
         scene.pp.prepareShadowPass();
-        render(scene, jitter,true,2);
+        render(scene, new Vector2f(0f),true,2);
 
         scene.pp.renderEffects();
         GLES30.glViewport(0,0,(int) ressources.viewport.x,(int) ressources.viewport.y);
-        render(scene, jitter, false,0);
+        render(scene, new Vector2f(0f), false,0);
 
         scene.callNewFrame();
 

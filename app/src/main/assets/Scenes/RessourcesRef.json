@@ -16,6 +16,12 @@
     },{
       "name" : "Village_Demo",
       "directory" : "Objects/Village_Demo.obj"
+    }, {
+      "name": "Arrière-plan1",
+      "directory": "Objects/Extérieur.obj"
+    },{
+      "name": "Arrière-plan2",
+      "directory": "Objects/Extérieur2.obj"
     }
   ],
 
@@ -59,6 +65,14 @@
     },{
       "name" : "fusé",
       "directory" : "Textures/fusé.png"
+    },
+    {
+      "name" : "Forêt1",
+      "directory": "Textures/Forêt_Texture.jpg"
+    },
+    {
+      "name" : "Forêt2",
+      "directory": "Textures/Forêt_Texture2.jpg"
     }
   ],
 

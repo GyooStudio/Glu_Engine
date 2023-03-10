@@ -18,6 +18,7 @@ import androidx.core.view.MotionEventCompat;
 import com.glu.engine.GUI.ColorSquare;
 import com.glu.engine.GUI.Glissoire;
 import com.glu.engine.GUI.Text.TextBox;
+import com.glu.engine.Objects.Entity;
 import com.glu.engine.Postprocessing.PostProcessing;
 import com.glu.engine.Scene.Light;
 import com.glu.engine.Scene.Ressources;
@@ -49,6 +50,8 @@ public final class GluSurfaceView extends GLSurfaceView {
     private final Loader loader;
 
     private TextBox fpsText;
+    private Entity arrièrePlanA;
+    private Entity arrièrePlanB;
 
     @SuppressLint("ClickableViewAccessibility")
     public void onConfigurationChanged(Configuration config){
@@ -153,7 +156,7 @@ public final class GluSurfaceView extends GLSurfaceView {
                                     scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
                                     scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT, -1.0f, 2.2f);
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
-                                    //scene.pp.addEffect(PostProcessing.effect.GAUSSIAN_BLUR,4.0f,1.0f);
+                                    //scene.pp.addEffect(PostProcessing.effect.GAUSSIAN_BLUR,1.0f,0.1f);
                                     //scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,5.0f);
                                     scene.pp.addEffect(PostProcessing.effect.BLOOM, 4f, 10f);
                                     scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
@@ -236,17 +239,17 @@ public final class GluSurfaceView extends GLSurfaceView {
                                 m.setIdentity();
                                 Matrix.rotateM(m.mat, 0, 0.025f * Math.max(scene.sunLight.direction.y, 0.1f) * 10f, 1, 0, 0);
                                 scene.sunLight.direction = Matrix4f.MultiplyMV(m, scene.sunLight.direction);
-                                scene.getSkybox().strength = Math.max(-scene.sunLight.direction.y * 1.5f, 0.1f);
-                                scene.sunLight.intensity = Math.max(-scene.sunLight.direction.y * 3.0f, 0f);
-                                /*if(scene.sunLight.direction.y > -0.2f){
-                                    for (int i = 0; i < lamps.length; i++) {
-                                        lamps[i].intensity = 3f;
-                                    }
-                                }else{
-                                    for (int i = 0; i < lamps.length; i++) {
-                                        lamps[i].intensity = 0f;
-                                    }
-                                }*/
+                                scene.getSkybox().strength = Math.max(-scene.sunLight.direction.y * 2f * (1f/0.65f), 0.1f);
+                                scene.sunLight.intensity = Math.max(-scene.sunLight.direction.y * 7.0f * (1f/0.65f), 0f);
+
+                                if(arrièrePlanA == null || arrièrePlanB == null){
+                                    arrièrePlanA = scene.getEntity("Arrière-plan1");
+                                    arrièrePlanB = scene.getEntity("Arrière-plan2");
+                                }
+                                if(arrièrePlanA != null && arrièrePlanB != null){
+                                    arrièrePlanA.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
+                                    arrièrePlanB.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
+                                }
 
                                 //requestRender();
 

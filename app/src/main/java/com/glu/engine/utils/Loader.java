@@ -827,7 +827,7 @@ public class Loader {
 								int MatType = 0;
 								boolean isColorTextured = false;
 								String textureName = null;
-								Vector3f color = null;
+								Vector3f color = new Vector3f(0f);
 								float eIntensity = 0f;
 								float roughness = 0f;
 								boolean isNormalMapped = false;
@@ -1699,8 +1699,11 @@ public class Loader {
 			Log.e("AssetTexture Loader",e.getMessage());
 			e.printStackTrace();
 		}
+
+		GTexture gTexture  = new GTexture(bmp);
+
 		Log.w("load Asset Texture", (System.currentTimeMillis()-timer) + " milliseconds to load texture : " + dirr);
-		return new GTexture(bmp);
+		return gTexture;
 	}
 
 	public Font loadAssetFont(String dirr, int size, int padding, int[] ranges){

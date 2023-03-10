@@ -147,7 +147,7 @@ void main(){
         //skybox diffuse
         vec3 n = normal;
         n.xy =  vec2( atan(n.x, n.z) * (1.0/3.14152) * 0.5 + 0.5, 1.0 - (n.y*0.5 + 0.5) );
-        vec3 skyDefColor = textureLod(D,n.xy, 8.0).rgb;
+        vec3 skyDefColor = textureLod(D,n.xy, 7.5).rgb;
         skyDefColor = skyDefColor * skyboxStrength;
         diffColorMultiplier += skyDefColor;
         //--- 2ms

@@ -52,6 +52,26 @@
       "isNormalMapped" : false,
       "normalMap" : "metal plate normal",
       "alphaClip" : true
+    },
+    {
+      "name": "Arrière-plan1",
+      "type": 2,
+      "isColorTextured": true,
+      "texture": "Forêt1",
+      "emissionIntensity": 5,
+      "isRoughnessMapped": false,
+      "isNormalMapped": false,
+      "alphaClip": false
+    },
+    {
+      "name": "Arrière-plan2",
+      "type": 2,
+      "isColorTextured": true,
+      "texture": "Forêt2",
+      "emissionIntensity": 5,
+      "isRoughnessMapped": false,
+      "isNormalMapped": false,
+      "alphaClip": false
     }
   ],
 
@@ -79,28 +99,41 @@
       "position" : [0.0,0.0,0.0],
       "rotation" : [0.0,0.0,0.0],
       "scale" : [10.0,10.0,10.0]
+    },
+    {
+      "name": "Arrière-plan1",
+      "mesh": "Arrière-plan1",
+      "SeparateMesh": false,
+      "material": "Arrière-plan1",
+      "position": [0,0,0],
+      "rotation": [0,0,0],
+      "scale": [10,10,10]
+    },
+    {
+      "name": "Arrière-plan2",
+      "mesh": "Arrière-plan2",
+      "SeparateMesh": false,
+      "material": "Arrière-plan2",
+      "position": [0,0,0],
+      "rotation": [0,0,0],
+      "scale": [10,10,10]
     }
   ],
 
   "lights" : [
     {
-      "position" : [2.2,5.75,-5.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 0.5
+      "position" : [-0.14194,7.05085,0.1736],
+      "color" : [1.0,0.8,0.6],
+      "intensity" : 1.5
     },
     {
-      "position" : [2.2,5.75, 5.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 0.5
+      "position" : [3.34973,0.77437, 13.6788],
+      "color" : [1.0,0.62,0.216],
+      "intensity" : 0.2
     },
     {
-      "position" : [-2.2,5.75,-4.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 0.5
-    },
-    {
-      "position" : [-2.2,5.75, 4.0],
-      "color" : [1.0,0.6,0.4],
+      "position" : [-2.4188,-1.2076,-7.75396],
+      "color" : [1.0,0.2,0.039],
       "intensity" : 0.5
     }
   ],
@@ -144,6 +177,15 @@
       "position" : [-2.2,5.75, 4.0],
       "color" : [1.0,0.6,0.4],
       "intensity" : 0.5
+    },
+    {
+      "name" : "ball",
+      "mesh" : "icosphere",
+      "SeparateMesh" : false,
+      "material" : "default",
+      "position" : [0.0,0.0,0.0],
+      "rotation" : [0.0,0.0,0.0],
+      "scale" : [0.5,0.5,0.5]
     },
     {
       "name" : "ballb",

@@ -34,8 +34,9 @@ void main(){
     finalColor.rgb = (1.3 * (finalColor.rgb * exp(exposure + l)-0.5) + 0.5) + 0.1;
     finalColor.rgb = mix(vec3(dot(finalColor.rgb,vec3(0.299,0.587,0.114))),finalColor.rgb,1.2);
 
-    float gamma = b;
-    finalColor.rgb = pow(max(finalColor.rgb,0.0),vec3(1.0/gamma));
+    /*float gamma = b;
+    finalColor.rgb = pow(max(finalColor.rgb,0.0),vec3(1.0/gamma));*/
+
     finalColor.a = -l + 1.0;
 
     Fragment =  finalColor; //vec4(l,finalColor.gb,0.0); //vec4(mix(vec3(abs(l)),finalColor.rgb,float(UV.x > 0.5)), 0.0);

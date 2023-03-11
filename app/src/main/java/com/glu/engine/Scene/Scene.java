@@ -63,7 +63,7 @@ public final class Scene {
     public boolean hasFirstUpdated = false;
     public boolean CleanEntities = true;
 
-    public SunLight sunLight = new SunLight(new Vector3f(-1f,0f,0.65f), new Vector3f(1f,0.9f,0.8f), 3.0f);
+    public SunLight sunLight = new SunLight(new Vector3f(-1f,-0.6f,0f), new Vector3f(1f,0.9f,0.8f), 3.0f);
 
     private Ressources ressources;
 
@@ -383,7 +383,7 @@ public final class Scene {
 
     public void updateGraphics(){
         if(!pp.isSetup) {
-            pp.setup(2.5f, this);
+            pp.setup(2f, this);
         }
         cleanTextures();
         cleanEntities();

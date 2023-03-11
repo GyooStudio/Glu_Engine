@@ -153,7 +153,7 @@ public final class GluSurfaceView extends GLSurfaceView {
                                     scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.SSR, 1.0f, 0.1f);
-                                    scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
+                                    //scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
                                     scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT, -1.0f, 2.2f);
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.GAUSSIAN_BLUR,1.0f,0.1f);
@@ -192,27 +192,27 @@ public final class GluSurfaceView extends GLSurfaceView {
                                             e.printStackTrace();
                                         }
                                     }
-                                    for (int i = 0; i < 10; i++) {
-                                        Light light = new Light(new Vector3f(((float) Math.random() * 2f - 1f) * 100f, (float) Math.random() * 100f, ((float) Math.random() * 2f - 1f) * 100f), new Vector3f((float) Math.random(), (float) Math.random(), (float) Math.random()), (float) Math.random() * 600f);
+                                    for (int i = 0; i < 17; i++) {
+                                        Light light = new Light(new Vector3f(((float) Math.random() * 2f - 1f) * 100f, 0f, ((float) Math.random() * 2f - 1f) * 100f), new Vector3f((float) Math.random(), (float) Math.random(), (float) Math.random()), (float) Math.random() * 2f);
                                         scene.addLight(light);
                                     }
 
-                                    ArrayList<Light> lights = scene.Lights;
-                                    Vector3f[] velocities = new Vector3f[lights.size()];
+                                    //ArrayList<Light> lights = scene.Lights;
+                                    Vector3f[] velocities = new Vector3f[scene.Lights.size()];
                                     for (int i = 0; i < velocities.length; i++) {
                                         velocities[i] = new Vector3f(0);
                                     }
                                     while (true) {
-                                        for (int i = 0; i < velocities.length; i++) {
+                                        for (int i = 0; i < scene.Lights.size(); i++) {
                                             double c = Math.random();
                                             if (c > 0.99) {
                                                 velocities[i].add(Vector3f.scale(new Vector3f((float) Math.random() * 2f - 1f, (float) Math.random() * 2f - 1f, (float) Math.random() * 2f - 1f), 0.0002f));
                                             }
-                                            velocities[i].add(Vector3f.scale(lights.get(i).position.negative(), 0.00000000001f * lights.get(i).position.length() * lights.get(i).position.length()));
-                                            velocities[i].add(Vector3f.scale(lights.get(i).position, 0.0001f / (lights.get(i).position.length() * lights.get(i).position.length())));
-                                            velocities[i].add(Vector3f.scale(velocities[i].negative(), 0.00005f));
-                                            lights.get(i).position.add(velocities[i]);
-                                            lights.get(i).position.y = Math.abs(lights.get(i).position.y);
+                                            velocities[i].add(Vector3f.scale(scene.Lights.get(i).position.negative(), 0.00000000001f * scene.Lights.get(i).position.length() * scene.Lights.get(i).position.length()));
+                                            velocities[i].add(Vector3f.scale(scene.Lights.get(i).position, 0.0001f / (scene.Lights.get(i).position.length() * scene.Lights.get(i).position.length())));
+                                            //velocities[i].add(Vector3f.scale(velocities[i].negative(), 0.00005f));
+                                            scene.Lights.get(i).position.add(velocities[i]);
+                                            scene.Lights.get(i).position.y = Math.abs(scene.Lights.get(i).position.y);
                                         }
                                     }
                                 }
@@ -239,7 +239,7 @@ public final class GluSurfaceView extends GLSurfaceView {
                                 m.setIdentity();
                                 Matrix.rotateM(m.mat, 0, 0.025f * Math.max(scene.sunLight.direction.y, 0.1f) * 10f, 1, 0, 0);
                                 scene.sunLight.direction = Matrix4f.MultiplyMV(m, scene.sunLight.direction);
-                                scene.getSkybox().strength = Math.max(-scene.sunLight.direction.y * 2f * (1f/0.65f), 0.1f);
+                                scene.getSkybox().strength = Math.max(-scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
                                 scene.sunLight.intensity = Math.max(-scene.sunLight.direction.y * 7.0f * (1f/0.65f), 0f);
 
                                 if(arrièrePlanA == null || arrièrePlanB == null){

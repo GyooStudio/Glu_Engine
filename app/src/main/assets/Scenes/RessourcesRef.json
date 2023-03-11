@@ -4,7 +4,16 @@
     {
       "name" : "Room",
       "directory" : "Objects/Cube_Room.obj"
-    }, {
+    },
+    {
+      "name": "Room metal",
+      "directory": "Objects/Room_Metal.obj"
+    },
+    {
+      "name" : "Fire",
+      "directory": "Objects/Fire.obj"
+    },
+    {
       "name" : "icosphere",
       "directory" : "Objects/ico.obj"
     },{
@@ -22,6 +31,9 @@
     },{
       "name": "Arrière-plan2",
       "directory": "Objects/Extérieur2.obj"
+    },{
+      "name" : "Classe",
+      "directory": "Objects/classroom.obj"
     }
   ],
 
@@ -73,6 +85,27 @@
     {
       "name" : "Forêt2",
       "directory": "Textures/Forêt_Texture2.jpg"
+    },
+    {
+      "name" : "Classe albedo",
+      "directory": "Textures/Classroom_Albedo.png"
+    },
+    {
+      "name" : "Room albedo",
+      "directory": "Textures/Room_Albedo_AO.png"
+    },
+    {
+      "name" : "Room normal",
+      "directory": "Textures/Room_Normal.png"
+    },{
+      "name": "Room metal albedo",
+      "directory": "Textures/Room_Metal_Albedo.png"
+    },{
+      "name": "Room metal normal",
+      "directory": "Textures/Room_Metal_Normal.png"
+    }, {
+      "name" : "Fire",
+      "directory": "Textures/Fire_Texture.png"
     }
   ],
 

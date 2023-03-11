@@ -144,7 +144,7 @@ public class PostProcessing {
         SSRColor = new FrameBuffer((int) (min/downSizeFactor/2), (int) (min/downSizeFactor/2),true, false, false,false);
         DitherColor = new FrameBuffer((int) (min/(downSizeFactor/2)), (int) (min/(downSizeFactor/2)),false, false, false,false);
         lastFrameExposure = new FrameBuffer(4,4,true,false,false,false);
-        Shadow = new FrameBuffer(1024,1024, false,false,true,false);
+        Shadow = new FrameBuffer(512,512, false,false,true,false);
         screen = new PPQuad(ressources.viewport);
         screen.scale = ressources.viewport;
         this.downSizeFactor = downSizeFactor;
@@ -412,7 +412,7 @@ public class PostProcessing {
                     offY = 1f;
                 }
 
-                float tileSize = 1024f;
+                //float tileSize = 1024f;
 
                 deffShader.loadNumberOfLights(lights.size());
                 for (int j = 0; j < lights.size(); j++) {

@@ -26,7 +26,7 @@ public class InputManager {
     public final Scene scene;
     private float deltaTime = 0f;
     private long prevFrameTime = 0;
-    private Vector3f camCenter = new Vector3f(0);
+    private Vector3f camCenter = new Vector3f(0f);
     private float camZoom = 5f;
     private int movementType = 0;
     private long timeOfLastMovement = System.currentTimeMillis();
@@ -52,22 +52,7 @@ public class InputManager {
         actionManager.manualUpdate();
         ActionManager.actionType action = actionManager.getAction(0);
 
-        if(bouton == null) {
-            ColorSquare base = new ColorSquare(new Vector4f(0.2f, 0.9f, 0.2f, 1.0f));
-            ColorSquare pressed = new ColorSquare(new Vector4f(0.9f, 0.2f, 0.2f, 1.0f));
-            ColorSquare survol = new ColorSquare(new Vector4f(0.9f, 0.6f, 0.2f, 1.0f));
-            //scene.addColorSquare(base);
-            //scene.addColorSquare(pressed);
-            //scene.addColorSquare(survol);
-            bouton = new Bouton(base, pressed, survol);
-            //scene.addButton(bouton);
-            bouton.changerTaille(new Vector2f(200f));
-            bouton.changerPosition(new Vector2f(100,0));
-            bouton.changerRotation(45f);
-            bouton.changerComportement(Bouton.Préréglages.CONTRÔLES);
-        }
-
-        /*if(cube == null){
+        if(cube == null){
             Entity[] es = new Entity[26];
             int i = 0;
             for (Entity e : scene.Entities) {
@@ -82,7 +67,7 @@ public class InputManager {
             if(i > 25) {
                 cube = new RubikCube(es);
             }
-        }*/
+        }
 
         for (int index = 0; index < ActionManager.MAX_POINTERS; index++) {
 

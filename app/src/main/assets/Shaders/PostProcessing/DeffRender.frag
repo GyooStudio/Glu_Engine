@@ -15,13 +15,10 @@ uniform float shadowSoftness;
 
 uniform highp vec3 CamPos;
 
-const lowp int MAX_LIGHTS = 5;
 uniform int NUMBER_OF_LIGHTS;
-//flat in int lID1s[MAX_LIGHTS];
-uniform mediump vec3 LightPos[10];
-uniform mediump vec3 LightColor[10];
-uniform mediump float LightIntensity[10];
-//uniform mediump vec4 LightInfo[10];
+uniform mediump vec3 LightPos[20];
+uniform mediump vec3 LightColor[20];
+uniform mediump float LightIntensity[20];
 uniform mediump float lightClipDistance;
 uniform mediump vec2 screenDiff;
 
@@ -55,6 +52,54 @@ const mediump vec2 poissonDisk[] = vec2[](
     vec2(-0.81409955, 0.91437590),
     vec2(0.19984126, 0.78641367),
     vec2(0.14383161, -0.14100790)
+//    vec2(-0.373396, 0.704901),
+//    vec2(0.214934, 0.034412),
+//    vec2(0.177880, 0.281217),
+//    vec2(-0.661949, 0.690283),
+//    vec2(-0.148486, 0.156874),
+//    vec2(-0.405008, 0.503787),
+//    vec2(-0.296872, -0.293545),
+//    vec2(-0.285652, 0.336566),
+//    vec2(0.350049, 0.231346),
+//    vec2(0.438191, -0.119867),
+//    vec2(-0.455220, -0.587768),
+//    vec2(0.962927, -0.196903),
+//    vec2(-0.394860, -0.416353),
+//    vec2(-0.791690, 0.536556),
+//    vec2(0.355259, 0.781544),
+//    vec2(0.380057, -0.607947),
+//    vec2(-0.634605, -0.664200),
+//    vec2(-0.527966, 0.331187),
+//    vec2(-0.358836, 0.174458),
+//    vec2(-0.526283, -0.795576),
+//    vec2(-0.797367, 0.366302),
+//    vec2(0.712396, -0.164424),
+//    vec2(0.622615, 0.170130),
+//    vec2(-0.149817, -0.331143),
+//    vec2(-0.898936, 0.243075),
+//    vec2(0.845215, 0.221285),
+//    vec2(-0.277564, -0.775839),
+//    vec2(0.381445, -0.844895),
+//    vec2(0.291014, -0.343865),
+//    vec2(0.563355, -0.814429),
+//    vec2(-0.803902, 0.024934),
+//    vec2(0.413255, -0.440061),
+//    vec2(-0.206887, -0.545120),
+//    vec2(0.045632, 0.174098),
+//    vec2(0.643063, 0.728214),
+//    vec2(-0.539246, 0.104497),
+//    vec2(-0.943239, -0.060358),
+//    vec2(-0.046883, -0.742114),
+//    vec2(0.252321, 0.544129),
+//    vec2(0.168197, 0.756582),
+//    vec2(0.415538, 0.487324),
+//    vec2(-0.323211, -0.046889),
+//    vec2(-0.163804, -0.018483),
+//    vec2(-0.863798, -0.195940),
+//    vec2(0.696512, 0.458282),
+//    vec2(0.110668, -0.892524),
+//    vec2(-0.021889, 0.568412),
+//    vec2(-0.068823, 0.394722)
 );
 
 void main(){
@@ -73,7 +118,7 @@ void main(){
         highp vec3 pos = (c.xyz * 2.0 - 1.0) * c.w;
         vec3 albedo = a.rgb;
         vec3 normal = b.xyz * 2.0 - 1.0;
-        //float roughness = 0.1;
+        //float roughness = 1.0-b.a;
 
         vec3 CamDir = normalize(CamPos - pos);
         //--- 1ms
@@ -82,11 +127,11 @@ void main(){
         /*float F_I = (1.45f-1.0)/(1.45f+1.0);
         F_I *= F_I;
         float F_A = pow(max(1.0-dot(normal, CamDir), 0.0), 3.0);
-        float fresnel = (1.0-F_I)*F_A + F_I;*/
+        float fresnel = ((1.0-F_I)*F_A + F_I) * (1.0 - b.a)*/;
         //--- 1.5ms
 
         vec3 diffColorMultiplier;
-        //vec3 specColor;
+        //vec3 specColor = vec3(1.0);
 
         //float isHit = 0.0;
         //float numLight = 0.0;
@@ -106,15 +151,15 @@ void main(){
             //isHit = distance(gl_FragCoord.xy * screenDiff, LightInfo[lID1s[i]].xy);
             //isHit = max((LightInfo[lID1s[i]].w - isHit) / LightInfo[lID1s[i]].w,0.0);
 
-            LightDist = inversesqrt(LightDist);
+            LightDist = 1.0/(1.0 + (4.0 * LightDist) + (LightDist*LightDist));
 
             //diffuse
             float diffLightAmount = max(dot(LightDir, normal), 0.0) * LightDist * lI; // * isHit;
             diffColorMultiplier += diffLightAmount  * lCol;
 
             //specular
-            //float specularAmount = max( 10.0 * ( dot(reflect(-LightDir, normal), CamDir) ) - 9.0, 0.0) * lI * float(b.a < 0.5); // * isHit;
-            //specColor += lCol * specularAmount;
+            /*float specularAmount = max( 10.0 * ( dot(reflect(-LightDir, normal), CamDir) ) - 9.0, 0.0) * lI; // * isHit;
+            specColor += lCol * specularAmount;*/
         }
         //--- 2ms
 
@@ -124,15 +169,16 @@ void main(){
         p.xyz = p.xyz*0.5 + 0.5;
         p.z = max(p.z,0.001);
         float shadow = float(texture(ShadowMap,p.xy).r + 0.0075 > p.z || p.x > 1.0 || p.x < 0.0 || p.y > 1.0 || p.y < 0.0 || texture(ShadowMap,p.xy).r < 0.001);
-        //--- 4ms
         /*vec2 STexel = 1.0/vec2(textureSize(ShadowMap,0));
         vec2 pUV = p.xy;
-        for(int i = 0; i < 16; i ++){
-            p.xy = pUV + poissonDisk[i] * STexel * shadowSoftness;
-            shadow += float(texture(ShadowMap,p.xy).r + 0.0075 > p.z || p.x > 1.0 || p.x < 0.0 || p.y > 1.0 || p.y < 0.0 || texture(ShadowMap,p.xy).r < 0.001);
+        for(int i = 0; i < 4; i ++){
+            int offset = int(mod( gl_FragCoord.x * gl_FragCoord.y * 76.52 + float(i), 16.0 ) );
+            p.xy = pUV + poissonDisk[offset]*STexel * shadowSoftness;
+            float tex = texture(ShadowMap,p.xy).r;
+            shadow += float(tex + 0.0075 > p.z || p.x > 1.0 || p.x < 0.0 || p.y > 1.0 || p.y < 0.0 || tex < 0.001);
         }
-        shadow = shadow/16.0;*/
-        //--- 25ms
+        shadow = shadow/4.0;*/
+        //--- 4ms
 
         // SunLight diffuse
         float lDiff = max(dot(-SunDir, normal), 0.0) * shadow;
@@ -140,8 +186,8 @@ void main(){
         //--- 0.5ms
 
         // SunLight specular
-        /*float lSpec = max( 100.0 * (dot(reflect(SunDir, normal), CamDir) ) - 90.0, 0.0 ) * shadow * SunIntensity * float(b.a < 0.5);
-        specColor += lSpec * SunColor;*/
+        /*float lSpec = max( 100.0 * (dot(reflect(SunDir, normal), CamDir) ) - 90.0, 0.0 ) * shadow * SunIntensity;
+        specColor += lSpec * SunColor*/;
         //--- 1ms
 
         //skybox diffuse
@@ -154,13 +200,13 @@ void main(){
 
         //skybox reflections
         /*n = reflect(-CamDir, normal);
-        //n.xy =  vec2( atan(n.x, n.z) * (1.0/3.14152) * 0.5 + 0.5, 1.0 - (n.y*0.5 + 0.5) );
+        n.xy =  vec2( atan(n.x, n.z) * (1.0/3.14152) * 0.5 + 0.5, 1.0 - (n.y*0.5 + 0.5) );
         vec3 skySpecColor = texture(D,n.xy).rgb;
-        skySpecColor = skySpecColor * skyboxStrength * float(b.a < 0.5);
-        specColor += skySpecColor;*/
+        skySpecColor = skySpecColor * skyboxStrength;
+        specColor += skySpecColor*/;
         //--- 2ms
 
-        Fragment = vec4((albedo * diffColorMultiplier), 1.0); //--- 2ms
+        Fragment = vec4((diffColorMultiplier * albedo), 1.0);
         //SkyColor = vec4(skyDefColor, 1.0);
     }
     //if(a.a > 1.9 && a.a < 2.1){

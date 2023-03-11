@@ -18,7 +18,7 @@ uniform mat4 mat;
 uniform mat4 matB;
 uniform mat4 matC;
 
-const lowp int SAMPLES = 32;
+const lowp int SAMPLES = 64;
 
 float rand(highp vec3 pos, float seed){
     return (fract( sin( pos.x + pos.y + pos.z + seed) * seed ) * 2.0) - 1.0;

@@ -76,7 +76,7 @@ void main(){
         }else{
             C = vec4(0.0);
         }
-        D = vec4(0.0);
+        D = vec4(depth);
     }else if(materialType == 2){
         vec4 emission;
         if(mapColor){
@@ -96,7 +96,7 @@ void main(){
         }else {
             C = vec4(0.0);
         }
-        D = vec4(0.0);
+        D = vec4(depth);
     }else if(materialType == 3){
         vec4 albedo;
         if(mapColor){
@@ -132,7 +132,7 @@ void main(){
         }else{
             C = vec4(0.0);
         }
-        D = vec4(0.0);
+        D = vec4(depth);
     }
     /*vec4 albedo = color;
     albedo = texture(textureSampler,UV);

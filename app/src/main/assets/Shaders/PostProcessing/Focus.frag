@@ -20,62 +20,51 @@ uniform bool isB;
 
 void main(){
 
+    float focalDepth = texture(texture3,vec2(0.5,0.5)).r;
+    float depth = texture(texture3,UV).r;
+    float factor = min(abs(depth - focalDepth) * (1.0/4.0),1.0);
+
     vec4 finalColor;
-    highp float depth = texture(texture2, UV).a;
-    depth += float(depth < 0.01) * 99999.0;
-    float aperture = 1.0/b;
-    highp float focusWeight = (abs(depth - fD) * aperture) * fDB;
 
-    bool Horizontal = is;
-    bool lastOne = isB;
+    vec2 STexel = 1.0/vec2( textureSize(texture1,0) );
 
-    float weights;
-    float texel;
+    float div = 0.0;
+    float original = 1.0;
+    for(float x = -1.0; x <= 1.0; x++){
+        for(float y = -1.0; y <= 1.0; y++){
+            if( x > -0.1 && x < 0.1 && y > -0.1 && y < 0.1){
+                finalColor.rgb += texture(texture1,UV).rgb;
+                div += 1.0;
+            }else {
+                float depthO = texture(texture3, UV + vec2(STexel.x * x, STexel.y * y)).r;
+                vec3 colorO = texture(texture1, UV + vec2(STexel.x * x, STexel.y * y)).rgb;
+                float factorO = min(abs(depthO - focalDepth) * (1.0/4.0), 1.0);
 
-    if(Horizontal){
-        texel = 1.0 / float(textureSize(texture2, 0).x);
-    }else{
-        texel = 1.0 / float(textureSize(texture2, 0).y);
-    }
-
-    for (int i = -WEIGHT_NUMBER; i < WEIGHT_NUMBER+1; i++){
-
-        vec2 sampleCoord;
-        float offset = float(i) * texel * a;
-        //bool inBounds;
-        if(Horizontal){
-            sampleCoord = vec2(UV.x + offset, UV.y);
-            //inBounds = UV.x + offset < 1.0-texel && UV.x + offset > texel;
-        }else{
-            sampleCoord = vec2(UV.x, UV.y + offset);
-            //inBounds = UV.y + offset < 1.0-texel && UV.y + offset > texel;
-        }
-
-        //if(true){
-            float gDepth = texture(texture2, sampleCoord).a;
-            gDepth += float(gDepth < 0.01) * 99999.0;
-
-            float weight;
-            if (gDepth < depth){ // if it's at the back
-                weight = (abs( gDepth - fD) * aperture) * fDB;
-            } else { //if it's in the front
-                weight = focusWeight;
+                if (depthO < depth && abs(depthO - depth) > 0.1){
+                    finalColor.rgb += colorO * factorO * (0.25/ length(vec2(x,y)));
+                    div += factorO * (0.25/ length(vec2(x,y)));
+                }else if (abs(depthO - depth) < 0.1){
+                    finalColor.rgb += colorO * factor * (0.25/ length(vec2(x,y)));
+                    div += factor * (0.25/ length(vec2(x,y)));
+                }
             }
-            finalColor += texture(texture1, sampleCoord) * weight;
-            weights += weight;
-        //}
+        }
     }
 
-    if (weights > 0.01){
-        finalColor.rgb = finalColor.rgb * (1.0 / weights);
-    } else {
-        finalColor.rgb = texture(texture1, UV).rgb;
-    }
+    finalColor.rgb = finalColor.rgb/div;
+    original = (div-1.0)/div;
+    finalColor.a = 1.0 - ( (1.0 - texture(texture1,UV).a) * (1.0 - original));
 
-    if(lastOne){
-        float w = min(focusWeight,2.5) * 0.4;
-        finalColor = mix(texture(texture3,UV),texture(texture1,UV),w);
+    /*if(GlowCut && !isB){
+        finalColor.rgb = max(finalColor.rgb - vec3(threshold), vec3(0.0));
+    }*/
+
+    if(isB && !is){
+        finalColor = mix(texture(texture2,UV), texture(texture1,UV), finalColor.a); //vec4(factor * float(focalDepth > depth), factor * float(focalDepth < depth), 0.0,0.0);
     }
+    /*if(isB && !is){
+        finalColor = vec4(finalColor.a);
+    }*/
 
     Fragment = finalColor;
 }

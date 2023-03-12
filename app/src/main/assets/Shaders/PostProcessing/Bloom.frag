@@ -20,12 +20,17 @@ float threshold = 0.8;
 void main(){
 
     vec4 finalColor;
-    if(is && isB){
-        finalColor = textureLod(texture1, UV, 8.0);
-    }else{
-        finalColor = texture(texture1, UV);
-    }
-    //vec4 finalColor = texture(texture1, UV);
+
+    vec2 STexel = 1.0/vec2( textureSize(texture1,0) );
+    finalColor = texture(texture1,UV);
+
+    finalColor += texture(texture1, UV + vec2(STexel.x, 0.0) ) * 0.5;
+    finalColor += texture(texture1, UV + vec2(-STexel.x, 0.0) ) * 0.5;
+    finalColor += texture(texture1, UV + vec2(0.0, STexel.y) ) * 0.5;
+    finalColor += texture(texture1, UV + vec2(0.0, -STexel.y) ) * 0.5;
+
+    finalColor = finalColor/3.0;
+
     bool GlowCut = is;
     bool GlowAdd = isB;
 

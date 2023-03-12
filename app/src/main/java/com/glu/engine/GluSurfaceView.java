@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.os.TestLooperManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -15,8 +14,6 @@ import android.view.SurfaceHolder;
 
 import androidx.core.view.MotionEventCompat;
 
-import com.glu.engine.GUI.ColorSquare;
-import com.glu.engine.GUI.Glissoire;
 import com.glu.engine.GUI.Text.TextBox;
 import com.glu.engine.Objects.Entity;
 import com.glu.engine.Postprocessing.PostProcessing;
@@ -28,9 +25,6 @@ import com.glu.engine.utils.Loader;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
 import com.glu.engine.vectors.Vector3f;
-import com.glu.engine.vectors.Vector4f;
-
-import java.util.ArrayList;
 
 @SuppressLint("ViewConstructor")
 public final class GluSurfaceView extends GLSurfaceView {
@@ -156,9 +150,9 @@ public final class GluSurfaceView extends GLSurfaceView {
                                     //scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
                                     scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT, -1.0f, 2.2f);
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
-                                    //scene.pp.addEffect(PostProcessing.effect.GAUSSIAN_BLUR,1.0f,0.1f);
-                                    //scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,5.0f);
-                                    scene.pp.addEffect(PostProcessing.effect.BLOOM, 4f, 10f);
+                                    //scene.pp.addEffect(PostProcessing.effect.GPU_BLUR,6.0f,0.0f);
+                                    //scene.pp.addEffect(PostProcessing.effect.FOCUS,1f,0f);
+                                    scene.pp.addEffect(PostProcessing.effect.BLOOM, 3f, 10f);
                                     scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.DITHERING,0f,0f);
                                     //scene.pp.addEffect(PostProcessing.effect.TAA,4.0f, 2.2f);

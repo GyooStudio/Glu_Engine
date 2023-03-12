@@ -56,7 +56,8 @@ public class FrameBuffer {
             ID = frameBuffer[0];
 
             GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
-        }else if(shadow){
+        }
+        else if(shadow){
 
             int[] frameBuffer = new int[1];
             GLES30.glGenFramebuffers(1,frameBuffer,0);
@@ -80,7 +81,8 @@ public class FrameBuffer {
             ID = frameBuffer[0];
 
             GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
-        }else{
+        }
+        else{
 
             int[] frameBuffer = new int[1];
             GLES30.glGenFramebuffers(1,frameBuffer,0);
@@ -100,6 +102,14 @@ public class FrameBuffer {
             GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
         }
 
+    }
+
+    public void détruire(){
+        GLES30.glDeleteTextures(1,new int[]{texture.ID}, 0);
+        if(B != null){
+            GLES30.glDeleteTextures(3,new int[]{B.ID, C.ID, D.ID}, 0);
+        }
+        GLES30.glDeleteFramebuffers(1,new int[]{ID},0);
     }
 }
 

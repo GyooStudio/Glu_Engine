@@ -1,11 +1,8 @@
 package com.glu.engine.Postprocessing;
 
 import android.opengl.GLES30;
-import android.opengl.GLES32;
-import android.opengl.Matrix;
 import android.util.Log;
 
-import com.glu.engine.Objects.GTexture;
 import com.glu.engine.Objects.SkyBox;
 import com.glu.engine.Scene.Camera;
 import com.glu.engine.Scene.Light;
@@ -15,10 +12,8 @@ import com.glu.engine.Scene.SunLight;
 import com.glu.engine.shader.DeffRenderShader;
 import com.glu.engine.shader.PPShader;
 import com.glu.engine.utils.Loader;
-import com.glu.engine.utils.Maths;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
-import com.glu.engine.vectors.Vector3f;
 import com.glu.engine.vectors.Vector4f;
 
 import java.util.ArrayList;
@@ -30,7 +25,7 @@ public class PostProcessing {
     public enum effect{
         NONE,
         GAMMA_CORRECT,
-        GAUSSIAN_BLUR,
+        GPU_BLUR,
         BLOOM,
         FOCUS,
         AO,
@@ -56,13 +51,15 @@ public class PostProcessing {
     public FrameBuffer quartA;
     public FrameBuffer quartB;
     public FrameBuffer scene;
-    public FrameBuffer scene2;
-    public FrameBuffer sceneRendered;
-    public FrameBuffer TAAColor;
+    //public FrameBuffer scene2;
+    //public FrameBuffer sceneRendered;
+    //public FrameBuffer TAAColor;
     public FrameBuffer AOColor;
-    public FrameBuffer SSRColor;
-    public FrameBuffer DitherColor;
+    //public FrameBuffer SSRColor;
+    //public FrameBuffer DitherColor;
     public FrameBuffer Shadow;
+
+    public FrameBuffer[] blurBuffersA = new FrameBuffer[8];
     public FrameBuffer lastFrameExposure;
     public SkyBox skybox;
     public SunLight sunLight;
@@ -103,11 +100,11 @@ public class PostProcessing {
         this.quartA = pp.quartA;
         this.quartB = pp.quartB;
         this.scene = pp.scene;
-        this.scene2 = pp.scene2;
-        this.sceneRendered = pp.sceneRendered;
-        this.TAAColor = pp.TAAColor;
+        //this.scene2 = pp.scene2;
+        //this.sceneRendered = pp.sceneRendered;
+        //this.TAAColor = pp.TAAColor;
         this.AOColor = pp.AOColor;
-        this.SSRColor = pp.SSRColor;
+        //this.SSRColor = pp.SSRColor;
         this.lastFrameExposure = pp.lastFrameExposure;
         this.screen = pp.screen;
         this.downSizeFactor = pp.downSizeFactor;
@@ -132,17 +129,17 @@ public class PostProcessing {
         float min = Math.min(ressources.viewport.x,ressources.viewport.y);
         frameBufferA = new FrameBuffer((int) (min/downSizeFactor),(int) (min/downSizeFactor),true, false,false, true);
         frameBufferB = new FrameBuffer((int) (min/downSizeFactor),(int) (min/downSizeFactor),true, false, false,true);
-        sceneRendered = new FrameBuffer((int) (min/downSizeFactor), (int) (min/downSizeFactor),true, true, false,false);
+        //sceneRendered = new FrameBuffer((int) (min/downSizeFactor), (int) (min/downSizeFactor),true, true, false,false);
         scene = new FrameBuffer((int) (min/downSizeFactor), (int) (min/downSizeFactor),true, true, false,false);
-        scene2 = new FrameBuffer((int) (min/downSizeFactor), (int) (min/downSizeFactor),true, true, false,false);
+        //scene2 = new FrameBuffer((int) (min/downSizeFactor), (int) (min/downSizeFactor),true, true, false,false);
         quartA = new FrameBuffer((int) (min/downSizeFactor)/4, (int) (min/downSizeFactor)/4,true, false,false,false);
         quartB = new FrameBuffer((int) (min/downSizeFactor)/4, (int) (min/downSizeFactor)/4,true, false, false,false);
         halfA = new FrameBuffer((int) (min/downSizeFactor)/2, (int) (min/downSizeFactor)/2,true, false,false,false);
         halfB = new FrameBuffer((int) (min/downSizeFactor)/2, (int) (min/downSizeFactor)/2,true, false, false,false);
-        TAAColor = new FrameBuffer((int) (min/(downSizeFactor/2)), (int) (min/(downSizeFactor/2)),false, false,false,false);
+        //TAAColor = new FrameBuffer((int) (min/(downSizeFactor/2)), (int) (min/(downSizeFactor/2)),false, false,false,false);
         AOColor = new FrameBuffer((int) (min/downSizeFactor/4), (int) (min/downSizeFactor/4),true, false, false,false);
-        SSRColor = new FrameBuffer((int) (min/downSizeFactor/2), (int) (min/downSizeFactor/2),true, false, false,false);
-        DitherColor = new FrameBuffer((int) (min/(downSizeFactor/2)), (int) (min/(downSizeFactor/2)),false, false, false,false);
+        //SSRColor = new FrameBuffer((int) (min/downSizeFactor/2), (int) (min/downSizeFactor/2),true, false, false,false);
+        //DitherColor = new FrameBuffer((int) (min/(downSizeFactor/2)), (int) (min/(downSizeFactor/2)),false, false, false,false);
         lastFrameExposure = new FrameBuffer(4,4,true,false,false,false);
         Shadow = new FrameBuffer(512,512, false,false,true,false);
         screen = new PPQuad(ressources.viewport);
@@ -176,7 +173,7 @@ public class PostProcessing {
                     readyForRendering = false;
                 }
                 break;
-            case GAUSSIAN_BLUR:
+            case GPU_BLUR:
                 if(ppShaders[2] == null){
                     ppShaders[2] = new PPShader(loader.loadAssetText("Shaders/PostProcessing/GaussianBlur.vert"),loader.loadAssetText("Shaders/PostProcessing/GaussianBlur.frag"));
                     readyForRendering = false;
@@ -271,12 +268,12 @@ public class PostProcessing {
         usingA = true;
     }
 
-    public void prepareForSecondPass(){
+    /*public void prepareForSecondPass(){
 
         GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,scene2.ID);
         GLES30.glViewport(0,0,scene2.width,scene2.height);
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT|GLES30.GL_DEPTH_BUFFER_BIT);
-    }
+    }*/
 
     public void prepareShadowPass(){
         GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,Shadow.ID);
@@ -313,18 +310,18 @@ public class PostProcessing {
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,quartB.texture.ID);
             GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
         }
-        if (TAAColor.isMipmaped){
+        /*if (TAAColor.isMipmaped){
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,TAAColor.texture.ID);
             GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
-        }
+        }*/
         if (AOColor.isMipmaped){
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,AOColor.texture.ID);
             GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
         }
-        if (SSRColor.isMipmaped){
+        /*if (SSRColor.isMipmaped){
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,SSRColor.texture.ID);
             GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
-        }
+        }*/
         if(scene.isMipmaped){
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,scene.texture.ID);
             GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
@@ -335,7 +332,7 @@ public class PostProcessing {
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,scene.D.ID);
             GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
         }
-        if(scene2.isMipmaped){
+        /*if(scene2.isMipmaped){
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,scene2.texture.ID);
             GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,scene2.B.ID);
@@ -344,7 +341,7 @@ public class PostProcessing {
             GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,scene2.D.ID);
             GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
-        }
+        }*/
     }
 
     public void renderEffects(){
@@ -376,8 +373,8 @@ public class PostProcessing {
                     GLES30.glViewport(0,0, (int) (ressources.viewport.x), (int) (ressources.viewport.y));
                     GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,0);
                 }else {
-                    GLES30.glViewport(0,0, scene.width, scene.height);
-                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,sceneRendered.ID);
+                    GLES30.glViewport(0,0, frameBufferB.width, frameBufferB.height);
+                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,frameBufferB.ID);
                 }
 
                 deffShader.start();
@@ -427,11 +424,11 @@ public class PostProcessing {
 
                 deffShader.stop();
 
-                if (!isLastEffect) {
-                    GLES30.glBindFramebuffer(GLES30.GL_READ_FRAMEBUFFER, sceneRendered.ID);
+                /*if (!isLastEffect) {
+                    GLES30.glBindFramebuffer(GLES30.GL_READ_FRAMEBUFFER, frameBufferB.ID);
                     GLES30.glBindFramebuffer(GLES30.GL_DRAW_FRAMEBUFFER,frameBufferB.ID);
-                    GLES30.glBlitFramebuffer(0,0,sceneRendered.width,sceneRendered.height,0,0,frameBufferB.width,frameBufferB.height,GLES30.GL_COLOR_BUFFER_BIT,GLES30.GL_NEAREST);
-                }
+                    GLES30.glBlitFramebuffer(0,0,frameBufferB.width,frameBufferB.height,0,0,frameBufferB.width,frameBufferB.height,GLES30.GL_COLOR_BUFFER_BIT,GLES30.GL_NEAREST);
+                }*/
 
 
                 usingA = true;
@@ -495,51 +492,74 @@ public class PostProcessing {
 
                         }
                         break;
-                    case GAUSSIAN_BLUR:
+                    case GPU_BLUR:
                         //only there to collapse the code in the IDE
                         if(true) {
                             if (A.get(i) != 0) {
-                                ppShaders[0].start();
 
-                                boolean lastPass = false;
+                                ppShaders[2].start();
+
+                                int reduction = 2;
+                                for (int j = 0; j < blurBuffersA.length; j++) {
+                                    if(blurBuffersA[j] ==null){
+                                        blurBuffersA[j] = new FrameBuffer(scene.width / reduction,scene.height / reduction,true,false,false,false);
+                                    }
+                                    reduction *= 2;
+                                }
+
+                                boolean useA = true;
+                                FrameBuffer wBuffer = blurBuffersA[0];
+                                FrameBuffer rBuffer;
+                                boolean input = true;
 
                                 for (int j = 0; j < A.get(i); j++) {
-
-                                    if((float)j + 1f == A.get(i)){
-                                        lastPass = true;
+                                    rBuffer = wBuffer;
+                                    wBuffer = blurBuffersA[j];
+                                    if (input) {
+                                        rBuffer = readBuffer;
+                                        input = false;
                                     }
 
-                                    makeMipmaps();
-
-                                    GLES30.glViewport(0, 0, quartA.width, quartA.height);
-
-                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, quartA.ID);
-
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, wBuffer.ID);
+                                    GLES30.glViewport(0, 0, wBuffer.width, wBuffer.height);
 
                                     GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
-
-                                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
-
-                                    if(!lastPass) {
-                                        GLES30.glViewport(0, 0, readBuffer.width, readBuffer.height);
-                                        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, readBuffer.ID);
-                                    }else if(!isLastEffect){
-                                        GLES30.glViewport(0, 0, writeBuffer.width, writeBuffer.height);
-                                        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, writeBuffer.ID);
-                                    }else{
-                                        GLES30.glViewport(0, 0, (int) ressources.viewport.x, (int) ressources.viewport.y);
-                                        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
-                                    }
-
-
-                                    GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, quartA.texture.ID);
+                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
+                                    //GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
 
                                     GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
                                 }
 
-                                ppShaders[0].stop();
+                                for (int j = Math.round( A.get(i) ) - 1; j >= 0; j--) {
+                                    rBuffer = wBuffer;
+                                    wBuffer = blurBuffersA[j];
+
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, wBuffer.ID);
+                                    GLES30.glViewport(0,0, wBuffer.width,wBuffer.height);
+
+                                    GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
+                                    //GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
+
+                                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+                                }
+                                rBuffer = wBuffer;
+
+                                if (!isLastEffect) {
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, writeBuffer.ID);
+                                    GLES30.glViewport(0, 0, writeBuffer.width, writeBuffer.height);
+                                }else{
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
+                                    GLES30.glViewport(0, 0, (int) ressources.viewport.x, (int) ressources.viewport.y);
+                                }
+
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
+                                //GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
+
+                                GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+
+                                ppShaders[2].stop();
 
                             } else {
                                 if (isLastEffect) {
@@ -567,8 +587,19 @@ public class PostProcessing {
                         if (true) {
                             if (A.get(i) >= 1f) {
 
-                                GLES30.glViewport(0, 0, writeBuffer.width, writeBuffer.height);
-                                GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,writeBuffer.ID);
+                                int reduction = 2;
+                                for (int j = 0; j < blurBuffersA.length; j++) {
+                                    if(blurBuffersA[j] ==null){
+                                        blurBuffersA[j] = new FrameBuffer(scene.width / reduction,scene.height / reduction,true,false,false,false);
+                                    }
+                                    reduction *= 2;
+                                }
+
+                                FrameBuffer wBuffer = blurBuffersA[0];
+                                FrameBuffer rBuffer;
+
+                                GLES30.glViewport(0, 0, wBuffer.width,wBuffer.height);
+                                GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,wBuffer.ID);
 
                                 ppShaders[3].start();
 
@@ -580,52 +611,58 @@ public class PostProcessing {
 
                                 GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
 
-                                boolean lastPass = false;
-
                                 for (int j = 0; j < A.get(i); j++) {
+                                    rBuffer = wBuffer;
+                                    wBuffer = blurBuffersA[j];
 
-                                    if((float)j + 1f == A.get(i)){
-                                        lastPass = true;
-                                    }
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, wBuffer.ID);
+                                    GLES30.glViewport(0, 0, wBuffer.width, wBuffer.height);
 
-                                    makeMipmaps();
-
-                                    GLES30.glViewport(0, 0, quartA.width, quartA.height);
-                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, quartA.ID);
+                                    ppShaders[3].loadBoolean(true);
+                                    ppShaders[3].loadBooleanB(true);
 
                                     GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, writeBuffer.texture.ID);
+                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
+
+                                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+                                }
+
+                                for (int j = Math.round( A.get(i) ) - 1; j >= 0; j--) {
+                                    rBuffer = wBuffer;
+                                    wBuffer = blurBuffersA[j];
+
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, wBuffer.ID);
+                                    GLES30.glViewport(0,0, wBuffer.width,wBuffer.height);
+
+                                    GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
 
                                     ppShaders[3].loadBoolean(true);
                                     ppShaders[3].loadBooleanB(true);
 
                                     GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
-
-                                    if(!lastPass) {
-                                        GLES30.glViewport(0, 0, writeBuffer.width, writeBuffer.height);
-                                        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, writeBuffer.ID);
-                                        ppShaders[3].loadBoolean(false);
-                                        ppShaders[3].loadBooleanB(false);
-                                    }else if(!isLastEffect){
-                                        GLES30.glViewport(0, 0, writeBuffer.width, writeBuffer.height);
-                                        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, writeBuffer.ID);
-                                        ppShaders[3].loadBoolean(false);
-                                        ppShaders[3].loadBooleanB(true);
-                                    }else{
-                                        GLES30.glViewport(0, 0, (int) ressources.viewport.x, (int) ressources.viewport.y);
-                                        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
-                                        ppShaders[3].loadBoolean(false);
-                                        ppShaders[3].loadBooleanB(true);
-                                    }
-
-
-                                    GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, quartA.texture.ID);
-                                    GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
-                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
-
-                                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
                                 }
+
+                                if(!isLastEffect){
+                                    GLES30.glViewport(0, 0, writeBuffer.width, writeBuffer.height);
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, writeBuffer.ID);
+                                }else{
+                                    GLES30.glViewport(0, 0, (int) ressources.viewport.x, (int) ressources.viewport.y);
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
+                                }
+
+                                rBuffer = wBuffer;
+
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
+
+                                ppShaders[3].loadBoolean(false);
+                                ppShaders[3].loadBooleanB(true);
+
+                                GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+
                                 ppShaders[3].stop();
                             } else {
                                 if (isLastEffect) {
@@ -651,64 +688,86 @@ public class PostProcessing {
                     case FOCUS:
                         //only there to collapse the code in the IDE
                         if(true) {
-                            if (A.get(i) != 0) {
-                                makeMipmaps();
+                            if (A.get(i) >= 1f) {
 
-                                boolean lastOne = false;
-                                boolean isFirst = true;
+                                int reduction = 2;
+                                for (int j = 0; j < blurBuffersA.length; j++) {
+                                    if(blurBuffersA[j] ==null){
+                                        blurBuffersA[j] = new FrameBuffer(scene.width / reduction,scene.height / reduction,true,false,false,false);
+                                    }
+                                    reduction *= 2;
+                                }
 
-                                GLES30.glViewport(0, 0, quartA.width, quartA.height);
-                                GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
-                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, scene.texture.ID);
+                                FrameBuffer wBuffer = blurBuffersA[0];
+                                FrameBuffer rBuffer;
+
+                                GLES30.glViewport(0, 0, wBuffer.width,wBuffer.height);
+                                GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,wBuffer.ID);
+
+                                ppShaders[4].start();
+
                                 GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
                                 GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
 
-                                for (int j = 0; j < (int) Math.ceil(A.get(i)); j++) {
+                                ppShaders[4].loadBoolean(true);
+                                ppShaders[4].loadBooleanB(false);
 
-                                    if (j + 1 == (int) Math.ceil(A.get(i))) {
-                                        lastOne = true;
-                                    }
+                                GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
 
-                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, quartB.ID);
+                                for (int j = 0; j < A.get(i); j++) {
+                                    rBuffer = wBuffer;
+                                    wBuffer = blurBuffersA[j];
 
-                                    ppShaders[4].start();
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, wBuffer.ID);
+                                    GLES30.glViewport(0, 0, wBuffer.width, wBuffer.height);
 
-                                    if (isFirst) {
-                                        isFirst = false;
-                                    } else {
-                                    }
-
-                                    ppShaders[4].loadUniformBlock(10f, B.get(i));
-                                    ppShaders[4].loadBoolean(false);
-                                    ppShaders[4].loadBooleanB(false);
-
-                                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
-
-                                    if (isLastEffect && lastOne) {
-                                        GLES30.glViewport(0, 0, (int) (ressources.viewport.x), (int) (ressources.viewport.y));
-                                        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
-                                    } else if (lastOne) {
-                                        GLES30.glViewport(0, 0, frameBufferA.width, frameBufferA.height);
-                                        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, writeBuffer.ID);
-                                    } else {
-                                        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, quartA.ID);
-                                    }
+                                    ppShaders[4].loadBoolean(true);
+                                    ppShaders[4].loadBooleanB(true);
 
                                     GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, quartB.texture.ID);
-
-                                    ppShaders[4].loadUniformBlock(10f, B.get(i));
-                                    ppShaders[4].loadBoolean(true);
-                                    if (lastOne) {
-                                        GLES30.glActiveTexture(GLES30.GL_TEXTURE2);
-                                        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
-                                        ppShaders[4].loadBooleanB(true);
-                                    } else {
-                                        ppShaders[4].loadBooleanB(false);
-                                    }
+                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
 
                                     GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
                                 }
+
+                                for (int j = Math.round( A.get(i) ) - 1; j >= 0; j--) {
+                                    rBuffer = wBuffer;
+                                    wBuffer = blurBuffersA[j];
+
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, wBuffer.ID);
+                                    GLES30.glViewport(0,0, wBuffer.width,wBuffer.height);
+
+                                    GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
+
+                                    ppShaders[4].loadBoolean(true);
+                                    ppShaders[4].loadBooleanB(true);
+
+                                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+                                }
+
+                                if(!isLastEffect){
+                                    GLES30.glViewport(0, 0, writeBuffer.width, writeBuffer.height);
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, writeBuffer.ID);
+                                }else{
+                                    GLES30.glViewport(0, 0, (int) ressources.viewport.x, (int) ressources.viewport.y);
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
+                                }
+
+                                rBuffer = wBuffer;
+
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE2);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, scene.D.ID);
+
+                                ppShaders[4].loadBoolean(false);
+                                ppShaders[4].loadBooleanB(true);
+
+                                GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+
                                 ppShaders[4].stop();
                             } else {
                                 if (isLastEffect) {
@@ -786,7 +845,7 @@ public class PostProcessing {
                         break;
                     case TAA:
                         //only there to collapse the code in the IDE
-                        if (true){
+                        /*if (true){
                             //makeMipmaps();
                             if (isLastEffect) {
                                 GLES30.glViewport(0, 0, (int) (ressources.viewport.x), (int) (ressources.viewport.y));
@@ -824,11 +883,11 @@ public class PostProcessing {
                                 GLES30.glViewport(0, 0, (int) scene.width, (int) scene.height);
                                 GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, frameBufferA.ID);
                             }
-                        }
+                        }*/
                         break;
                     case SSR:
                         //only there to collapse the code in the IDE
-                        if(true) {
+                        /*if(true) {
                             makeMipmaps();
 
                             GLES30.glViewport(0, 0, halfA.width, halfA.height);
@@ -872,8 +931,8 @@ public class PostProcessing {
                             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, halfA.texture.ID);
                             GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
                             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
-                            GLES30.glActiveTexture(GLES30.GL_TEXTURE2);
-                            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, sceneRendered.B.ID);
+                            //GLES30.glActiveTexture(GLES30.GL_TEXTURE2);
+                            //GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, sceneRendered.B.ID);
 
                             ppShaders[7].loadBoolean(false);
                             ppShaders[7].loadBooleanB(true);
@@ -881,11 +940,11 @@ public class PostProcessing {
                             GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
 
                             ppShaders[7].stop();
-                        }
+                        }*/
                         break;
                     case DITHERING:
                         //only there to collapse the code in the IDE
-                        if(true) {
+                        /*if(true) {
                             GLES30.glViewport(0,0,DitherColor.width,DitherColor.height);
                             GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,DitherColor.ID);
 
@@ -917,7 +976,7 @@ public class PostProcessing {
                                 GLES30.glViewport(0, 0, (int) scene.width, (int) scene.height);
                                 GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, writeBuffer.ID);
                             }
-                        }
+                        }*/
                         break;
                     case PIXELISE:
                         //only there to collapse the code in the IDE

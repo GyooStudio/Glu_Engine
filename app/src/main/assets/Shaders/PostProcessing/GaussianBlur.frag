@@ -18,23 +18,15 @@ float GaussianFunction(float x){
 
 void main(){
 
+    vec2 STexel = 1.0/vec2( textureSize(texture1,0) );
     vec4 finalColor = texture(texture1,UV);
-    /*bool Horizontal = a > 0.5;
 
-    float offset = 0.0;
-    if (Horizontal){
-        float texel = 1.0 / float(textureSize(texture1, 0).x);
-        for (int i = -WEIGHT_NUMBER; i < WEIGHT_NUMBER+1; i++){
-            offset = texel * float(i) * b;
-            finalColor.rgb += texture( texture1, vec2( max(min( UV.x + offset, 0.99 ), 0.01) , UV.y ) ).rgb * GaussianFunction((float(i) / float(WEIGHT_NUMBER)) * 2.0);
-        }
-    } else {
-        float texel = 1.0 / float(textureSize(texture1, 0).y);
-        for (int i = -WEIGHT_NUMBER + 1; i < WEIGHT_NUMBER+1; i++){
-            offset = texel * float(i) * b;
-            finalColor.rgb += texture( texture1, vec2( UV.x, max(min( UV.y + offset, 0.99 ) , 0.01) ) ).rgb * GaussianFunction((float(i) / float(WEIGHT_NUMBER)) * 2.0);
-        }
-    }*/
+    finalColor += texture(texture1, UV + vec2(STexel.x, 0.0) ) * 0.5;
+    //finalColor += texture(texture1, UV + vec2(-STexel.x, 0.0) ) * 0.5;
+    finalColor += texture(texture1, UV + vec2(0.0, STexel.y) ) * 0.5;
+    //finalColor += texture(texture1, UV + vec2(0.0, -STexel.y) ) * 0.5;
+
+    finalColor = finalColor/2.0;
 
     Fragment = finalColor;
 }

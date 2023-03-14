@@ -30,6 +30,12 @@ public class InputManager {
     private float camZoom = 5f;
     private int movementType = 0;
     private long timeOfLastMovement = System.currentTimeMillis();
+    private Vector3f camDir = new Vector3f(0f);
+    private Vector3f camUp = new Vector3f(0f);
+    private Vector3f prevCamDir = new Vector3f(0f);
+    private Vector3f camVel = new Vector3f(0f);
+    private Vector3f camA = new Vector3f(0f);
+    private float roll = 0f;
 
     public RubikCube cube;
 
@@ -114,15 +120,48 @@ public class InputManager {
 
         }
 
+        //Vector3f camRot = Vector3f.lookAt(new Vector3f(0f),camDir,0f);
+        //scene.camera.setRotation(camRot);
+        //scene.camera.rotate(new Vector3f(0f,0f,deltaTime));
+        if(deltaTime < 0.5) {
+            Vector3f X = new Vector3f((float) Math.cos(Math.toRadians(scene.camera.getRotation().y + 90f)), 0f,(float) Math.sin(Math.toRadians(scene.camera.getRotation().y + 90f)));
+            Vector3f Z = new Vector3f((float) Math.cos(Math.toRadians(scene.camera.getRotation().y)), 0f,(float) Math.sin(Math.toRadians(scene.camera.getRotation().y)));
+            Vector3f acceleration = Vector3f.add(Vector3f.scale(X, camA.x), Vector3f.scale(Z, camA.z));
+            camVel.add(Vector3f.scale(acceleration, deltaTime));
+            camVel.add(Vector3f.scale(camVel,0.1f).negative());
+            scene.camera.move(Vector3f.add(Vector3f.scale(camVel, deltaTime), Vector3f.scale(acceleration, 0.5f * deltaTime * deltaTime)));
+            //Log.w("camera", "position : x:" + scene.camera.getPosition().x + " y: " + scene.camera.getPosition().y + " z: " + scene.camera.getPosition().z + " velocité : x: " + camVel.x + " y: " + camVel.y + " z: " + camVel.z + " accélération: x: " + camA.x + " y: " + camA.y + " z: " + camA.z + " deltaTime:  " + deltaTime);
+        }
+
         //camCenter = new Vector3f((float) Math.cos((double) System.currentTimeMillis() / 4000.0) * 3f, 0f, (float) Math.sin((double) System.currentTimeMillis() / 4000.0) * 3f );
-        Matrix4f m = new Matrix4f();
-        Matrix.translateM(m.mat,0,m.mat,0,camCenter.x,camCenter.y,camCenter.z);
-        Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);
-        Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().x,1,0,0);
-        Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().z,0,0,1);
-        Matrix.translateM(m.mat,0,m.mat,0,0,0,camZoom);
-        scene.camera.setPosition(Matrix4f.MultiplyMV(m,new Vector3f(0)));
+        //Matrix4f m = new Matrix4f();
+        //Matrix.translateM(m.mat,0,m.mat,0,camCenter.x,camCenter.y,camCenter.z);
+        //Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().y,0,1,0);
+        //Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().x,1,0,0);
+        //Matrix.rotateM(m.mat, 0, m.mat,0, scene.camera.getRotation().z,0,0,1);
+        //Matrix.translateM(m.mat,0,m.mat,0,0,0,camZoom);
+        //scene.camera.setPosition(Matrix4f.MultiplyMV(m,new Vector3f(0)));
 
         prevFrameTime = System.currentTimeMillis();
+    }
+
+    public void onAccelerometerChanged(Vector3f dir){
+        prevCamDir = camDir;
+        Vector3f d = dir;
+        d.normalize();
+        camA = new Vector3f(d.x,0f,-d.z*1f);
+        float l = camA.length();
+        float h = 0.75f;
+        double min = Math.min(Math.pow(l * h, 4f), 1f);
+        l = (float) ( (1f - min) * Math.pow(l * h,4) + l * min);
+        camA.normalize();
+        camA.scale(l * 5f);
+        Log.w("camera","accélération: x: " + camA.x + " y: " + camA.y + " z: " + camA.z);
+        //roll = (float) Math.atan2(d.y,d.x);
+        //Log.w("camDir","x: " + camDir.x + " y: " + camDir.y + " z: " + camDir.z);
+        //camA.scale(0.01f);
+
+        camUp = Vector3f.sub(camDir,prevCamDir);
+        camUp.normalize();
     }
 }

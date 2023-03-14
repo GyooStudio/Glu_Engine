@@ -229,21 +229,21 @@ public final class GluSurfaceView extends GLSurfaceView {
                                 //Log.w("update", "updated scene");
                                 //shadowTest.texture = scene.pp.Shadow.texture;
 
-                                Matrix4f m = new Matrix4f();
-                                m.setIdentity();
-                                Matrix.rotateM(m.mat, 0, 0.025f * Math.max(scene.sunLight.direction.y, 0.1f) * 10f, 1, 0, 0);
-                                scene.sunLight.direction = Matrix4f.MultiplyMV(m, scene.sunLight.direction);
-                                scene.getSkybox().strength = Math.max(-scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
-                                scene.sunLight.intensity = Math.max(-scene.sunLight.direction.y * 7.0f * (1f/0.65f), 0f);
+                                //Matrix4f m = new Matrix4f();
+                                //m.setIdentity();
+                                //Matrix.rotateM(m.mat, 0, 0.025f * Math.max(scene.sunLight.direction.y, 0.1f) * 10f, 1, 0, 0);
+                                //scene.sunLight.direction = Matrix4f.MultiplyMV(m, scene.sunLight.direction);
+                                //scene.getSkybox().strength = Math.max(-scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
+                                //scene.sunLight.intensity = Math.max(-scene.sunLight.direction.y * 7.0f * (1f/0.65f), 0f);
 
-                                if(arrièrePlanA == null || arrièrePlanB == null){
+                                /*if(arrièrePlanA == null || arrièrePlanB == null){
                                     arrièrePlanA = scene.getEntity("Arrière-plan1");
                                     arrièrePlanB = scene.getEntity("Arrière-plan2");
                                 }
                                 if(arrièrePlanA != null && arrièrePlanB != null){
                                     arrièrePlanA.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
                                     arrièrePlanB.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
-                                }
+                                }*/
 
                                 //requestRender();
 

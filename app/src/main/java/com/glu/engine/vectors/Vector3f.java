@@ -100,6 +100,7 @@ public class Vector3f {
     }
 
     public static Vector3f normalize(Vector3f a){
+
         return new Vector3f(a.x/a.length(),a.y/a.length(),a.z/a.length());
     }
 

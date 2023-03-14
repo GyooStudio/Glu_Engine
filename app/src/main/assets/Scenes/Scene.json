@@ -13,118 +13,6 @@
       "isNormalMapped" : false,
       "normalMap" : "metal plate normal",
       "alphaClip" : false
-    },
-    {
-      "name" : "Rubiks_Cube",
-      "type" : 1,
-      "isColorTextured" : true,
-      "texture" : "Rubiks cube albedo",
-      "color" : [1.0,1.0,1.0],
-      "emissionIntensity" : 0.0,
-      "isRoughnessMapped" : false,
-      "roughness" : 1.0,
-      "isNormalMapped" : true,
-      "normalMap" : "Rubiks cube normal",
-      "alphaClip" : false
-    },
-    {
-      "name" : "metal",
-      "type" : 3,
-      "isColorTextured" : false,
-      "texture" : "fusé",
-      "color" : [1.0,1.0,1.0],
-      "emissionIntensity" : 1.0,
-      "isRoughnessMapped" : false,
-      "roughness" : 0.1,
-      "isNormalMapped" : false,
-      "normalMap" : "metal plate normal",
-      "alphaClip" : false
-    },
-    {
-      "name" : "glow",
-      "type" : 2,
-      "isColorTextured" : true,
-      "texture" : "fusé",
-      "color" : [1.0,1.0,1.0],
-      "emissionIntensity" : 5.0,
-      "isRoughnessMapped" : false,
-      "roughness" : 0.0,
-      "isNormalMapped" : false,
-      "normalMap" : "metal plate normal",
-      "alphaClip" : true
-    },
-    {
-      "name": "Arrière-plan1",
-      "type": 2,
-      "isColorTextured": true,
-      "texture": "Forêt1",
-      "emissionIntensity": 5,
-      "isRoughnessMapped": false,
-      "isNormalMapped": false,
-      "alphaClip": false
-    },
-    {
-      "name": "Arrière-plan2",
-      "type": 2,
-      "isColorTextured": true,
-      "texture": "Forêt2",
-      "emissionIntensity": 5,
-      "isRoughnessMapped": false,
-      "isNormalMapped": false,
-      "alphaClip": false
-    },
-    {
-      "name": "Village_Demo",
-      "type": 1,
-      "isColorTextured": true,
-      "texture": "Village demo albedo",
-      "emissionIntensity": 0,
-      "isRoughnessMapped": false,
-      "isNormalMapped": false,
-      "alphaClip": true
-    },
-    {
-      "name": "ClasseMat",
-      "type": 1,
-      "isColorTextured": true,
-      "texture": "Classe albedo",
-      "emissionIntensity": 0,
-      "isRoughnessMapped": false,
-      "isNormalMapped": false,
-      "alphaClip": false
-    },
-    {
-      "name" : "RoomMat",
-      "type" : 1,
-      "isColorTextured" : true,
-      "texture" : "Room albedo",
-      "isRoughnessMapped" : false,
-      "isNormalMapped" : true,
-      "normalMap" : "Room normal",
-      "alphaClip" : false,
-      "emissionIntensity": 0
-    },
-    {
-      "name": "RoomMatMetal",
-      "type": 3,
-      "isColorTextured": true,
-      "texture": "Room metal albedo",
-      "emissionIntensity": 0,
-      "isRoughnessMapped": false,
-      "roughness": 0.25,
-      "isNormalMapped": true,
-      "normalMap": "Room metal normal",
-      "alphaClip": true
-    },
-    {
-      "name" : "Fire",
-      "type": 2,
-      "isColorTextured": true,
-      "texture": "Fire",
-      "emissionIntensity": 5,
-      "isRoughnessMapped": false,
-      "isNormalMapped": false,
-      "alphaClip": true
     }
   ],
 
@@ -139,110 +27,20 @@
       "name" : "Room",
       "mesh" : "Room",
       "SeparateMesh": false,
-      "material" : "RoomMat",
+      "material" : "default",
       "position" : [0.0,0.0,0.0],
       "rotation" : [0.0,0.0,0.0],
       "scale" : [10.0,10.0,10.0]
-    },
-    {
-      "name": "Room metal",
-      "mesh": "Room metal",
-      "SeparateMesh": false,
-      "material": "RoomMatMetal",
-      "position": [0,0,0],
-      "rotation": [0,0,0],
-      "scale": [10,10,10]
-    },
-    {
-      "name": "Feu",
-      "mesh": "Fire",
-      "SeparateMesh": false,
-      "material": "Fire",
-      "position": [0,0,0],
-      "rotation": [0,0,0],
-      "scale": [10,10,10]
-    },
-    {
-      "name" : "Rubiks cube",
-      "mesh" : "Rubiks_Cube",
-      "SeparateMesh" : true,
-      "material" : "Rubiks_Cube",
-      "position" : [0.0,0.0,0.0],
-      "rotation" : [0.0,0.0,0.0],
-      "scale" : [10.0,10.0,10.0]
-    },
-    {
-      "name": "Arrière-plan1",
-      "mesh": "Arrière-plan1",
-      "SeparateMesh": false,
-      "material": "Arrière-plan1",
-      "position": [0,0,0],
-      "rotation": [0,0,0],
-      "scale": [10,10,10]
-    },
-    {
-      "name": "Arrière-plan2",
-      "mesh": "Arrière-plan2",
-      "SeparateMesh": false,
-      "material": "Arrière-plan2",
-      "position": [0,0,0],
-      "rotation": [0,0,0],
-      "scale": [10,10,10]
     }
   ],
 
   "lights" : [
-    {
-      "position" : [-2.41881, -1.20760, -7.75396],
-      "color" : [1.000000, 0.5, 0.2],
-      "intensity" : 0.5
-    },
-    {
-      "position": [-0.11181, 20.62440, 28.34609],
-      "color": [0.262776, 0.290741, 1.000000],
-      "intensity": 0.7
-    },
-    {
-      "position": [23.03116, 20.62440, 0.95554],
-      "color": [0.262776, 0.290741, 1.000000],
-      "intensity": 0.7
-    },
-    {
-      "position": [-32.04645, 20.62440, 1.32618],
-      "color": [0.262776, 0.290741, 1.000000],
-      "intensity": 0.7
-    },
-    {
-      "position": [-0.89008, 0.99568, 1.04234],
-      "color": [1.0, 0.9, 0.8],
-      "intensity": 0.05
-    },
-    {
-      "position": [1.07294, 0.99568, -0.93084],
-      "color": [1.0, 0.9, 0.8],
-      "intensity": 0.05
-    },
-    {
-      "position": [5.97698, 0.64874, 3.44998],
-      "color": [1.0, 0.7, 0.6],
-      "intensity": 0.03
-    },
-    {
-      "position": [-2.70070, 0.35250, 10.87787],
-      "color": [1.0, 0.7, 0.6],
-      "intensity": 0.03
-    }
+
   ],
 
   "UI": {
     "TexQuads": [
-      {
-        "name" : "pointer",
-        "texture" : "pointer",
-        "position" : [0.0,0.0],
-        "rotation" : 0.0,
-        "scale" : [80.0,80.0]
-      }
+
     ],
     "ColorSquare" : [
     ],
@@ -264,81 +62,6 @@
   },
 
   "TMP_NULL" : [
-    {
-      "position" : [-2.2,5.75,-4.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 0.5
-    },
-    {
-      "position" : [-2.2,5.75, 4.0],
-      "color" : [1.0,0.6,0.4],
-      "intensity" : 0.5
-    },
-    {
-      "name" : "ball",
-      "mesh" : "icosphere",
-      "SeparateMesh" : false,
-      "material" : "default",
-      "position" : [0.0,0.0,0.0],
-      "rotation" : [0.0,0.0,0.0],
-      "scale" : [0.5,0.5,0.5]
-    },
-    {
-      "name" : "ballb",
-      "mesh" : "icosphere",
-      "SeparateMesh" : false,
-      "material" : "glow",
-      "position" : [4.0,0.0,2.0],
-      "rotation" : [0.0,0.0,0.0],
-      "scale" : [0.5,0.5,0.5]
-    },
-    {
-      "name" : "ball",
-      "mesh" : "icosphere",
-      "SeparateMesh" : false,
-      "material" : "metal",
-      "position" : [0.0,0.0,9.0],
-      "rotation" : [0.0,0.0,0.0],
-      "scale" : [5.0,5.0,5.0]
-    },
-    {
-      "name": "Room",
-      "mesh": "Classe",
-      "SeparateMesh": false,
-      "material": "ClasseMat",
-      "position": [0,-0.5,0],
-      "rotation": [0,0,0],
-      "scale": [1,1,1]
-    },
-    {
-      "position": [1.99317,2.29479,2.73251],
-      "color": [1,1,1],
-      "intensity": 0.5
-    },
-    {
-      "position": [-0.604963, 2.294785, 2.732509],
-      "color": [1,1,1],
-      "intensity": 0.5
-    },
-    {
-      "position": [1.993169, 2.294785, 0.676481],
-      "color": [1,1,1],
-      "intensity": 0.5
-    },
-    {
-      "position": [-0.604963, 2.294785, 0.676481],
-      "color": [1,1,1],
-      "intensity": 0.5
-    },
-    {
-      "position": [1.993169, 2.294785, -1.398763],
-      "color": [1,1,1],
-      "intensity": 0.5
-    },
-    {
-      "position": [-0.604963, 2.294785, -1.398763],
-      "color": [1,1,1],
-      "intensity": 0.5
-    }
+
   ]
 }

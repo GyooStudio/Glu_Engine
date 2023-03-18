@@ -64,7 +64,7 @@ public final class Renderer implements GLSurfaceView.Renderer {
         Log.w("setScene","Trying to set scene...");
         boolean succeeded = false;
         while (!succeeded){
-            if(hasRendered){
+            if(!ressources.isRendering){
                 succeeded = true;
                 Log.w("setScene","Succeeded to set scene.");
                 this.scene = scene;

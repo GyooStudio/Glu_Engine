@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public final class ActionManager {
     private final static ActionManager actionManager = new ActionManager();
 
-    public static final int MAX_POINTERS = 3;
+    public static final int MAX_POINTERS = 20;
     public int pointerNumber = 0;
     public long timeOfLastRecording;
     public boolean hasManuallyUpdated = false;

@@ -70,35 +70,34 @@ public class InputManager {
         }
 
         for (int index = 0; index < ActionManager.MAX_POINTERS; index++) {
-
             // if true, the action was handled and won't update other stuff (like clicking a menu won't update the background game)
             boolean updatedAction = false;
 
             for (Bouton bouton : scene.boutons) {
-                if(!updatedAction) {
+                if (!updatedAction) {
                     updatedAction = bouton.actualiser(index);
-                }else{
+                } else {
                     break;
                 }
             }
 
             for (Glissoire glissoire : scene.glissoires) {
-                if(!updatedAction) {
+                if (!updatedAction) {
                     updatedAction = glissoire.actualiser(index);
-                }else{
+                } else {
                     break;
                 }
             }
 
-            if(!updatedAction && cube != null){
-                updatedAction = cube.update(scene);
+            if (!updatedAction && cube != null) {
+                updatedAction = cube.update(scene, index);
             }
 
             //Log.w("InputManager", "moving camera");
             //actionManager.log(index);
-            if(!updatedAction) {
-                if(actionManager.isTouching[index] && actionManager.pointerNumber == 1 && (movementType == 0 || movementType == 1)) {
-                    scene.camera.setRotation(Vector3f.add(new Vector3f(actionManager.velocity[index].y * 10f * deltaTime,-actionManager.velocity[index].x * 10f * deltaTime,0f),scene.camera.getRotation()));
+            if (!updatedAction) {
+                if (actionManager.isTouching[index] && actionManager.pointerNumber == 1 && (movementType == 0 || movementType == 1)) {
+                    scene.camera.setRotation(Vector3f.add(new Vector3f(actionManager.velocity[index].y * 10f * deltaTime, -actionManager.velocity[index].x * 10f * deltaTime, 0f), scene.camera.getRotation()));
                     movementType = 1;
                     timeOfLastMovement = System.currentTimeMillis();
                 }

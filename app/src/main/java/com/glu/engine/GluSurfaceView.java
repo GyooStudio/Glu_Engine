@@ -151,8 +151,8 @@ public final class GluSurfaceView extends GLSurfaceView {
                                     scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT, -1.0f, 2.2f);
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.GPU_BLUR,6.0f,0.0f);
-                                    //scene.pp.addEffect(PostProcessing.effect.FOCUS,1f,0f);
-                                    scene.pp.addEffect(PostProcessing.effect.BLOOM, 3f, 10f);
+                                    scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,4f);
+                                    //scene.pp.addEffect(PostProcessing.effect.BLOOM, 3f, 10f);
                                     scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.DITHERING,0f,0f);
                                     //scene.pp.addEffect(PostProcessing.effect.TAA,4.0f, 2.2f);

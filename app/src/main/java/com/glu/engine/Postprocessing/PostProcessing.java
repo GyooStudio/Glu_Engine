@@ -60,6 +60,7 @@ public class PostProcessing {
     public FrameBuffer Shadow;
 
     public FrameBuffer[] blurBuffersA = new FrameBuffer[8];
+    public FrameBuffer FocusBuffers;
     public FrameBuffer lastFrameExposure;
     public SkyBox skybox;
     public SunLight sunLight;
@@ -618,7 +619,7 @@ public class PostProcessing {
                                     GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, wBuffer.ID);
                                     GLES30.glViewport(0, 0, wBuffer.width, wBuffer.height);
 
-                                    ppShaders[3].loadBoolean(true);
+                                    ppShaders[3].loadBoolean(false);
                                     ppShaders[3].loadBooleanB(true);
 
                                     GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
@@ -690,12 +691,17 @@ public class PostProcessing {
                         if(true) {
                             if (A.get(i) >= 1f) {
 
+                                ppShaders[4].start();
+
                                 int reduction = 2;
                                 for (int j = 0; j < blurBuffersA.length; j++) {
                                     if(blurBuffersA[j] ==null){
                                         blurBuffersA[j] = new FrameBuffer(scene.width / reduction,scene.height / reduction,true,false,false,false);
                                     }
                                     reduction *= 2;
+                                }
+                                if(FocusBuffers == null){
+                                    FocusBuffers = new FrameBuffer(scene.width, scene.height, true,false,false,false);
                                 }
 
                                 FrameBuffer wBuffer = blurBuffersA[0];
@@ -704,15 +710,85 @@ public class PostProcessing {
                                 GLES30.glViewport(0, 0, wBuffer.width,wBuffer.height);
                                 GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,wBuffer.ID);
 
-                                ppShaders[4].start();
-
                                 GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,readBuffer.texture.ID);
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,scene.D.ID);
 
                                 ppShaders[4].loadBoolean(true);
                                 ppShaders[4].loadBooleanB(false);
+                                ppShaders[4].loadUniformBlock(0f,0f);
 
                                 GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+
+                                for (int j = 0; j < A.get(i); j++) {
+                                    rBuffer = wBuffer;
+                                    wBuffer = blurBuffersA[j];
+
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, wBuffer.ID);
+                                    GLES30.glViewport(0, 0, wBuffer.width, wBuffer.height);
+
+                                    ppShaders[4].loadBoolean(false);
+                                    ppShaders[4].loadBooleanB(false);
+
+                                    GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
+
+                                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+                                }
+
+                                for (int j = Math.round( A.get(i) ) - 1; j >= 0; j--) {
+                                    rBuffer = wBuffer;
+                                    wBuffer = blurBuffersA[j];
+
+                                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, wBuffer.ID);
+                                    GLES30.glViewport(0,0, wBuffer.width,wBuffer.height);
+
+                                    GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
+
+                                    ppShaders[4].loadBoolean(false);
+                                    ppShaders[4].loadBooleanB(false);
+
+                                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+                                }
+
+                                rBuffer = wBuffer;
+
+                                GLES30.glViewport(0, 0, writeBuffer.width,writeBuffer.height);
+                                GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,writeBuffer.ID);
+
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,rBuffer.texture.ID);
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,scene.D.ID);
+
+                                ppShaders[4].loadBoolean(true);
+                                ppShaders[4].loadBooleanB(false);
+                                ppShaders[4].loadUniformBlock(0f,0f);
+
+                                GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+
+                                GLES30.glBindFramebuffer(GLES30.GL_READ_FRAMEBUFFER,writeBuffer.ID);
+                                GLES30.glBindFramebuffer(GLES30.GL_DRAW_FRAMEBUFFER,FocusBuffers.ID);
+                                GLES30.glBlitFramebuffer(0,0,(int) writeBuffer.width, (int) writeBuffer.height, 0,0, (int) FocusBuffers.width, (int) FocusBuffers.height,GLES30.GL_COLOR_BUFFER_BIT,GLES30.GL_LINEAR);
+
+                                wBuffer = blurBuffersA[0];
+
+                                GLES30.glViewport(0, 0, wBuffer.width,wBuffer.height);
+                                GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,wBuffer.ID);
+
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,readBuffer.texture.ID);
+                                GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,scene.D.ID);
+
+                                ppShaders[4].loadBoolean(true);
+                                ppShaders[4].loadBooleanB(true);
+                                ppShaders[4].loadUniformBlock(0f,0f);
+
+                                GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
+                                ppShaders[4].loadUniformBlock(1f,0f);
 
                                 for (int j = 0; j < A.get(i); j++) {
                                     rBuffer = wBuffer;
@@ -746,6 +822,7 @@ public class PostProcessing {
                                     GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
                                 }
 
+
                                 if(!isLastEffect){
                                     GLES30.glViewport(0, 0, writeBuffer.width, writeBuffer.height);
                                     GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, writeBuffer.ID);
@@ -759,16 +836,18 @@ public class PostProcessing {
                                 GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
                                 GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rBuffer.texture.ID);
                                 GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
-                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, FocusBuffers.texture.ID);
                                 GLES30.glActiveTexture(GLES30.GL_TEXTURE2);
-                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, scene.D.ID);
+                                GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, readBuffer.texture.ID);
 
                                 ppShaders[4].loadBoolean(false);
                                 ppShaders[4].loadBooleanB(true);
+                                ppShaders[4].loadUniformBlock(0f,B.get(i));
 
                                 GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
 
                                 ppShaders[4].stop();
+
                             } else {
                                 if (isLastEffect) {
                                     GLES30.glViewport(0, 0, (int) (ressources.viewport.x), (int) (ressources.viewport.y));

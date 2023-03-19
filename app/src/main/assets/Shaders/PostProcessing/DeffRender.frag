@@ -268,6 +268,10 @@ void main(){
         //SkyColor = vec4(skySpecColor, 1.0);
     }
 
+    if(isinf(Fragment.r) || isinf(Fragment.g) || isinf(Fragment.b) || isinf(Fragment.a) || isnan(Fragment.r) || isnan(Fragment.g) || isnan(Fragment.b) || isnan(Fragment.a)){
+        Fragment = vec4(0.0);
+    }
+
     /*vec3 finalColor;
 
     highp vec3 pos = (c.xyz * 2.0 - 1.0) * c.w;

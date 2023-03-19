@@ -20,51 +20,64 @@ uniform bool isB;
 
 void main(){
 
-    float focalDepth = texture(texture3,vec2(0.5,0.5)).r;
-    float depth = texture(texture3,UV).r;
-    float factor = min(abs(depth - focalDepth) * (1.0/4.0),1.0);
-
-    vec4 finalColor;
-
-    vec2 STexel = 1.0/vec2( textureSize(texture1,0) );
-
-    float div = 0.0;
-    float original = 1.0;
-    for(float x = -1.0; x <= 1.0; x++){
-        for(float y = -1.0; y <= 1.0; y++){
-            if( x > -0.1 && x < 0.1 && y > -0.1 && y < 0.1){
-                finalColor.rgb += texture(texture1,UV).rgb;
-                div += 1.0;
-            }else {
-                float depthO = texture(texture3, UV + vec2(STexel.x * x, STexel.y * y)).r;
-                vec3 colorO = texture(texture1, UV + vec2(STexel.x * x, STexel.y * y)).rgb;
-                float factorO = min(abs(depthO - focalDepth) * (1.0/4.0), 1.0);
-
-                if (depthO < depth && abs(depthO - depth) > 0.1){
-                    finalColor.rgb += colorO * factorO * (0.25/ length(vec2(x,y)));
-                    div += factorO * (0.25/ length(vec2(x,y)));
-                }else if (abs(depthO - depth) < 0.1){
-                    finalColor.rgb += colorO * factor * (0.25/ length(vec2(x,y)));
-                    div += factor * (0.25/ length(vec2(x,y)));
-                }
-            }
+    vec4 finalColor = texture(texture1,UV);
+    if(is && a < 0.5){
+        float depth;
+        if(!isB){
+            depth = texture(texture2, UV).r - fD;
+            depth = depth / fD;
+            finalColor.a = max(depth,0.0);
+            finalColor.rgb *= max(min(depth, 1.0),0.0);
+        }else{
+            depth = texture(texture2, UV).r - fD;
+            depth = depth/fD;
+            finalColor.a = max(-depth,0.0);
         }
     }
 
-    finalColor.rgb = finalColor.rgb/div;
-    original = (div-1.0)/div;
-    finalColor.a = 1.0 - ( (1.0 - texture(texture1,UV).a) * (1.0 - original));
+    if(is && isB && a > 0.5){
+        vec2 STexel = 1.0/vec2( textureSize(texture1,0) );
+        //finalColor = texture(texture1,UV);
 
-    /*if(GlowCut && !isB){
-        finalColor.rgb = max(finalColor.rgb - vec3(threshold), vec3(0.0));
-    }*/
+        finalColor.rgb += texture(texture1, UV + vec2(STexel.x, 0.0) ).rgb * 0.5;
+        finalColor.rgb += texture(texture1, UV + vec2(-STexel.x, 0.0) ).rgb * 0.5;
+        finalColor.rgb += texture(texture1, UV + vec2(0.0, STexel.y) ).rgb * 0.5;
+        finalColor.rgb += texture(texture1, UV + vec2(0.0, -STexel.y) ).rgb * 0.5;
+
+        finalColor.rgb = finalColor.rgb/3.0;
+
+        finalColor.a += texture(texture1, UV + vec2(STexel.x, 0.0) ).a * 0.25;
+        finalColor.a += texture(texture1, UV + vec2(-STexel.x, 0.0) ).a * 0.25;
+        finalColor.a += texture(texture1, UV + vec2(0.0, STexel.y) ).a * 0.25;
+        finalColor.a += texture(texture1, UV + vec2(0.0, -STexel.y) ).a * 0.25;
+    }
+    if(!is && !isB){
+        vec2 STexel = 1.0/vec2( textureSize(texture1,0) );
+        //finalColor = texture(texture1,UV);
+
+        finalColor.rgb += texture(texture1, UV + vec2(STexel.x, 0.0) ).rgb * 0.5;
+        finalColor.rgb += texture(texture1, UV + vec2(-STexel.x, 0.0) ).rgb * 0.5;
+        finalColor.rgb += texture(texture1, UV + vec2(0.0, STexel.y) ).rgb * 0.5;
+        finalColor.rgb += texture(texture1, UV + vec2(0.0, -STexel.y) ).rgb * 0.5;
+
+        finalColor.rgb = finalColor.rgb/3.0;
+    }
 
     if(isB && !is){
-        finalColor = mix(texture(texture2,UV), texture(texture1,UV), finalColor.a); //vec4(factor * float(focalDepth > depth), factor * float(focalDepth < depth), 0.0,0.0);
+        vec4 clearColor = texture(texture3,UV);
+        vec4 blurColorBehind = texture(texture2,UV);
+        float depthBehind = min(blurColorBehind.a/b,1.0);
+        float depthFront = min(finalColor.a/(b*2.0),1.0);
+        depthBehind = pow(depthBehind,5.0);
+        depthFront = pow(depthFront,5.0);
+
+        finalColor = mix( mix(clearColor, blurColorBehind, depthBehind), finalColor, depthFront);
     }
-    /*if(isB && !is){
-        finalColor = vec4(finalColor.a);
-    }*/
+
+    if(isinf(finalColor.r) || isinf(finalColor.g) || isinf(finalColor.b) || isinf(finalColor.a) || isnan(finalColor.r) || isnan(finalColor.g) || isnan(finalColor.b) || isnan(finalColor.a)){
+        finalColor = vec4(0.0);
+    }
 
     Fragment = finalColor;
+
 }

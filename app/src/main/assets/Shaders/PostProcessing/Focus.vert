@@ -19,7 +19,7 @@ float linearize(float d){
 
 void main(){
 
-    fD = texture(texture2, vec2(0.5,0.5)).a;
+    fD = texture(texture2, vec2(0.5,0.5)).r;
     fD += float(fD < 0.01) * 99999.0;
     fDB = 1.0/fD;
 

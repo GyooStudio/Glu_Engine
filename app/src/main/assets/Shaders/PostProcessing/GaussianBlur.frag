@@ -28,5 +28,9 @@ void main(){
 
     finalColor = finalColor/2.0;
 
+    if(isinf(finalColor.r) || isinf(finalColor.g) || isinf(finalColor.b) || isinf(finalColor.a) || isnan(finalColor.r) || isnan(finalColor.g) || isnan(finalColor.b) || isnan(finalColor.a)){
+        finalColor = vec4(0.0);
+    }
+
     Fragment = finalColor;
 }

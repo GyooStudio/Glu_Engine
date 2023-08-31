@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public abstract class GUIBase {
 
     public ArrayList<Vector2f> position = new ArrayList<>();
-    public ArrayList<Float> rotation = new ArrayList<Float>();
+    public ArrayList<Float> rotation = new ArrayList<>();
     public ArrayList<Vector2f> scale = new ArrayList<>();
     public ArrayList<Boolean> show = new ArrayList<>();
     public final float[] positions = new float[]{

@@ -143,17 +143,17 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                     renderer.setScene(scene);
 
-                                    //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
-                                    scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING, 0, 0);
+                                    scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
+                                    //scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.SSR, 1.0f, 0.1f);
                                     //scene.pp.addEffect(PostProcessing.effect.AO, 1.0f, 5f);
                                     scene.pp.addEffect(PostProcessing.effect.GAMMA_CORRECT, -1.0f, 2.2f);
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.GPU_BLUR,6.0f,0.0f);
-                                    scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,4f);
+                                    //scene.pp.addEffect(PostProcessing.effect.FOCUS,2f,4f);
                                     //scene.pp.addEffect(PostProcessing.effect.BLOOM, 3f, 10f);
-                                    scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
+                                    //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.DITHERING,0f,0f);
                                     //scene.pp.addEffect(PostProcessing.effect.TAA,4.0f, 2.2f);
                                     //scene.pp.addEffect(PostProcessing.effect.PIXELISE,0f,0f);
@@ -223,7 +223,7 @@ public final class GluSurfaceView extends GLSurfaceView {
                         if (!ressources.isRendering && hasInit) {
                             try {
 
-                                ressources.isModifyingScene = true;
+                                //ressources.isModifyingScene = true;
 
                                 scene.inputManager.update();
                                 //Log.w("update", "updated scene");
@@ -247,7 +247,7 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                 //requestRender();
 
-                                ressources.isModifyingScene = false;
+                                //ressources.isModifyingScene = false;
 
                                 fpsCounter++;
                                 if (System.currentTimeMillis() - fpsTimer > 5000) {

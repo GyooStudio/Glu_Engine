@@ -1,15 +1,9 @@
 package com.glu.engine.shader;
 
-import android.opengl.GLES30;
-import android.util.Log;
-
 import com.glu.engine.Scene.Camera;
-import com.glu.engine.utils.Maths;
+import com.glu.engine.Scene.SunLight;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
-import com.glu.engine.vectors.Vector3f;
-
-import java.util.ServiceLoader;
 
 public class StaticShader extends ShaderProgram{
 
@@ -26,6 +20,11 @@ public class StaticShader extends ShaderProgram{
     private int MAP_NORMAL;
     private int MATERIAL;
     private int ALPHA_CUT;
+
+    private int SUNDIR;
+    private int SUNCOLOR;
+    private int SUNINTENSITY;
+    private int SKYSTRENGTH;
 
     public StaticShader(String VERTCODE, String FRAGCODE){ super(VERTCODE, FRAGCODE);}
 
@@ -53,9 +52,14 @@ public class StaticShader extends ShaderProgram{
         MAP_NORMAL = super.getUniformLocation("mapNormal");
         MATERIAL = super.getUniformLocation("materialType");
         ALPHA_CUT = super.getUniformLocation("alphaCut");
+        SUNDIR = super.getUniformLocation("SunDir");
+        SUNCOLOR = super.getUniformLocation("SunColor");
+        SUNINTENSITY = super.getUniformLocation("SunInt");
+        SKYSTRENGTH = super.getUniformLocation("skyStrength");
 
         loadTexture("colorSampler",0);
         loadTexture("normalMap",1);
+        loadTexture("sky",2);
     }
 
     public void loadTransformationMatrix(Matrix4f matrix){
@@ -87,6 +91,16 @@ public class StaticShader extends ShaderProgram{
 
     public void loadTexture(String uniformName, int textureUnit){
         super.loadUniformTexture(super.getUniformLocation(uniformName),textureUnit);
+    }
+
+    public void loadSunLight(SunLight s){
+        super.loadUniformVector(SUNDIR, s.direction);
+        super.loadUniformVector(SUNCOLOR, s.color);
+        super.loadUniformFloat(SUNINTENSITY, s.intensity);
+    }
+
+    public void loadSkyStrength(float s){
+        super.loadUniformFloat(SKYSTRENGTH, s);
     }
 
     public void loadJitter(Vector2f jit){super.loadUniformVector(JITTER,jit);}

@@ -23,12 +23,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             renderscriptOptimLevel 3
             signingConfig signingConfigs.debug
+            debuggable true
         }
         debug {
             minifyEnabled false
             //shrinkResources false
             //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             renderscriptOptimLevel 0
+            debuggable true
         }
     }
     compileOptions {
@@ -37,6 +39,7 @@ android {
     }
     namespace 'com.glu.engine'
     flavorDimensions 'dev'
+    ndkVersion '23.1.7779620'
 }
 
 dependencies {

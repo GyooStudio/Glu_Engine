@@ -434,7 +434,8 @@ public class PostProcessing {
 
                 usingA = true;
 
-            }else{
+            }
+            else{
                 FrameBuffer writeBuffer;
                 FrameBuffer readBuffer;
                 if(usingA){

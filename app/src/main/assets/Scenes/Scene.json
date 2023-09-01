@@ -188,15 +188,6 @@
       "position": [0,0,0],
       "rotation": [0,0,0],
       "scale": [10,10,10]
-    },
-    {
-      "name": "ball",
-      "mesh": "icosphere",
-      "SeparateMesh": false,
-      "material": "default",
-      "position": [0,0,0],
-      "rotation": [0,0,0],
-      "scale": [1,1,1]
     }
   ],
 
@@ -204,42 +195,42 @@
     {
       "position" : [-2.41881, -1.20760, -7.75396],
       "color" : [1.000000, 0.5, 0.2],
-      "intensity" : 0.5
+      "intensity" : 5
     },
     {
       "position": [-0.11181, 20.62440, 28.34609],
       "color": [0.262776, 0.290741, 1.000000],
-      "intensity": 0.7
+      "intensity": 7
     },
     {
       "position": [23.03116, 20.62440, 0.95554],
       "color": [0.262776, 0.290741, 1.000000],
-      "intensity": 0.7
+      "intensity": 7
     },
     {
       "position": [-32.04645, 20.62440, 1.32618],
       "color": [0.262776, 0.290741, 1.000000],
-      "intensity": 0.7
+      "intensity": 7
     },
     {
       "position": [-0.89008, 0.99568, 1.04234],
       "color": [1.0, 0.9, 0.8],
-      "intensity": 0.05
+      "intensity": 0.5
     },
     {
       "position": [1.07294, 0.99568, -0.93084],
       "color": [1.0, 0.9, 0.8],
-      "intensity": 0.05
+      "intensity": 0.5
     },
     {
       "position": [5.97698, 0.64874, 3.44998],
       "color": [1.0, 0.7, 0.6],
-      "intensity": 0.03
+      "intensity": 0.3
     },
     {
       "position": [-2.70070, 0.35250, 10.87787],
       "color": [1.0, 0.7, 0.6],
-      "intensity": 0.03
+      "intensity": 0.3
     }
   ],
 

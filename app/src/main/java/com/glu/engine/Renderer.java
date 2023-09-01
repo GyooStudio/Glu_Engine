@@ -3,25 +3,32 @@ package com.glu.engine;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
-import android.view.View;
 
 //import androidx.appcompat.app.AppCompatActivity;
 
-import com.glu.engine.GUI.ColorSquare;
-import com.glu.engine.GUI.TexQuad;
-import com.glu.engine.GUI.Text.TextBox;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.glu.engine.Objects.Entity;
 import com.glu.engine.Objects.RawModel;
 import com.glu.engine.Objects.SkyBox;
-import com.glu.engine.Postprocessing.PostProcessing;
+import com.glu.engine.Postprocessing.FrameBuffer;
 import com.glu.engine.Scene.Ressources;
 import com.glu.engine.Scene.Scene;
+import com.glu.engine.Scene.SunLight;
 import com.glu.engine.utils.Loader;
 import com.glu.engine.utils.Maths;
 import com.glu.engine.vectors.Matrix4f;
 import com.glu.engine.vectors.Vector2f;
 import com.glu.engine.vectors.Vector3f;
 import com.glu.engine.vectors.Vector4f;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -36,12 +43,11 @@ public final class Renderer implements GLSurfaceView.Renderer {
     private short inc = 0;
 
     public boolean hasRendered = true;
-
     public boolean toUpdateViewport = false;
-
     public String FPS;
-
     private Scene scene;
+    public BlockingQueue<Scene> sceneModifications = new LinkedBlockingQueue<Scene>();
+    private FrameBuffer shadowPass;
 
     Renderer(MainActivity main){
         loader = Loader.getLoader();
@@ -62,15 +68,15 @@ public final class Renderer implements GLSurfaceView.Renderer {
 
     public synchronized void setScene(Scene scene){
         Log.w("setScene","Trying to set scene...");
-        boolean succeeded = false;
-        while (!succeeded){
-            if(!ressources.isRendering){
-                succeeded = true;
-                Log.w("setScene","Succeeded to set scene.");
-                this.scene = scene;
+        //boolean succeeded = false;
+        //while (!succeeded){
+            //if(!ressources.isRendering){
+                //succeeded = true;
+                this.scene = scene;//.copy();
                 toUpdateViewport = true;
-            }
-        }
+                Log.w("setScene","Succeeded to set scene.");
+            //}
+        //}
     }
 
     @Override
@@ -79,6 +85,8 @@ public final class Renderer implements GLSurfaceView.Renderer {
         int[] ints = new int[2];
         GLES30.glGetIntegerv(GLES30.GL_MAX_FRAGMENT_UNIFORM_VECTORS,ints, 1);
         GLES30.glGetIntegerv(GLES30.GL_MAX_DRAW_BUFFERS,ints, 0);
+
+        shadowPass = new FrameBuffer(512,512,false,false,true,false);
         Log.w("init", "max combined texture units : "  + ints[1]);
         Log.w("init", "max draw buffers : " + ints[0]);
     }
@@ -94,13 +102,10 @@ public final class Renderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl10) {
 
         //wait until whatever is modifying the scene stops.
-        /*while (ressources.isModifyingScene){
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }*/
+        Scene s;
+        if ((s = sceneModifications.poll()) != null){
+            //scene = s.copy();
+        }
 
         //ressources.isRendering = true;
 
@@ -140,14 +145,12 @@ public final class Renderer implements GLSurfaceView.Renderer {
             }
         }*/
 
-        scene.pp.prepareForRender();
-        render(scene);
-
-        /*Matrix4f[] mats = Maths.generateSunTransformMatrix(scene);
+        Matrix4f[] mats = Maths.generateSunTransformMatrix(scene);
         scene.sunLight.view = mats[0];
         scene.sunLight.proj = mats[1];
-        scene.pp.prepareShadowPass();*/
-        //render(scene, new Vector2f(0f),true,2);
+        render(scene,2);
+        scene.pp.prepareForRender();
+        render(scene,1);
 
         scene.pp.renderEffects();
         //GLES30.glViewport(0,0,(int) ressources.viewport.x,(int) ressources.viewport.y);
@@ -168,10 +171,16 @@ public final class Renderer implements GLSurfaceView.Renderer {
         }
     }
 
-    public void render(Scene scene){// 15 ms
+    public void render(Scene scene,int pass){// 15 ms
+
+        if(pass == 2){
+            GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,shadowPass.ID);
+            GLES30.glViewport(0,0,shadowPass.width,shadowPass.height);
+            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT|GLES30.GL_DEPTH_BUFFER_BIT);
+        }
 
         //if (pass3D) { // 15 ms
-            if(scene.getSkybox() != null ) {
+            if(scene.getSkybox() != null && pass == 1) {
                 GLES30.glDisable(GLES30.GL_DEPTH_TEST);
                 GLES30.glDisable(GLES30.GL_CULL_FACE);
 
@@ -198,11 +207,10 @@ public final class Renderer implements GLSurfaceView.Renderer {
             }
 
             GLES30.glEnable(GLES30.GL_DEPTH_TEST);
+            GLES30.glEnable(GLES30.GL_CULL_FACE);
 
             for (Entity entity : scene.Entities) {
                 RawModel model = entity.model;
-
-                ressources.staticShader.start();
 
                 GLES30.glBindVertexArray(model.vaoID);
                 GLES30.glEnableVertexAttribArray(0);
@@ -211,27 +219,54 @@ public final class Renderer implements GLSurfaceView.Renderer {
                 GLES30.glEnableVertexAttribArray(3);
                 GLES30.glEnableVertexAttribArray(4);
 
-                if(entity.material.get(0).isColorTextured) {
-                    GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
-                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, entity.material.get(0).texture.ID);
-                }
-                if(entity.material.get(0).isNormalMapped){
-                    GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
-                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, entity.material.get(0).normalMap.ID);
-                }
-                if(scene.getSkybox() != null){
-                    GLES30.glActiveTexture(GLES30.GL_TEXTURE2);
-                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, scene.getSkybox().HDRI.ID);
-                }
-                ressources.staticShader.loadMaterial(entity.material.get(0));
+                if(pass == 2) {
 
-                ressources.staticShader.loadSunLight(scene.sunLight);
-                ressources.staticShader.loadSkyStrength(scene.getSkybox().strength);
+                    ressources.shadowShader.start();
 
-                ressources.staticShader.loadTransformationMatrix( Matrix4f.MultiplyMM( scene.PROJECTION_MATRIX,Matrix4f.MultiplyMM( scene.camera.getViewMat(),entity.getTransformMatrix(0) ) ) );
-                ressources.staticShader.loadRotationMatrix( entity.getRotationMatrix(0) );
+                    ressources.shadowShader.loadProjectionMatrix(scene.sunLight.proj);
+                    ressources.shadowShader.loadViewMatrix(scene.sunLight.view);
+                    ressources.shadowShader.loadTransformMatrix(entity.getTransformMatrix(0));
 
-                GLES30.glDrawElements(GLES30.GL_TRIANGLES,model.vertCount,GLES30.GL_UNSIGNED_INT,0);
+                    GLES30.glDrawElements(GLES30.GL_TRIANGLES, model.vertCount, GLES30.GL_UNSIGNED_INT, 0);
+
+                    ressources.shadowShader.stop();
+                } else if (pass == 1) {
+
+                    ressources.staticShader.start();
+
+                    if (entity.material.get(0).isColorTextured) {
+                        GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, entity.material.get(0).texture.ID);
+                    }
+                    if (entity.material.get(0).isNormalMapped) {
+                        GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
+                        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, entity.material.get(0).normalMap.ID);
+                    }
+                    if (scene.getSkybox() != null) {
+                        GLES30.glActiveTexture(GLES30.GL_TEXTURE2);
+                        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, scene.getSkybox().HDRI.ID);
+                    }
+                    GLES30.glActiveTexture(GLES30.GL_TEXTURE3);
+                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, shadowPass.texture.ID);
+
+                    ressources.staticShader.loadMaterial(entity.material.get(0));
+
+                    ressources.staticShader.loadSunLight(scene.sunLight);
+                    ressources.staticShader.loadSkyStrength(scene.getSkybox().strength);
+                    for (int i = 0; i < scene.Lights.size(); i++) {
+                        ressources.staticShader.loadLight(i, scene.Lights.get(i).position, scene.Lights.get(i).color, scene.Lights.get(i).intensity);
+                    }
+                    ressources.staticShader.loadLightNumber(scene.Lights.size());
+
+                    ressources.staticShader.loadTransformationMatrix(entity.getTransformMatrix(0));
+                    ressources.staticShader.loadRotationMatrix(entity.getRotationMatrix(0));
+                    ressources.staticShader.loadViewMatrix(scene.camera);
+                    ressources.staticShader.loadProjectionMatrix(scene.PROJECTION_MATRIX);
+
+                    GLES30.glDrawElements(GLES30.GL_TRIANGLES, model.vertCount, GLES30.GL_UNSIGNED_INT, 0);
+
+                    ressources.staticShader.stop();
+                }
 
                 GLES30.glDisableVertexAttribArray(4);
                 GLES30.glDisableVertexAttribArray(3);
@@ -239,8 +274,6 @@ public final class Renderer implements GLSurfaceView.Renderer {
                 GLES30.glDisableVertexAttribArray(1);
                 GLES30.glDisableVertexAttribArray(0);
                 GLES30.glBindVertexArray(0);
-
-                ressources.staticShader.stop();
             }
         //}
 

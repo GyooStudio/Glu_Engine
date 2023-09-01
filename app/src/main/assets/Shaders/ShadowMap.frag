@@ -4,5 +4,5 @@ precision mediump float;
 layout(location = 0) out float Fragment;
 
 void main(){
-    Fragment = gl_FragCoord.z;
+    Fragment = float(gl_FragCoord.z);
 }

@@ -136,14 +136,14 @@ public final class GluSurfaceView extends GLSurfaceView {
                         if (scene != null && !hasStartedInitThread) {
                             Thread loadScene = new Thread() {
                                 @Override
-                                public synchronized void run() {
+                                public void run() {
                                     long timer = System.currentTimeMillis();
 
                                     scene = loader.loadScene("Scenes/Scene.json", new Vector2f(1));
 
                                     renderer.setScene(scene);
 
-                                    scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
+                                    //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.SSR, 1.0f, 0.1f);
@@ -164,9 +164,13 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                     //requestRender();
 
-                                    while(fpsText == null){
+                                    //renderer.setScene(scene.copy());
+
+                                    while (fpsText == null) {
                                         fpsText = scene.getTextBox("FPS");
                                     }
+
+                                    renderer.setScene(scene.copy());
 
                                     hasInit = true;
 
@@ -178,7 +182,7 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                             Thread LightThread = new Thread() {
                                 @Override
-                                synchronized public void run() {
+                                public void run() {
                                     while (!hasInit) {
                                         try {
                                             Thread.sleep(100);
@@ -186,8 +190,8 @@ public final class GluSurfaceView extends GLSurfaceView {
                                             e.printStackTrace();
                                         }
                                     }
-                                    for (int i = 0; i < 17; i++) {
-                                        Light light = new Light(new Vector3f(((float) Math.random() * 2f - 1f) * 100f, 0f, ((float) Math.random() * 2f - 1f) * 100f), new Vector3f((float) Math.random(), (float) Math.random(), (float) Math.random()), (float) Math.random() * 2f);
+                                    for (int i = 0; i < 5; i++) {
+                                        Light light = new Light(new Vector3f(((float) Math.random() * 2f - 1f) * 5f, 0f, ((float) Math.random() * 2f - 1f) * 5f), new Vector3f((float) Math.random(), (float) Math.random(), (float) Math.random()), (float) Math.random() * 50f);
                                         scene.addLight(light);
                                     }
 
@@ -199,11 +203,11 @@ public final class GluSurfaceView extends GLSurfaceView {
                                     while (true) {
                                         for (int i = 0; i < scene.Lights.size(); i++) {
                                             double c = Math.random();
-                                            if (c > 0.99) {
-                                                velocities[i].add(Vector3f.scale(new Vector3f((float) Math.random() * 2f - 1f, (float) Math.random() * 2f - 1f, (float) Math.random() * 2f - 1f), 0.0002f));
+                                            if (c > 0.9999) {
+                                                velocities[i].add(Vector3f.scale(new Vector3f((float) Math.random() * 2f - 1f, (float) Math.random() * 2f - 1f, (float) Math.random() * 2f - 1f), 0.00000002f));
                                             }
-                                            velocities[i].add(Vector3f.scale(scene.Lights.get(i).position.negative(), 0.00000000001f * scene.Lights.get(i).position.length() * scene.Lights.get(i).position.length()));
-                                            velocities[i].add(Vector3f.scale(scene.Lights.get(i).position, 0.0001f / (scene.Lights.get(i).position.length() * scene.Lights.get(i).position.length())));
+                                            velocities[i].add(Vector3f.scale(scene.Lights.get(i).position.negative(), 0.000000000001f * scene.Lights.get(i).position.length() * scene.Lights.get(i).position.length()));
+                                            velocities[i].add(Vector3f.scale(scene.Lights.get(i).position, 0.00000001f / (scene.Lights.get(i).position.length() * scene.Lights.get(i).position.length())));
                                             //velocities[i].add(Vector3f.scale(velocities[i].negative(), 0.00005f));
                                             scene.Lights.get(i).position.add(velocities[i]);
                                             scene.Lights.get(i).position.y = Math.abs(scene.Lights.get(i).position.y);
@@ -231,10 +235,11 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                 Matrix4f m = new Matrix4f();
                                 m.setIdentity();
-                                Matrix.rotateM(m.mat, 0, 0.025f * Math.max(scene.sunLight.direction.y, 0.1f) * 10f, 1, 0, 0);
+                                Matrix.rotateM(m.mat, 0, 0.25f * Math.max(scene.sunLight.direction.y, 0.1f), 1, 0, 0);
                                 scene.sunLight.direction = Matrix4f.MultiplyMV(m, scene.sunLight.direction);
                                 scene.getSkybox().strength = Math.max(-scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
                                 scene.sunLight.intensity = Math.max(-scene.sunLight.direction.y * 7.0f * (1f/0.65f), 0f);
+                                scene.pp.A.set(0,scene.sunLight.direction.y * 0.75f + 0.25f);
 
                                 if(arrièrePlanA == null || arrièrePlanB == null){
                                     arrièrePlanA = scene.getEntity("Arrière-plan1");
@@ -244,6 +249,8 @@ public final class GluSurfaceView extends GLSurfaceView {
                                     arrièrePlanA.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
                                     arrièrePlanB.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
                                 }
+
+                                //renderer.sceneModifications.add(scene);
 
                                 //requestRender();
 

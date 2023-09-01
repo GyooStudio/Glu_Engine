@@ -84,6 +84,8 @@ public final class Scene {
     }
 
     public Scene(Scene scene){
+        long timer = System.currentTimeMillis();
+
         Loader loader = Loader.getLoader();
         ressources = Ressources.getRessources();
         this.actionManager = ActionManager.getActionManager();
@@ -122,6 +124,8 @@ public final class Scene {
         CleanEntities = scene.CleanEntities;
 
         sunLight = scene.sunLight;
+
+        Log.w("Scene Copy","Scene Copy : " + (float)(System.currentTimeMillis() - timer)/1000.0 + " seconds to complete");
     }
 
     public Scene copy(){

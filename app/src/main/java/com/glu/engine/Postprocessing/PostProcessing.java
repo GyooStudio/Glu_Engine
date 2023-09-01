@@ -1097,6 +1097,14 @@ public class PostProcessing {
 
                     GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);
 
+                    /*GLES30.glViewport(0,0,(int) ressources.viewport.x,(int) ressources.viewport.y);
+                    GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,0);
+
+                    GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+                    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,lastFrameExposure.texture.ID);
+
+                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, screen.model.vertCount);*/
+
                     ppShaders[0].stop();
 
                     GLES30.glViewport(0,0,(int) ressources.viewport.x,(int) ressources.viewport.y);

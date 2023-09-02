@@ -165,13 +165,13 @@ void main(){
     float shadowMultiplier = float(texture(shadow,p.xy).r + 0.0075 > p.z || p.x > 1.0 || p.x < 0.0 || p.y > 1.0 || p.y < 0.0 || texture(shadow,p.xy).r < 0.001);
     /*vec2 STexel = 1.0/vec2(textureSize(shadow,0));
     vec2 pUV = p.xy;
-    for(int i = 0; i < 2; i ++){
+    for(int i = 0; i < 4; i ++){
         int offset = int(mod( gl_FragCoord.x * gl_FragCoord.y * 76.52 + float(i), 16.0 ) );
         p.xy = pUV + poissonDisk[offset]*STexel * 1.0;
         float tex = texture(shadow,p.xy).r;
         shadowMultiplier += float(tex + 0.0075 > p.z || p.x > 1.0 || p.x < 0.0 || p.y > 1.0 || p.y < 0.0 || tex < 0.001);
     }
-    shadowMultiplier = shadowMultiplier/2.0;*/
+    shadowMultiplier = shadowMultiplier/4.0;*/
 
     vec4 finalColor = vec4( max( dot(normal,-SunDir), 0.0 ) * albedo.rgb * SunColor * SunInt * shadowMultiplier + diffuseSkyColor * albedo.rgb + diffuseLights * albedo.rgb, albedo.a );
 

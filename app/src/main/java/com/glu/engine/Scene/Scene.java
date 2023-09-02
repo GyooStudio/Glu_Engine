@@ -65,7 +65,7 @@ public final class Scene {
 
     public SunLight sunLight = new SunLight(new Vector3f(-1f,-0.6f,0f), new Vector3f(1f,0.9f,0.8f), 3.0f);
 
-    private Ressources ressources;
+    private final Ressources ressources;
 
     public Scene(){
         Loader loader = Loader.getLoader();
@@ -109,13 +109,11 @@ public final class Scene {
         Lights = (ArrayList<Light>) scene.Lights.clone();
         textures = (ArrayList<GTexture>) scene.textures.clone();
         objects = (ArrayList<CustomObject>) scene.objects.clone();
-        skybox = scene.skybox;
+        skybox = scene.skybox.copy();
         pp = new PostProcessing(scene.pp);
-        camera = scene.camera;
+        camera = scene.camera.copy();
         isLightSorted = true;
         isSkyboxClean = false;
-
-        //PROJECTION_MATRIX = new Matrix4f();
 
         renderGUIas3D = scene.renderGUIas3D;
 
@@ -123,13 +121,48 @@ public final class Scene {
         hasFirstUpdated = scene.hasFirstUpdated;
         CleanEntities = scene.CleanEntities;
 
-        sunLight = scene.sunLight;
+        sunLight = scene.sunLight.copy();
 
-        Log.w("Scene Copy","Scene Copy : " + (float)(System.currentTimeMillis() - timer)/1000.0 + " seconds to complete");
+        //Log.w("Scene Copy","Scene Copy : " + (float)(System.currentTimeMillis() - timer)/1000.0 + " seconds to complete");
     }
 
-    public Scene copy(){
+    public Scene copy() {
         return new Scene(this);
+    }
+
+    public void copy(Scene scene){
+        long timer = System.currentTimeMillis();
+
+        state = scene.state;
+        Entities = (ArrayList<Entity>) scene.Entities.clone();
+        DirtyEntities = (ArrayList<Entity>) scene.DirtyEntities.clone();
+        TexQuads = (ArrayList<TexQuad>) scene.TexQuads.clone();
+        dirtyTexQuads = (ArrayList<TexQuad>) scene.dirtyTexQuads.clone();
+        dirtyColor = (ArrayList<com.glu.engine.GUI.ColorSquare>) scene.dirtyColor.clone();
+        ColorSquare = (ArrayList<com.glu.engine.GUI.ColorSquare>) scene.ColorSquare.clone();
+        dirtyBoutons = (ArrayList<Bouton>) scene.dirtyBoutons.clone();
+        boutons = (ArrayList<Bouton>) scene.boutons.clone();
+        dirtyGlissoires = (ArrayList<Glissoire>) scene.dirtyGlissoires.clone();
+        glissoires = (ArrayList<Glissoire>) scene.glissoires.clone();
+        DirtyTextBoxes = (ArrayList<TextBox>) scene.DirtyTextBoxes.clone();
+        TextBoxes = (ArrayList<TextBox>) scene.TextBoxes.clone();
+        Lights = (ArrayList<Light>) scene.Lights.clone();
+        textures = (ArrayList<GTexture>) scene.textures.clone();
+        objects = (ArrayList<CustomObject>) scene.objects.clone();
+        skybox = scene.skybox.copy();
+        pp.copy(scene.pp);
+        camera = scene.camera.copy();
+        isLightSorted = scene.isLightSorted;
+        isSkyboxClean = scene.isSkyboxClean;
+
+        renderGUIas3D = scene.renderGUIas3D;
+
+        entityIncrement = scene.entityIncrement;
+        hasFirstUpdated = scene.hasFirstUpdated;
+        CleanEntities = scene.CleanEntities;
+
+        sunLight = scene.sunLight.copy();
+        //Log.w("Scene Copy","Scene Copy : " + (float)(System.currentTimeMillis() - timer)/1000.0 + " seconds to complete");
     }
 
     public void addEntity(Entity entity){

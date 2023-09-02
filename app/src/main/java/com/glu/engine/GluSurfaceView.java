@@ -141,8 +141,6 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                     scene = loader.loadScene("Scenes/Scene.json", new Vector2f(1));
 
-                                    renderer.setScene(scene);
-
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.DEFFERED_RENDERING, 0, 0);
                                     //scene.pp.addEffect(PostProcessing.effect.NONE, 0, 0);
@@ -164,13 +162,12 @@ public final class GluSurfaceView extends GLSurfaceView {
 
                                     //requestRender();
 
-                                    //renderer.setScene(scene.copy());
+                                    renderer.setScene(scene);
 
-                                    while (fpsText == null) {
-                                        fpsText = scene.getTextBox("FPS");
-                                    }
-
-                                    renderer.setScene(scene.copy());
+                                    /*while (fpsText == null) {
+                                        Scene s = renderer.getScene();
+                                        fpsText = s.getTextBox("FPS");
+                                    }*/
 
                                     hasInit = true;
 
@@ -224,11 +221,12 @@ public final class GluSurfaceView extends GLSurfaceView {
                             Log.e("oups!", e.getMessage());
                         }
 
-                        if (!ressources.isRendering && hasInit) {
+                        if (hasInit) {
                             try {
 
                                 //ressources.isModifyingScene = true;
 
+                                //scene = renderer.getScene();
                                 scene.inputManager.update();
                                 //Log.w("update", "updated scene");
                                 //shadowTest.texture = scene.pp.Shadow.texture;
@@ -246,11 +244,11 @@ public final class GluSurfaceView extends GLSurfaceView {
                                     arrièrePlanB = scene.getEntity("Arrière-plan2");
                                 }
                                 if(arrièrePlanA != null && arrièrePlanB != null){
-                                    arrièrePlanA.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
-                                    arrièrePlanB.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 5f * (1f/0.65f), 0f);
+                                    arrièrePlanA.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 7f * (1f/0.65f), 0f);
+                                    arrièrePlanB.material.get(0).emissionIntensity = Math.max( -scene.sunLight.direction.y * 7f * (1f/0.65f), 0f);
                                 }
 
-                                //renderer.sceneModifications.add(scene);
+                                renderer.setUpdateScene(scene);
 
                                 //requestRender();
 
@@ -259,7 +257,7 @@ public final class GluSurfaceView extends GLSurfaceView {
                                 fpsCounter++;
                                 if (System.currentTimeMillis() - fpsTimer > 5000) {
                                     Log.w("Game", "Time : " + ((float) (System.currentTimeMillis() - fpsTimer) / (float) fpsCounter) + "ms | FPS : " + ((float) fpsCounter / ((float) (System.currentTimeMillis() - fpsTimer) / 1000f)));
-                                    fpsText.setText("GameLoop \n Time : " + ((float)(System.currentTimeMillis() - fpsTimer)/(float) fpsCounter) + "ms \n FPS : " + ((float)fpsCounter/((float) (System.currentTimeMillis() - fpsTimer)/1000f)) + "\nDraw \n" + renderer.FPS,4,5, TextBox.Alignment.LEFT);
+                                    //fpsText.setText("GameLoop \n Time : " + ((float)(System.currentTimeMillis() - fpsTimer)/(float) fpsCounter) + "ms \n FPS : " + ((float)fpsCounter/((float) (System.currentTimeMillis() - fpsTimer)/1000f)) + "\nDraw \n" + renderer.FPS,4,5, TextBox.Alignment.LEFT);
                                     fpsCounter = 0;
                                     fpsTimer = System.currentTimeMillis();
                                 }

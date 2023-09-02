@@ -6,18 +6,24 @@ import com.glu.engine.vectors.Vector3f;
 public class Camera {
     private Vector3f position = new Vector3f(0,0,0);
     private Vector3f rotation = new Vector3f(0,0,0);
-    private Vector3f prevPosition = new Vector3f(0,0,0);
-    private Vector3f prevRotation = new Vector3f(0,0,0);
 
     private Matrix4f translationMat = new Matrix4f();
     private Matrix4f rotationMat = new Matrix4f();
-    private Matrix4f prevTranslationMat = new Matrix4f();
-    private Matrix4f prevRotationMat = new Matrix4f();
     private Matrix4f viewMat = new Matrix4f();
 
     boolean hasChanged = false;
 
     public Camera(){}
+
+    public Camera(Camera c){
+        this.position = c.position.copy();
+        this.rotation = c.rotation.copy();
+        this.translationMat = c.translationMat.copy();
+        this.rotationMat = c.rotationMat.copy();
+        this.viewMat = c.viewMat.copy();
+        this.hasChanged = c.hasChanged;
+    }
+    public Camera copy(){return new Camera(this);}
 
     public void move(Vector3f p){
         position.add(p);
@@ -57,10 +63,6 @@ public class Camera {
 
     public Vector3f getRotation(){return rotation;}
 
-    public Vector3f getPrevPosition(){return prevPosition;}
-
-    public Vector3f getPrevRotation(){return prevRotation;}
-
     public Matrix4f getViewMat(){
         if(hasChanged){
             viewMat = Matrix4f.MultiplyMM(rotationMat,translationMat);
@@ -70,9 +72,5 @@ public class Camera {
 
     public Matrix4f getRotationMat(){
         return rotationMat;
-    }
-
-    public Matrix4f getPrevViewMat(){
-        return Matrix4f.MultiplyMM(prevRotationMat,prevTranslationMat);
     }
 }

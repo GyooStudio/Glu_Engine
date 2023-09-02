@@ -21,4 +21,16 @@ public class SunLight {
         view = new Matrix4f();
         softness = 1f;
     }
+
+    public SunLight(SunLight s){
+        this.direction = s.direction.copy();
+        this.color = s.color.copy();
+        this.intensity = s.intensity;
+        this.shadowDist = s.shadowDist;
+        this.softness = s.softness;
+        this.proj = s.proj.copy();
+        this.view = s.view.copy();
+    }
+
+    public SunLight copy(){return new SunLight(this);}
 }

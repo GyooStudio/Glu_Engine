@@ -10,4 +10,10 @@ public class SkyBox {
         this.HDRI = HDRI;
         strength = 1.0f;
     }
+    public SkyBox(SkyBox s){
+        this.model = s.model;
+        this.HDRI = s.HDRI;
+        this.strength = s.strength;
+    }
+    public SkyBox copy(){return new SkyBox(this);}
 }

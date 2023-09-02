@@ -46,7 +46,8 @@ public final class Renderer implements GLSurfaceView.Renderer {
     public boolean toUpdateViewport = false;
     public String FPS;
     private Scene scene;
-    public BlockingQueue<Scene> sceneModifications = new LinkedBlockingQueue<Scene>();
+    private Scene sCopy;
+    private boolean toCopyScene = false;
     private FrameBuffer shadowPass;
 
     Renderer(MainActivity main){
@@ -58,25 +59,23 @@ public final class Renderer implements GLSurfaceView.Renderer {
 
     public Scene getScene(){
         Log.w("getScene","Trying to get scene...");
-        while (true){
-            if(hasRendered){
-                Log.w("getScene","Succeeded to get scene.");
-                return scene;
-            }
-        }
-    }
-
-    public synchronized void setScene(Scene scene){
-        Log.w("setScene","Trying to set scene...");
-        //boolean succeeded = false;
-        //while (!succeeded){
+        //while (true){
             //if(!ressources.isRendering){
-                //succeeded = true;
-                this.scene = scene;//.copy();
-                toUpdateViewport = true;
-                Log.w("setScene","Succeeded to set scene.");
+                Log.w("getScene","Succeeded to get scene.");
+                return scene.copy();
             //}
         //}
+    }
+
+    public void setScene(Scene scene){
+        Log.w("setScene","Trying to set scene...");
+        this.scene = scene.copy();
+        toUpdateViewport = true;
+        Log.w("setScene","Succeeded to set scene.");
+    }
+    public void setUpdateScene(Scene s){
+        sCopy = s;
+        toCopyScene = true;
     }
 
     @Override
@@ -86,7 +85,7 @@ public final class Renderer implements GLSurfaceView.Renderer {
         GLES30.glGetIntegerv(GLES30.GL_MAX_FRAGMENT_UNIFORM_VECTORS,ints, 1);
         GLES30.glGetIntegerv(GLES30.GL_MAX_DRAW_BUFFERS,ints, 0);
 
-        shadowPass = new FrameBuffer(512,512,false,false,true,false);
+        shadowPass = new FrameBuffer(1024,1024,false,false,true,false);
         Log.w("init", "max combined texture units : "  + ints[1]);
         Log.w("init", "max draw buffers : " + ints[0]);
     }
@@ -100,34 +99,33 @@ public final class Renderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl10) {
+        if(sCopy != null) {
+            //update the scene's viewport size if it just got set.
+            if (toUpdateViewport) {
+                sCopy.updateViewportSize();
+                toUpdateViewport = false;
+            }
 
-        //wait until whatever is modifying the scene stops.
-        Scene s;
-        if ((s = sceneModifications.poll()) != null){
-            //scene = s.copy();
+            sCopy.updateGraphics();
+
+            if (toCopyScene) {
+                scene.copy(sCopy);
+                toCopyScene = false;
+            }
+        }else{
+            if (toUpdateViewport) {
+                scene.updateViewportSize();
+                toUpdateViewport = false;
+            }
+
+            scene.updateGraphics();
         }
-
-        //ressources.isRendering = true;
 
         //if the shaders aren't built, it will build them.
         ressources.buildShaders();
 
-        //update the scene's viewport size if it just got set.
-        if(toUpdateViewport){
-            scene.updateViewportSize();
-            toUpdateViewport = false;
-        }
-
-        //GLES30.glViewport(0,0,(int) ressources.viewport.x,(int) ressources.viewport.y);
-        //GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER,0);
-
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
-        //GLES30.glClearColor(color.x, color.y,color.z,color.w);
         GLES30.glClearColor(0f,0f,0f,0f);
-
-        scene.updateGraphics();
-
-        //Scene scene = this.scene.copy();
 
         //TAA
         /*inc = (short) Math.floorMod(scene.pp.inc + 1,4);
@@ -156,13 +154,11 @@ public final class Renderer implements GLSurfaceView.Renderer {
         //GLES30.glViewport(0,0,(int) ressources.viewport.x,(int) ressources.viewport.y);
         //render(scene, new Vector2f(0f), false,0);
 
-        scene.callNewFrame();
-
-        //ressources.isRendering = false;
+        //scene.callNewFrame();
 
         fpsCount ++;
         if (System.currentTimeMillis()-fpsTime > 5000){
-            FPS = " Time : " + ((float) (System.currentTimeMillis()-fpsTime)/(float) fpsCount) + "ms \n " + (int)fpsCount/((int) (System.currentTimeMillis()-fpsTime)/1000) + " FPS";
+            FPS = " DRAW | TIME : " + ((float) (System.currentTimeMillis()-fpsTime)/(float) fpsCount) + "ms | " + (int)((float)fpsCount/((float) (System.currentTimeMillis()-fpsTime)/1000f)) + " FPS";
             Log.w("DRAW", FPS);
             fpsTime = System.currentTimeMillis();
             fpsCount = 0;

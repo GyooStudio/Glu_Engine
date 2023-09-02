@@ -65,16 +65,6 @@ public class Maths {
         return matrix;
     }
 
-    public static Matrix4f generatePrevViewMatrix(Camera camera){
-        Matrix4f matrix = new Matrix4f();
-        matrix.setIdentity();
-        Matrix.rotateM(matrix.mat,0,-camera.getPrevRotation().x,1.0f,0.0f,0.0f);
-        Matrix.rotateM(matrix.mat,0,-camera.getPrevRotation().y,0.0f,1.0f,0.0f);
-        Matrix.rotateM(matrix.mat,0,-camera.getPrevRotation().z,0.0f,0.0f,1.0f);
-        Matrix.translateM(matrix.mat,0,-camera.getPrevPosition().x,-camera.getPrevPosition().y,-camera.getPrevPosition().z);
-        return matrix;
-    }
-
     public static float lessThan(float a, float b){
         if(a<b){
             return 1.0f;

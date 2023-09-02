@@ -62,7 +62,6 @@ public class StaticShader2 extends ShaderProgram{
 
     public void loadViewMatrix(Camera camera){
         super.loadUniformMatix(VIEW_MATRIX, camera.getViewMat());
-        super.loadUniformMatix(PREV_VIEW_MATRIX,camera.getPrevViewMat());
     }
 
     public void loadJitter(Vector2f jit){super.loadUniformVector(JITTER,jit);}

@@ -119,6 +119,38 @@ public class PostProcessing {
         this.PROJMAT = pp.PROJMAT;
         ressources = Ressources.getRessources();
     }
+    public void copy(PostProcessing pp){
+        this.effects = (ArrayList<effect>) pp.effects.clone();
+        this.A = (ArrayList<Float>) pp.A.clone();
+        this.B = (ArrayList<Float>) pp.B.clone();
+        //this.loader = pp.loader;
+        this.ppShaders = pp.ppShaders;
+        this.deffShader = pp.deffShader;
+        //this.frameBufferA = pp.frameBufferA;
+        //this.frameBufferB = pp.frameBufferB;
+        //this.halfA = pp.halfA;
+        //this.halfB = pp.halfB;
+        //this.quartA = pp.quartA;
+        //this.quartB = pp.quartB;
+        //this.scene = pp.scene;
+        //this.scene2 = pp.scene2;
+        //this.sceneRendered = pp.sceneRendered;
+        //this.TAAColor = pp.TAAColor;
+        //this.AOColor = pp.AOColor;
+        //this.SSRColor = pp.SSRColor;
+        //this.lastFrameExposure = pp.lastFrameExposure;
+        //this.screen = pp.screen;
+        this.downSizeFactor = pp.downSizeFactor;
+        this.camera = pp.camera;
+        this.lights = pp.lights;
+        this.depthRange = pp.depthRange;
+        //this.Shadow = pp.Shadow;
+        this.FOV = pp.FOV;
+        this.skybox = pp.skybox;
+        this.sunLight = pp.sunLight;
+        this.PROJMAT = pp.PROJMAT;
+        //ressources = Ressources.getRessources();
+    }
 
     public PostProcessing(){
         ressources = Ressources.getRessources();
